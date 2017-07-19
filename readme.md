@@ -13,10 +13,10 @@ The bundle is a various number of files between 1 and infinite (based on your co
 The bundle has a 2 weeks expiry date after the creation of the bundle. This value is not editable yet, this is a todo.
 
 This application provides three links per upload bundle : 
-- a bundle preview link : you can send this link to your recipients who will see the bundle content. For example: http://yourdomain/bundle/dda2d646b6746b96ea9b?auth=965242
-- a bundle download link : you can send this link yo your recipients who will download all the files of the bundle at once. For example: http://yourdomain/bundle/dda2d646b6746b96ea9b/download?auth=965242
+- a bundle preview link : you can send this link to your recipients who will see the bundle content. For example: http://yourdomain/bundle/dda2d646b6746b96ea9b?auth=965242. The recipient can see all the files of the bundle, can download one given file only or the entire bundle.
+- a bundle download link : you can send this link yo your recipients who will download all the files of the bundle at once. For example: http://yourdomain/bundle/dda2d646b6746b96ea9b/download?auth=965242. 
 - a deletion link : for you only, it invalidates the bundle. For example: 
-http://yourdomain/bundle/dda2d646b6746b96ea9b/delete?auth=ace6f22f5
+http://yourdomain/bundle/dda2d646b6746b96ea9b/delete?auth=ace6f22f5. 
 
 Each of these links come with a auth code. This code is the same for the preview and the download links. It is however different for the deletion link.
 
