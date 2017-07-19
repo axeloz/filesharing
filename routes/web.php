@@ -11,6 +11,10 @@
 |
 */
 
+Route::get('/', function() {
+    return redirect()->route('upload.create');
+});
+
 Route::prefix('upload')->middleware(['web', 'upload'])->group(function() {
     Route::get('/', [
         'uses'      => 'UploadController@create',

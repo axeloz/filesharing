@@ -58,6 +58,7 @@ The application also uses:
 	- `LOCALE=en` change this to "fr" or "en"
 	- `STORAGE_PATH=` change this wherever you want to store the files
 	- `UPLOAD_MAX_FILESIZE=5M` change this to the value you want (M, G, T, ...). Attention : you must configure your PHP settings too (`post_max_size`, `upload_max_filesize` and `memory_limit`)
+- generate the Laravel KEY: `php artisan key:generate`
 - start the Laravel scheduler (it will delete expired bundles of the storage). For example `* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
 
 Use your browser to navigate to your domain name (example: files.yourdomain.com) and **that's it**.
