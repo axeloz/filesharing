@@ -61,7 +61,7 @@ class Upload {
 			$size = preg_replace('/[^0-9\.]/', '', $v);
 			if ($unit) {
 				// Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
-				$values[$k] = round($v * pow(1024, stripos('bkmgtpezy', $unit[0])));
+				$values[$k] = round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
 			}
 		}
 
