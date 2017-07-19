@@ -1,11 +1,13 @@
 # Files Sharing
 
+<p align="center"><img src="https://github.com/axeloz/filesharing/raw/master/public/img/capture.png" width="700" /></p>
+
 Powered by Laravel
 <p><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 ## Description
 
-This PHP application based on Laravel 5.4 allows to share files like Wetransfer. You may install it on your own server. It does not require any database system, it works with JSON files in the storage folder.
+This PHP application based on Laravel 5.4 allows to share files like Wetransfer. You may install it on your own server. It does not require any database system, it works with JSON files in the storage folder. It is multilingual and comes with english and french translations for now. You're welcome to help.
 
 It comes with a droplet (based on Dropzone.js). You may drag and drop some files or directories into the droplet, your files will be uploaded to the server as a bundle. 
 
