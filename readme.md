@@ -69,6 +69,7 @@ There are many ideas to come. You are welcome to **participate**.
 - make the expiry date editable per bundle
 - limit upload permission based on an IP address (or IP range) or by a password (or passwords)
 - ability to send link to recipients
+- add unit testing
 
 ## Licence
 
