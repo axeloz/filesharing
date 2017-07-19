@@ -1,0 +1,270 @@
+@import url('https://fonts.googleapis.com/css?family=Indie+Flower|Quicksand');
+
+body {
+	margin: 0;
+	padding: 0;
+	font-family: 'Quicksand', sans-serif;
+	font-size: 13px;
+}
+
+div#content {
+	max-width: 800px;
+	margin: 20px auto;
+	padding: 10px 10px 10px 10px;
+	color: #f1f1f1;
+	background:
+		radial-gradient(#292929 15%, transparent 16%) 0 0,
+		radial-gradient(#292929 15%, transparent 16%) 8px 8px,
+		radial-gradient(rgba(255, 255, 255, 0) 15%, transparent 20%) 0 1px,
+		radial-gradient(rgba(255, 255, 255, 0.1) 15%, transparent 20%) 8px 9px;
+	background-color: #3a3a3a;
+	background-size:16px 16px;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+
+}
+
+h1 {
+
+}
+
+.spacer {
+	clear: both;
+	line-height: 0;
+	padding: 0;
+	margin: 0;
+	font-size: 0;
+}
+
+a, a:visited {
+	color: #58bfe4;
+}
+
+label {
+	display: block;
+	width: 100%;
+	margin: 10px 0 5px 0;
+
+	&:first-child {
+		margin: 0 0 5px 0;
+	}
+
+	&:last-child {
+		margin: 10px 0 0 0;
+	}
+}
+
+body#upload {
+
+	div#upload-column {
+		float: left;
+		width: 190px;
+
+		form.dropzone {
+			margin: 0;
+			cursor: pointer;
+			border: 1px dashed #a1bdf4;
+			text-align: center;
+			min-height: 170px;
+			max-height: 170px;
+			color: #eaeaea;
+			background-color:rgba(64, 154, 189, 0.33);
+			background-size:16px 16px;
+			-webkit-border-radius: 4px;
+			-moz-border-radius: 4px;
+			border-radius: 4px;
+			height: 100%;
+			white-space: nowrap;
+			position: relative;
+
+			&:before {
+				content: '';
+				display: inline-block;
+				vertical-align: middle;
+				width: 0;
+				margin-right: -.25em;
+				height: 100%;
+			}
+
+			&.dz-drag-hover {
+				background-color:rgba(64, 154, 189, 0.66);
+			}
+
+			.dz-message {
+				font-family: 'Indie Flower', cursive;
+				font-size: 18px;
+				margin: 35px 15px;
+				display: inline-block;
+				vertical-align: middle;
+				white-space: normal;
+				padding: 0 1em;
+			}
+		}
+
+		.max-filesize-warning {
+			font-family: 'Quicksand', sans-serif;
+			padding: 0;
+			margin: 2px 0 0 0;
+			font-size: 9px;
+			position: absolute;
+			bottom: 3px;
+			right: 3px;
+		}
+
+		&.wide {
+			width: 100%;
+		}
+	}
+
+	div#settings-column {
+		float: right;
+		max-width: 590px;
+		width: 590px;
+		display: none;
+
+		p.link {
+			max-width: 80%;
+			width: 80%;
+			background-color: #CCC;
+			white-space: nowrap;
+			padding: 6px;
+			background-color: #545454;
+			margin: 0;
+			overflow: hidden;
+			display: inline-flex;
+		}
+
+		.clippy {
+			background-image: url(/img/clippy.svg);
+			background-size: 15px;
+			background-repeat: no-repeat;
+			background-color: transparent;
+			border: 0;
+			color: #FFF;
+			height: 28px;
+			width: 20px;
+			background-position: center center;
+			cursor: pointer;
+		}
+	}
+
+	div#files-list {
+		display: none;
+		margin: 20px 0 0 0;
+		font-size: 12px;
+		padding: 5px 0;
+		position: relative;
+
+		.preview-tpl {
+			display: none;
+		}
+
+		.file-row {
+			padding: 10px 0px 10px 6px;
+			border-top: 1px solid #5a5a5a;
+			position: relative;
+
+			.dz-filename {
+				width: 60%;
+				overflow: hidden;
+				float: left;
+				position: relative;
+			}
+
+			.dz-size {
+				width: 10%;
+				overflow: hidden;
+				float: right;
+				text-align: right;
+			}
+
+			.dz-progress {
+				width: 12%;
+				overflow: hidden;
+				float: right;
+				min-height: 8px;
+				margin: 3px 10px 0 5px;
+				position: relative;
+				-webkit-border-radius: 4px;
+				-moz-border-radius: 4px;
+				border-radius: 4px;
+				background-color: #eaeaea;
+
+				.dz-upload {
+					position: absolute;
+					top: 0;
+					left: 0;
+					width: 0;
+					background-color: #51acd0;
+				}
+			}
+
+			.dz-error-message {
+				position: absolute;
+				top: 10px;
+				right: 100px;
+				background-color: red;
+				padding: 0 8px;
+			}
+
+			.dz-result {
+				width: 5%;
+				float: right;
+				margin-left: 10px;
+			}
+
+			&.dz-success {
+				.dz-result {
+					background-image: url('/img/success.png');
+					background-repeat: no-repeat;
+					background-size: contain;
+				}
+			}
+
+			&.dz-error {
+				.dz-result {
+					background-image: url('/img/error.png');
+					background-repeat: no-repeat;
+					background-size: contain;
+				}
+			}
+		}
+	}
+}
+
+body#download {
+	#files-list {
+		font-size: 12px;
+		margin-bottom: 40px;
+	}
+
+	.expiry-warning {
+		font-size: 11px;
+		font-style: italic;
+		margin-top: 30px;
+	}
+
+	.download-all-btn {
+		margin: 0 auto;
+		width: 60%;
+		text-align: center;
+		font-size: 22px;
+		background-color: #54606d;
+		-webkit-border-radius: 10px;
+		-moz-border-radius: 10px;
+		border-radius: 10px;
+		padding: 10px 5px;
+		box-shadow: inset 0px 1px 0px 0px #cae3fc;
+
+		&a, &a:visited {
+			color: #FFF;
+		}
+
+		&:hover {}
+
+		.bundle-info {
+			font-size: 12px;
+		}
+	}
+}
