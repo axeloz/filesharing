@@ -53,6 +53,11 @@ The application also uses:
 - run a `composer install`
 - run a `npm install --production`
 - make sure that the PHP process has write permission on the ./storage folder
+- configure the application : copy the .env.example file into .env
+	- `APP_ENV=local` change this to "production" if applicable
+	- `LOCALE=en` change this to "fr" or "en"
+	- `STORAGE_PATH=` change this wherever you want to store the files
+	- `UPLOAD_MAX_FILESIZE=5M` change this to the value you want (M, G, T, ...). Attention : you must configure your PHP settings too (`post_max_size`, `upload_max_filesize` and `memory_limit`)
 - start the Laravel scheduler (it will delete expired bundles of the storage). For example `* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
 
 Use your browser to navigate to your domain name (example: files.yourdomain.com) and **that's it**.
@@ -74,6 +79,7 @@ There are many ideas to come. You are welcome to **participate**.
 - limit upload permission based on an IP address (or IP range) or by a password (or passwords)
 - ability to send link to recipients
 - add unit testing
+- more testing on heavy files
 
 ## Licence
 
