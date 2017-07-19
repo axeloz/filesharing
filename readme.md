@@ -35,7 +35,10 @@ Basically, nothing more than Laravel itself:
 - Mbstring PHP Extension
 - Tokenizer PHP Extension
 - XML PHP Extension
-- JSON PHP Extension
+
+Plus:
+- JSON PHP Extension (included in PHP 5.2+)
+- ZipArchive PHP Extension (included in PHP 5.3+)
 
 The application also uses:
 - http://www.dropzonejs.com/
@@ -49,6 +52,7 @@ The application also uses:
 - configuration your webserver to point your domain name to the public/ folder
 - run a `composer install`
 - run a `npm install --production`
+- make sure that the PHP process has write permission on the ./storage folder
 - start the Laravel scheduler (it will delete expired bundles of the storage). For example `* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
 
 Use your browser to navigate to your domain name (example: files.yourdomain.com) and **that's it**.
