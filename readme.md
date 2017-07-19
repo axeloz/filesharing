@@ -1,51 +1,77 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+# Files Sharing
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+Powered by Laravel
+<p><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
-## About Laravel
+## Description
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+This PHP application based on Laravel 5.4 allows to share files like Wetransfer. You may install it on your own server. It does not require any database system, it works with JSON files in the storage folder.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+It comes with a droplet (based on Dropzone.js). You may drag and drop some files or directories into the droplet, your files will be uploaded to the server as a bundle. 
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+The bundle is a various number of files between 1 and infinite (based on your configuration). 
+The bundle has a 2 weeks expiry date after the creation of the bundle. This value is not editable yet, this is a todo.
 
-## Learning Laravel
+This application provides three links per upload bundle : 
+- a bundle preview link : you can send this link to your recipients who will see the bundle content. For example: http://yourdomain/bundle/dda2d646b6746b96ea9b?auth=965242
+- a bundle download link : you can send this link yo your recipients who will download all the files of the bundle at once. For example: http://yourdomain/bundle/dda2d646b6746b96ea9b/download?auth=965242
+- a deletion link : for you only, it invalidates the bundle. For example: 
+http://yourdomain/bundle/dda2d646b6746b96ea9b/delete?auth=ace6f22f5
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+Each of these links come with a auth code. This code is the same for the preview and the download links. It is however different for the deletion link.
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+The application also comes with a Laravel Command (background task) who will physically removed expired bundle files of the storage disk.
 
-## Laravel Sponsors
+Sorry about the design, I know it's ugly. You're welcome to help and participate.
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](http://patreon.com/taylorotwell):
+## Requirements
 
-- **[Vehikl](http://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Styde](https://styde.net)**
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
+Basically, nothing more than Laravel itself:
+- PHP >= 5.6.4
+- OpenSSL PHP Extension
+- PDO PHP Extension
+- Mbstring PHP Extension
+- Tokenizer PHP Extension
+- XML PHP Extension
+- JSON PHP Extension
 
-## Contributing
+The application also uses:
+- http://www.dropzonejs.com/
+- http://jquery.com/
+- https://clipboardjs.com/
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
+## Installation
 
-## Security Vulnerabilities
+- configure your domain name. For example: files.yourdomain.com 
+- clone the repo or download the sources into the webroot folder
+- configuration your webserver to point your domain name to the public/ folder
+- run a `composer install`
+- run a `npm install --production`
+- start the Laravel scheduler (it will delete expired bundles of the storage). For example `* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
+Use your browser to navigate to your domain name (example: files.yourdomain.com) and that's it.
 
-## License
+## Development
 
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+If your want to modify the sources, you can use the Laravel Mix features:
+- configure your domain name. For example: files.yourdomain.com 
+- clone the repo or download the sources into the webroot folder
+- configuration your webserver to point your domain name to the public/ folder
+- run a `composer install`
+- run a `npm install`
+- run a `npm run watch` in order to recompile the assets when changed
+
+## Roadmap
+
+There are many ideas to come. You are welcome to participate. 
+- make the expiry date editable per bundle
+- limit upload permission based on an IP address (or IP range) or by a password (or passwords)
+- ability to send link to recipients 
+
+## Licence
+
+https://choosealicense.com/licenses/gpl-3.0/
+
+## Welcome on board
+
+If you want to participate or if you want to talk with me : sharing@mabox.eu
