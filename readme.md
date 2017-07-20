@@ -68,7 +68,7 @@ Use your browser to navigate to your domain name (example: files.yourdomain.com)
 If your want to modify the sources, you can use the Laravel Mix features:
 - configure your domain name. For example: files.yourdomain.com
 - clone the repo or download the sources into the webroot folder
-- configuration your webserver to point your domain name to the public/ folder
+- configure your webserver to point your domain name to the public/ folder
 - run a `composer install`
 - run a `npm install`
 - run a `npm run watch` in order to recompile the assets when changed
@@ -83,6 +83,16 @@ There are many ideas to come. You are welcome to **participate**.
 - more testing on heavy files
 
 ## Licence
+
+GPL-3.0
+
+| Permissions     | Conditions                    | Limitations |
+| --------------- | ----------------------------- | ----------- |
+| Commercial use  | Disclose source               | Liability   |
+| Distribution    | License and copyright notice  | Warranty    |      
+| Modification    | Same license                  |             |
+| Patent use      |  State changes                |             |
+| Private use     |                               |             |
 
 https://choosealicense.com/licenses/gpl-3.0/
 
