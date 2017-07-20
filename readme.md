@@ -53,16 +53,22 @@ The application also uses:
 - run a `composer install`
 - run a `npm install --production`
 - make sure that the PHP process has write permission on the ./storage folder
-- configure the application : copy the .env.example file into .env
-	- `APP_ENV=local` change this to "production" if applicable
-	- `LOCALE=en` change this to "fr" or "en"
-	- `STORAGE_PATH=` (optional) changes this wherever you want to store the files
-	- `UPLOAD_MAX_FILESIZE=5M` (optional) change this to the value you want (M, G, T, ...). Attention : you must configure your PHP settings too (`post_max_size`, `upload_max_filesize` and `memory_limit`)
-	- `UPLOAD_LIMIT_IPS` (optional) a comma separated list of IPs from which you may upload files. Different formats are supported : Full IP address (192.168.10.2), Wildcard format (192.168.10.*), CIDR Format (192.168.10/24) OR  1.2.3.4/255.255.255.0 or Start-end IP (192.168.10.0-192.168.10.10)
 - generate the Laravel KEY: `php artisan key:generate`
 - start the Laravel scheduler (it will delete expired bundles of the storage). For example `* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
 
 Use your browser to navigate to your domain name (example: files.yourdomain.com) and **that's it**.
+
+## Configuration
+
+In order to configure your application, copy the .env.example file into .env. Then edit the .env file. 
+
+- `APP_ENV` change this to `production` when in production (`local` otherwise)
+- `APP_DEBUG` change this to `false` when in production (`true` otherwise)
+- `TIMEZONE` change this to your current timezone
+- `LOCALE=en` change this to "fr" or "en"
+- `STORAGE_PATH=` (optional) changes this wherever you want to store the files
+- `UPLOAD_MAX_FILESIZE=5M` (optional) change this to the value you want (M, G, T, ...). Attention : you must configure your PHP settings too (`post_max_size`, `upload_max_filesize` and `memory_limit`)
+- `UPLOAD_LIMIT_IPS` (optional) a comma separated list of IPs from which you may upload files. Different formats are supported : Full IP address (192.168.10.2), Wildcard format (192.168.10.*), CIDR Format (192.168.10/24 or 1.2.3.4/255.255.255.0) or Start-end IP (192.168.10.0-192.168.10.10)
 
 ## Development
 
