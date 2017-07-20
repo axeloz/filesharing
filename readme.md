@@ -41,6 +41,7 @@ Sorry about the design, I'm not very good at this, you're welcome to help and pa
 - easy installation, no database required
 - upload limitation based on client IP filtering
 - secured by tokens, authentication codes and non-accessible files
+- (very) early stage for theming support
 
 ## Requirements
 
@@ -104,10 +105,9 @@ There are many ideas to come. You are welcome to **participate**.
 - make the expiry date editable per bundle
 - limit upload permission by a password (or passwords)
 - ability to send link to recipients
-- add unit testing
+- add PHP unit testing
 - more testing on heavy files
 - customizable (logo, name...)
-- theming 
 - responsiveness
 
 ## Licence
