@@ -26,6 +26,22 @@ The application also comes with a Laravel Command (background task) who will phy
 
 *Sorry about the design, I know it's ugly*. You're welcome to help and participate.
 
+## Features
+
+- upload one or more files via drag and drop or browse
+- creation of a bundle
+- ability to keep adding files to the bundle until you close your browser tab, the links remain untouched
+- bundle expiration
+- sharing link with bundle content preview
+- ability to download a single file of the bundle or the entire bundle
+- direct download link (doesn't show the bundle content)
+- deletion link
+- garbage collector which removes the expired bundles as a background tasks
+- multilingual (EN and FR)
+- easy installation, no database required
+- upload limitation based on client IP filtering
+- secured by tokens, authentication codes and non-accessible files
+
 ## Requirements
 
 Basically, nothing more than Laravel itself:
@@ -62,13 +78,15 @@ Use your browser to navigate to your domain name (example: files.yourdomain.com)
 
 In order to configure your application, copy the .env.example file into .env. Then edit the .env file. 
 
-- `APP_ENV` change this to `production` when in production (`local` otherwise)
-- `APP_DEBUG` change this to `false` when in production (`true` otherwise)
-- `TIMEZONE` change this to your current timezone
-- `LOCALE=en` change this to "fr" or "en"
-- `STORAGE_PATH=` (optional) changes this wherever you want to store the files
-- `UPLOAD_MAX_FILESIZE=5M` (optional) change this to the value you want (M, G, T, ...). Attention : you must configure your PHP settings too (`post_max_size`, `upload_max_filesize` and `memory_limit`)
-- `UPLOAD_LIMIT_IPS` (optional) a comma separated list of IPs from which you may upload files. Different formats are supported : Full IP address (192.168.10.2), Wildcard format (192.168.10.*), CIDR Format (192.168.10/24 or 1.2.3.4/255.255.255.0) or Start-end IP (192.168.10.0-192.168.10.10)
+| Configuration | Description |
+| ------------- | ----------- |
+| `APP_ENV`     | change this to `production` when in production (`local` otherwise) |
+| `APP_DEBUG` | change this to `false` when in production (`true` otherwise) |
+| `TIMEZONE` | change this to your current timezone |
+| `LOCALE=en` | change this to "fr" or "en" |
+| `STORAGE_PATH=` | (*optional*) changes this wherever you want to store the files |
+| `UPLOAD_MAX_FILESIZE=5M` | (*optional*) change this to the value you want (M, G, T, ...). Attention : you must configure your PHP settings too (`post_max_size`, `upload_max_filesize` and `memory_limit`) |
+| `UPLOAD_LIMIT_IPS` | (*optional*) a comma separated list of IPs from which you may upload files. Different formats are supported : Full IP address (192.168.10.2), Wildcard format (192.168.10.*), CIDR Format (192.168.10/24 or 1.2.3.4/255.255.255.0) or Start-end IP (192.168.10.0-192.168.10.10) |
 
 ## Development
 
