@@ -56,8 +56,9 @@ The application also uses:
 - configure the application : copy the .env.example file into .env
 	- `APP_ENV=local` change this to "production" if applicable
 	- `LOCALE=en` change this to "fr" or "en"
-	- `STORAGE_PATH=` change this wherever you want to store the files
-	- `UPLOAD_MAX_FILESIZE=5M` change this to the value you want (M, G, T, ...). Attention : you must configure your PHP settings too (`post_max_size`, `upload_max_filesize` and `memory_limit`)
+	- `STORAGE_PATH=` (optional) changes this wherever you want to store the files
+	- `UPLOAD_MAX_FILESIZE=5M` (optional) change this to the value you want (M, G, T, ...). Attention : you must configure your PHP settings too (`post_max_size`, `upload_max_filesize` and `memory_limit`)
+	- `UPLOAD_LIMIT_IPS` (optional) a comma separated list of IPs from which you may upload files. Different formats are supported : Full IP address (192.168.10.2), Wildcard format (192.168.10.*), CIDR Format (192.168.10/24) OR  1.2.3.4/255.255.255.0 or Start-end IP (192.168.10.0-192.168.10.10)
 - generate the Laravel KEY: `php artisan key:generate`
 - start the Laravel scheduler (it will delete expired bundles of the storage). For example `* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
 
@@ -77,7 +78,7 @@ If your want to modify the sources, you can use the Laravel Mix features:
 
 There are many ideas to come. You are welcome to **participate**.
 - make the expiry date editable per bundle
-- limit upload permission based on an IP address (or IP range) or by a password (or passwords)
+- limit upload permission by a password (or passwords)
 - ability to send link to recipients
 - add unit testing
 - more testing on heavy files
