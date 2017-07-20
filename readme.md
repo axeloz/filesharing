@@ -24,7 +24,7 @@ Each of these links come with a auth code. This code is the same for the preview
 
 The application also comes with a Laravel Command (background task) who will physically removed expired bundle files of the storage disk. This command is included in Laravel scheduled commands.
 
-*Sorry about the design, I know it's ugly*. You're welcome to help and participate.
+Sorry about the design, I'm not very good at this, you're welcome to help and participate.
 
 ## Features
 
