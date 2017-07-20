@@ -47,7 +47,6 @@ class Upload {
 		}
 	}
 
-
 	public static function fileMaxSize($human = false) {
 		$values = [
 			'post'		=> ini_get('post_max_size'),
@@ -70,5 +69,93 @@ class Upload {
 			return self::humanFilesize($min);
 		}
 		return $min;
+	}
+
+
+	public static function canUpload($current_ip) {
+
+		// Getting the IP limit configuration
+		$ips = config('sharing.upload_ip_limit');
+
+		// If set and not empty, checking client's IP
+		if (! empty($ips) && count($ips) > 0) {
+			$valid      = false;
+
+			foreach ($ips as $ip) {
+				// Client's IP appears in the whitelist
+				if (self::isValidIp($current_ip, $ip)) {
+					$valid = true;
+					break;
+				}
+			}
+
+			// Client's IP is not allowed
+			if ($valid === false) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	public static function isValidIp($ip, $range) {
+
+		// Range is in CIDR format
+		if (strpos($range, '/') !== false) {
+			list($range, $netmask) = explode('/', $range, 2);
+
+			// Netmask is a 255.255.0.0 format
+			if (strpos($netmask, '.') !== false) {
+				$netmask = str_replace('*', '0', $netmask);
+				$netmask_dec = ip2long($netmask);
+				return ( (ip2long($ip) & $netmask_dec) == (ip2long($range) & $netmask_dec) );
+			}
+			// Netmask is a CIDR size block
+			else {
+				// fix the range argument
+				$x = explode('.', $range);
+
+				while(count($x) < 4) {
+					$x[] = 0;
+				}
+
+				list($a, $b, $c, $d) = $x;
+				$range = sprintf("%u.%u.%u.%u", empty($a)?'0':$a, empty($b)?'0':$b,empty($c)?'0':$c,empty($d)?'0':$d);
+				$range_dec = ip2long($range);
+				$ip_dec = ip2long($ip);
+
+				$wildcard_dec = pow(2, (32-$netmask)) - 1;
+				$netmask_dec = ~ $wildcard_dec;
+
+				return (($ip_dec & $netmask_dec) == ($range_dec & $netmask_dec));
+			}
+		}
+		// Range might be 255.255.*.* or 1.2.3.0-1.2.3.255
+		elseif (strpos($range, '*') !== false || strpos($range, '-') !== false) {
+
+			// a.b.*.* format
+			if (strpos($range, '*') !== false) {
+				// Just convert to A-B format by setting * to 0 for A and 255 for B
+				$lower = str_replace('*', '0', $range);
+				$upper = str_replace('*', '255', $range);
+				$range = "$lower-$upper";
+			}
+
+			// A-B format
+			if (strpos($range, '-') !== false) {
+				list($lower, $upper) = explode('-', $range, 2);
+				$lower_dec = (float)sprintf("%u",ip2long($lower));
+				$upper_dec = (float)sprintf("%u",ip2long($upper));
+				$ip_dec = (float)sprintf("%u",ip2long($ip));
+				return ( ($ip_dec>=$lower_dec) && ($ip_dec<=$upper_dec) );
+			}
+
+			return false;
+		}
+		// Full IP format 192.168.10.10
+		else {
+			return ($ip == $range);
+		}
+		return false;
 	}
 }

@@ -3,6 +3,7 @@
 namespace app\Http\Middleware;
 
 use Closure;
+use Upload;
 
 class UploadAccess
 {
@@ -15,6 +16,9 @@ class UploadAccess
      */
     public function handle($request, Closure $next)
     {
+        if (Upload::canUpload($request->ip()) !== true) {
+            return redirect()->route('homepage');
+        }
         return $next($request);
     }
 }

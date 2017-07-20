@@ -21,6 +21,12 @@ return [
 	'you-can-add-files' => 'Vous pouvez continuer d\'ajouter autant de fichiers que vous le souhaitez.',
 	'error-title' => 'Une erreur est survenue',
 	'files-count-limit' => 'Nombre maximal de fichiers atteint',
-	'file-too-big' => 'Le fichier est trop gros (poids : {{filesize}}MB, limite : {{maxFilesize}}MB)'
-
+	'file-too-big' => 'Le fichier est trop gros (poids : {{filesize}}MB, limite : {{maxFilesize}}MB)',
+	'cannot-upload' => 'Téléversement impossible',
+	'cannot-upload-blocked-ip' => 'L\'administrateur de cette application ne vous autorise pas à téléverser.',
+	'upload-permission-required' => 'Autorisation requise pour téléverser',
+	'cannot-upload-no-password' => 'Vous devez saisir un mot de passe pour pouvoir téléverser sur cette application',
+	'password' => 'Mot de passe : ',
+	'upload-disabled' => 'Le téléversement est désactivé sur cette application',
+	'start-new-upload' => 'Cliquez ici pour démarrer un nouveau téléversement'
 ];

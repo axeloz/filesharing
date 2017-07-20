@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Http\Request;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -11,9 +13,18 @@
 |
 */
 
-Route::get('/', function() {
-    return redirect()->route('upload.create');
-});
+Route::get('/', function(Request $request) {
+
+    if (Upload::canUpload($request->ip()) !== true) {
+        return view('cannotupload', [
+            'u' => $request->get('u')
+        ]);
+    }
+    else {
+        return redirect()->route('upload.create');
+    }
+
+})->name('homepage');
 
 Route::prefix('upload')->middleware(['web', 'upload'])->group(function() {
     Route::get('/', [

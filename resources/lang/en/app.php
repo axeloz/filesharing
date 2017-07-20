@@ -21,6 +21,13 @@ return [
 	'you-can-add-files' => 'You may keep adding files if you want to.',
 	'error-title' => 'An error has occurred',
 	'files-count-limit' => 'Max number of files reached',
-	'file-too-big' => 'This file is too big (size : {{filesize}}MB, limit : {{maxFilesize}}MB)'
+	'file-too-big' => 'This file is too big (size : {{filesize}}MB, limit : {{maxFilesize}}MB)',
+	'cannot-upload' => 'Téléversement impossible',
+	'cannot-upload-blocked-ip' => 'You haven\'t been granted permission to upload on this application',
+	'upload-permission-required' => 'Permission required for upload',
+	'cannot-upload-no-password' => 'You must provide a valid password in order to upload on this application',
+	'password' => 'Password: ',
+	'upload-disabled' => 'Upload is disabled on this application',
+	'start-new-upload' => 'Click here to start a new upload'
 
 ];
