@@ -11,8 +11,8 @@ const { mix } = require('laravel-mix');
  |
  */
 
-mix.js('resources/assets/js/app.js', 'public/js')
-    .sass('resources/assets/sass/app.scss', 'public/css')
+mix.js('resources/themes/' + process.env.MIX_THEME + '/assets/js/app.js', 'public/js')
+    .sass('resources/themes/' + process.env.MIX_THEME + '/assets/sass/app.scss', 'public/css')
     .extract(['jquery', 'dropzone', 'clipboard'])
 
 if (mix.inProduction()) {
