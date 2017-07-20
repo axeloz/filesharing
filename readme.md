@@ -73,7 +73,7 @@ If your want to modify the sources, you can use the Laravel Mix features:
 - run a `npm install`
 - run a `npm run watch` in order to recompile the assets when changed
 
-## Roadmap
+## Roadmap / Ideas / Improvements
 
 There are many ideas to come. You are welcome to **participate**.
 - make the expiry date editable per bundle
@@ -81,6 +81,9 @@ There are many ideas to come. You are welcome to **participate**.
 - ability to send link to recipients
 - add unit testing
 - more testing on heavy files
+- customizable (logo, name...)
+- theming 
+- responsiveness
 
 ## Licence
 
