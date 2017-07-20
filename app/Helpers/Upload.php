@@ -77,11 +77,19 @@ class Upload {
 		// Getting the IP limit configuration
 		$ips = config('sharing.upload_ip_limit');
 
+		if (empty($ips)) {
+			return true;
+		}
+
+		$ips = explode(',', $ips);
+
 		// If set and not empty, checking client's IP
 		if (! empty($ips) && count($ips) > 0) {
 			$valid      = false;
 
 			foreach ($ips as $ip) {
+				$ip = trim($ip);
+
 				// Client's IP appears in the whitelist
 				if (self::isValidIp($current_ip, $ip)) {
 					$valid = true;

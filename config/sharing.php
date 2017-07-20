@@ -13,9 +13,5 @@ return [
 	 **  3. CIDR Format (192.168.10/24) OR  1.2.3.4/255.255.255.0
 	 **  4. Start-end IP (192.168.10.0-192.168.10.10)
 	 */
-	'upload_ip_limit'		=> [
-		'127.0.0.1'
-	]
-
-
+	'upload_ip_limit'		=> env('UPLOAD_LIMIT_IPS', null),
 ];
