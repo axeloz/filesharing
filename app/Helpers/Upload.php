@@ -2,11 +2,16 @@
 
 namespace app\Helpers;
 
+use Exception;
 use Illuminate\Support\Facades\Storage;
 
 class Upload {
 
 	public static function generateFilePath(string $token) {
+		if (strlen($token) < 5) {
+			throw new Exception('Invalid token');
+		}
+
 		$path = 'files/';
 		for ($i = 0; $i < 3; $i++) {
 			$letter = substr($token, $i, 1);
@@ -33,7 +38,7 @@ class Upload {
 		return false;
 	}
 
-	public static function humanFilesize(float $size, $precision = 2)
+	public static function humanFilesize($size, $precision = 2)
 	{
 		if ($size > 0) {
 			$size = (int) $size;
@@ -152,10 +157,10 @@ class Upload {
 			// A-B format
 			if (strpos($range, '-') !== false) {
 				list($lower, $upper) = explode('-', $range, 2);
-				$lower_dec = (float)sprintf("%u",ip2long($lower));
-				$upper_dec = (float)sprintf("%u",ip2long($upper));
-				$ip_dec = (float)sprintf("%u",ip2long($ip));
-				return ( ($ip_dec>=$lower_dec) && ($ip_dec<=$upper_dec) );
+				$lower_dec = (float)sprintf("%u", ip2long($lower));
+				$upper_dec = (float)sprintf("%u", ip2long($upper));
+				$ip_dec = (float)sprintf("%u", ip2long($ip));
+				return ( ($ip_dec >= $lower_dec) && ($ip_dec <= $upper_dec) );
 			}
 
 			return false;
