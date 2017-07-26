@@ -7,12 +7,11 @@ Powered by Laravel
 
 ## Description
 
-This PHP application based on Laravel 5.4 allows to share files like Wetransfer. You may install it **on your own server**. It **does not require** any database system, it works with JSON files in the storage folder. It is **multilingual** and comes with english and french translations for now. You're welcome to help.
+This PHP application based on Laravel 5.4 allows to share files like Wetransfer. You may install it **on your own server**. It **does not require** any database system, it works with JSON files into the storage folder. It is **multilingual** and comes with english and french translations for now. You're welcome to help translating the app.
 
-It comes with a droplet (based on Dropzone.js). You may drag and drop some files or directories into the droplet, your files will be uploaded to the server as a bundle.
+It comes with a droplet. You may drag and drop some files or directories into the droplet, your files will be uploaded to the server as a bundle.
 
-The bundle is a various number of files between 1 and infinite (based on your configuration).
-The bundle has a 2 weeks expiry date after the creation of the bundle. This value is not editable yet, this is a todo.
+A bundle is like a package containing is a various number of files. The bundle has a 2 weeks expiry date after the creation of the bundle. This value is not editable yet, this is a todo.
 
 This application provides three links per upload bundle :
 - a bundle preview link : you can send this link to your recipients who will see the bundle content. For example: http://yourdomain/bundle/dda2d646b6746b96ea9b?auth=965242. The recipient can see all the files of the bundle, can download one given file only or the entire bundle.
@@ -20,27 +19,27 @@ This application provides three links per upload bundle :
 - a deletion link : for you only, it invalidates the bundle. For example:
 http://yourdomain/bundle/dda2d646b6746b96ea9b/delete?auth=ace6f22f5.
 
-Each of these links come with a auth code. This code is the same for the preview and the download links. It is however different for the deletion link.
+Each of these links comes with an authorization code. This code is the same for the preview and the download links. However it is  different for the deletion link for obvious reasons.
 
-The application also comes with a Laravel Command (background task) who will physically removed expired bundle files of the storage disk. This command is included in Laravel scheduled commands.
+The application also comes with a Laravel Artisan command as a background task who will physically remove expired bundle files of the storage disk. This command is configured to run every five minutes among the Laravel scheduled commands.
 
 Sorry about the design, I'm not very good at this, you're welcome to help and participate.
 
 ## Features
 
-- upload one or more files via drag and drop or browse
+- upload one or more files via drag and drop or via browsing your computer
 - creation of a bundle
-- ability to keep adding files to the bundle until you close your browser tab, the links remain untouched
-- bundle expiration
+- ability to keep adding files to the bundle until you close your browser tab, the preview link remain untouched
+- bundle expiration after 2 weeks
 - sharing link with bundle content preview
 - ability to download a single file of the bundle or the entire bundle
-- direct download link (doesn't show the bundle content)
-- deletion link
-- garbage collector which removes the expired bundles as a background tasks
+- direct download link (doesn't preview the bundle content)
+- deletion link for bundle owner
+- garbage collector which removes the expired bundles as a background task
 - multilingual (EN and FR)
 - easy installation, no database required
 - upload limitation based on client IP filtering
-- secured by tokens, authentication codes and non-accessible files
+- secured by tokens, authentication codes and non-publicly-accessible files
 - (very) early stage for theming support
 
 ## Requirements
@@ -77,7 +76,7 @@ Use your browser to navigate to your domain name (example: files.yourdomain.com)
 
 ## Configuration
 
-In order to configure your application, copy the .env.example file into .env. Then edit the .env file. 
+In order to configure your application, copy the .env.example file into .env. Then edit the .env file.
 
 | Configuration | Description |
 | ------------- | ----------- |
@@ -102,22 +101,24 @@ If your want to modify the sources, you can use the Laravel Mix features:
 ## Roadmap / Ideas / Improvements
 
 There are many ideas to come. You are welcome to **participate**.
+- ability to define a bundle name and/or description that will be shown to the recipients
 - make the expiry date editable per bundle
 - limit upload permission by a password (or passwords)
-- ability to send link to recipients
+- disable bundle after X downloads (value to be configurable by the bundle owner)
+- ability to send link to recipients directly from the app
 - add PHP unit testing
 - more testing on heavy files
-- customizable (logo, name...)
-- responsiveness
+- customizable / white labeling (logo, name, terms of service, footer ...)
+- responsiveness (is it really useful?)
 
 ## Licence
 
-GPL-3.0
+GPLv3
 
 | Permissions     | Conditions                    | Limitations |
 | --------------- | ----------------------------- | ----------- |
 | Commercial use  | Disclose source               | Liability   |
-| Distribution    | License and copyright notice  | Warranty    |      
+| Distribution    | License and copyright notice  | Warranty    |
 | Modification    | Same license                  |             |
 | Patent use      |  State changes                |             |
 | Private use     |                               |             |
@@ -126,4 +127,4 @@ https://choosealicense.com/licenses/gpl-3.0/
 
 ## Welcome on board
 
-If you want to **participate** or if you want to talk with me : sharing@mabox.eu
+If you are willing to **participate** or if you just want to talk with me : sharing@mabox.eu
