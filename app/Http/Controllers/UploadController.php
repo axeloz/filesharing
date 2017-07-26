@@ -144,8 +144,6 @@ class UploadController extends Controller
 				'error'			=> $e->getMessage()
 			], 500);
 		}
-
-
 	}
 
 }
