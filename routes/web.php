@@ -13,54 +13,43 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::get('/', function(Request $request) {
+Route::get('/', "WebController@homepage")->name('homepage');
 
-    if (Upload::canUpload($request->ip()) !== true) {
-        return view('cannotupload', [
-            'u' => $request->get('u')
-        ]);
-    }
-    else {
-        return redirect()->route('upload.create');
-    }
-
-})->name('homepage');
-
-Route::prefix('upload')->middleware(['web', 'upload'])->group(function() {
+Route::prefix('upload')->middleware(['web', 'upload'])->group(function () {
     Route::get('/', [
-        'uses'      => 'UploadController@create',
-        'as'        => 'upload.create'
+        'uses' => 'UploadController@create',
+        'as' => 'upload.create'
     ]);
 
     Route::post('/file', [
-        'uses'      => 'UploadController@store',
-        'as'        => 'upload.store'
+        'uses' => 'UploadController@store',
+        'as' => 'upload.store'
     ]);
 
     Route::post('/complete', [
-        'uses'      => 'UploadController@complete',
-        'as'        => 'upload.complete'
+        'uses' => 'UploadController@complete',
+        'as' => 'upload.complete'
     ]);
 });
 
-Route::prefix('bundle')->group(function() {
+Route::prefix('bundle')->group(function () {
     Route::get('/{bundle}', [
-        'uses'      => 'BundleController@preview',
-        'as'        => 'bundle.preview'
+        'uses' => 'BundleController@preview',
+        'as' => 'bundle.preview'
     ]);
 
     Route::get('/{bundle}/download', [
-        'uses'      => 'BundleController@download',
-        'as'        => 'bundle.download'
+        'uses' => 'BundleController@download',
+        'as' => 'bundle.download'
     ]);
 
     Route::get('/{bundle}/file/{file}/download', [
-        'uses'      => 'BundleController@download',
-        'as'        => 'file.download'
+        'uses' => 'BundleController@download',
+        'as' => 'file.download'
     ]);
 
     Route::get('/{bundle}/delete', [
-        'uses'      => 'BundleController@delete',
-        'as'        => 'bundle.delete'
+        'uses' => 'BundleController@delete',
+        'as' => 'bundle.delete'
     ]);
 });
