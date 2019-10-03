@@ -2,6 +2,7 @@
 
 namespace app\Http\Controllers;
 
+use Upload;
 use Illuminate\Http\Request;
 
 
