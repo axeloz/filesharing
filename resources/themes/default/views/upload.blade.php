@@ -3,7 +3,8 @@
 @section('page', 'upload')
 
 @section('content')
-    <h1>@lang('app.upload-files-title')</h1>
+    <h1>{{ config('app.name') }}</h1>
+    <h2>@lang('app.upload-files-title')</h2>
 
     <div id="upload-column" class="wide">
         <form action="{{ route('upload.store') }}" class="dropzone" id="upload-form">

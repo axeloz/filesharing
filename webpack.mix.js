@@ -1,4 +1,4 @@
-const { mix } = require('laravel-mix');
+const mix = require('laravel-mix');
 
 /*
  |--------------------------------------------------------------------------
@@ -11,8 +11,9 @@ const { mix } = require('laravel-mix');
  |
  */
 
-mix.js('resources/themes/' + process.env.MIX_THEME + '/assets/js/app.js', 'public/js')
-    .sass('resources/themes/' + process.env.MIX_THEME + '/assets/sass/app.scss', 'public/css')
+mix
+    .js('resources/themes/default/assets/js/app.js', 'public/js')
+    .sass('resources/themes/default/assets/sass/app.scss', 'public/css')
     .extract(['jquery', 'dropzone', 'clipboard'])
 
 if (mix.inProduction()) {
@@ -20,5 +21,4 @@ if (mix.inProduction()) {
 }
 else {
     mix.sourceMaps();
-    mix.browserSync('filesharing.local');
 }

@@ -10,7 +10,6 @@ class WebController extends Controller
 {
     function homepage(Request $request)
     {
-
         if (Upload::canUpload($request->ip()) !== true) {
             return view('cannotupload', [
                 'u' => $request->get('u')
