@@ -28,5 +28,8 @@ return [
 	'cannot-upload-no-password' => 'Vous devez saisir un mot de passe pour pouvoir téléverser sur cette application',
 	'password' => 'Mot de passe : ',
 	'upload-disabled' => 'Le téléversement est désactivé sur cette application',
-	'start-new-upload' => 'Cliquez ici pour démarrer un nouveau téléversement'
+	'start-new-upload' => 'Cliquez ici pour démarrer un nouveau téléversement',
+	'upload-settings' => 'Paramètres :',
+	'upload-expiry'	=> 'Expiration du téléchargement :',
+	'upload-title'	=> 'Titre du téléchargement :'
 ];

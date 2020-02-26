@@ -4,7 +4,25 @@
 
 @section('content')
     <h1>{{ config('app.name') }}</h1>
-    <h2>@lang('app.upload-files-title')</h2>
+
+    <br />
+    <h2><img src="{{ asset('img/settings.png') }}" width="21" alt="" />&nbsp;@lang('app.upload-settings')</h2>
+    <div id="upload-settings" class="wide">
+        <label>@lang('app.upload-title')</label>
+        <input type="text" name="title" id="upload-title" />
+        <p class="spacer">&nbsp;</p>
+
+        <label>@lang('app.upload-expiry')</label>
+        <select name="expiry" id="upload-expiry">
+            @foreach (config('sharing.expiry_values') as $e)
+                <option value="{{ Upload::getExpirySeconds($e) }}" {{ $e == config('sharing.default_expiry') ? 'selected' : '' }}>{{  $e   }}</option>
+            @endforeach
+        </select>
+        <p class="spacer">&nbsp;</p>
+    </div>
+
+    <br />
+    <h2><img src="{{ asset('img/files.png') }}" width="21" alt="" />&nbsp;@lang('app.upload-files-title')</h2>
 
     <div id="upload-column" class="wide">
         <form action="{{ route('upload.store') }}" class="dropzone" id="upload-form">
@@ -90,18 +108,21 @@
                         'X-Upload-Bundle': '{{ $bundle_id }}'
                     },
                     method: 'POST',
-                    url: '{{ route('upload.complete') }}'
+                    url: '{{ route('upload.complete') }}',
+                    data: {
+                        title: $('#upload-title').val(),
+                        expiry: $('#upload-expiry').val()
+                    }
+                }).done(function (data) {
+                    if (data.result == true) {
+                        $('#preview-link').attr('href', data.bundle_url).html(data.bundle_url);
+                        $('#download-link').attr('href', data.download_url).html(data.download_url);
+                        $('#delete-link').attr('href', data.delete_url).html(data.delete_url);
 
-                    }).done(function (data) {
-                        if (data.result == true) {
-                            $('#preview-link').attr('href', data.bundle_url).html(data.bundle_url);
-                            $('#download-link').attr('href', data.download_url).html(data.download_url);
-                            $('#delete-link').attr('href', data.delete_url).html(data.delete_url);
-
-                            $('#upload-column').removeClass('wide');
-                            $('#settings-column').show();
-                        }
-                    });
+                        $('#upload-column').removeClass('wide');
+                        $('#settings-column').show();
+                    }
+                });
             }
         };
 

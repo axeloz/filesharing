@@ -171,4 +171,23 @@ class Upload {
 		}
 		return false;
 	}
+
+	public static function getExpirySeconds($expiry) {
+		$unit_multipliers = [
+			'h'	=> 3600,
+			'd'	=> 86400,
+			'w' => 604800,
+			'm'	=> 2592000
+		];
+
+		$unit = strtolower(substr(trim($expiry), -1));
+		$value = (int)substr($expiry, 0, -1);
+
+		if (empty($unit_multipliers[$unit]) || $value <= 0) {
+			// 24h by default
+			return $unit_multipliers['d'];
+		}
+
+		return ($value * $unit_multipliers[$unit]);
+	}
 }

@@ -16,7 +16,7 @@ body {
 		padding: 10px 10px 10px 10px;
 		background-size:16px 16px;
 		font-size: 1rem;
-		background-color:rgba(56, 76, 65, 0.84);
+		background-color:rgba(56, 76, 65, 0.95);
 		border: 1px solid rgb(69, 87, 77);
 		position: absolute;
 		top: 50%;
@@ -36,7 +36,7 @@ body {
 		margin-top: 0;
 		color: rgba(255, 255, 255, 0.877);
 		text-transform: uppercase;
-		font-size: 1.7rem;
+		font-size: 1.5rem;
 	}
 
 	.spacer {
@@ -66,6 +66,18 @@ body {
 	}
 
 	&#upload {
+
+		#upload-settings {
+			label {
+				float: left;
+				width: 45%;
+				text-align: left;
+			}
+			input, select {
+				width: 45% !important;
+				text-align: left;
+			}
+		}
 
 		div#upload-column {
 			float: left;

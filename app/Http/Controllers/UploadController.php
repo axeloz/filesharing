@@ -96,18 +96,21 @@ class UploadController extends Controller
 		if (! $metadata = Upload::getMetadata($request->header('X-Upload-Bundle'))) {
 			$metadata = [
 				'created_at'	=> time(),
-				'expires_at'	=> time()+60*60*24*15, # TODO : make this editable in the FRONT
+				'expires_at'	=> time()+$request->expiry,
 				'bundle_id'		=> $request->header('X-Upload-Bundle'),
 				'view-auth'		=> substr(sha1(uniqid('', true)), 0, rand(6, 10)),
 				'delete-auth'	=> substr(sha1(uniqid('', true)), 0, rand(6, 10)),
 				'fullsize'		=> 0,
-				'files'			=> $bundle['files']
+				'files'			=> $bundle['files'],
+				'title'			=> $request->title
 			];
 		}
 		// The metadata file already exists
 		else {
 			// Adding bundle files to metadata
 			$metadata['files'] = array_merge($metadata['files'], $bundle['files']);
+			$metadata['title'] = $request->title;
+			$metadata['expires_at']	= time()+$request->expiry;
 		}
 
 		// Processing size

@@ -4,6 +4,8 @@ return [
 
 	'max_filesize'			=> env('UPLOAD_MAX_FILESIZE', '5M'),
 	'max_files'				=> env('UPLOAD_MAX_FILES', 100),
+	'expiry_values'			=> ['1H', '2H', '6H', '12H', '24H', '48H', '1W', '2W', '1M', '6M'],
+	'default_expiry'		=> '6H',
 
 	/**
 	 ** IP v4 access limitations
@@ -13,5 +15,6 @@ return [
 	 **  3. CIDR Format (192.168.10/24) OR  1.2.3.4/255.255.255.0
 	 **  4. Start-end IP (192.168.10.0-192.168.10.10)
 	 */
-	'upload_ip_limit'		=> env('UPLOAD_LIMIT_IPS', null)
+	'upload_ip_limit'		=> env('UPLOAD_LIMIT_IPS', null),
+
 ];

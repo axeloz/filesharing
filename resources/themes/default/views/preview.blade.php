@@ -10,6 +10,10 @@
 		@lang('app.bundle-preview-intro')<br />
 		@lang('app.download-all-or-one')<br /><br />
 
+		@if (! empty($metadata['title']))
+			<h2>{{ $metadata['title'] }}</h2>
+		@endif
+
 		<ul id="files-list">
 			@foreach ($metadata['files'] as $f)
 				<li>

@@ -14,7 +14,7 @@ return [
 	'preview-link'	=> 'Preview link: ',
 	'direct-link' => 'Direct download link: ',
 	'delete-link' => 'Deletion link: ',
-	'upload-files-title' => 'Files upload',
+	'upload-files-title' => 'Files',
 	'bundle-preview-title' => 'Files download',
 	'download-all-or-one' => 'You can download each file individually or download the entire bundle at once',
 	'files-list' => 'Uploaded files list',
@@ -28,6 +28,9 @@ return [
 	'cannot-upload-no-password' => 'You must provide a valid password in order to upload on this application',
 	'password' => 'Password: ',
 	'upload-disabled' => 'Upload is disabled on this application',
-	'start-new-upload' => 'Click here to start a new upload'
+	'start-new-upload' => 'Click here to start a new upload',
+	'upload-settings' => 'Settings',
+	'upload-expiry'	=> 'Expiration of the bundle:',
+	'upload-title'	=> 'Title of the bundle:'
 
 ];
