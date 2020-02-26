@@ -85,6 +85,7 @@ In order to configure your application, copy the .env.example file into .env. Th
 | `TIMEZONE` | change this to your current timezone |
 | `LOCALE` | change this to "fr" or "en" |
 | `STORAGE_PATH` | (*optional*) changes this wherever you want to store the files. When missing, using the `storage` folder at the root of the application |
+| `UPLOAD_MAX_FILES` | (*optional*) maximal number of files per bundle |
 | `UPLOAD_MAX_FILESIZE` | (*optional*) change this to the value you want (K, M, G, T, ...). Attention : you must configure your PHP settings too (`post_max_size`, `upload_max_filesize` and `memory_limit`). When missing, using PHP lowest configuration |
 | `UPLOAD_LIMIT_IPS` | (*optional*) a comma separated list of IPs from which you may upload files. Different formats are supported : Full IP address (192.168.10.2), Wildcard format (192.168.10.*), CIDR Format (192.168.10/24 or 1.2.3.4/255.255.255.0) or Start-end IP (192.168.10.0-192.168.10.10). When missing, filtering is disabled. |
 | `APP_NAME`    | the title of the application |
