@@ -166,7 +166,7 @@ class UploadController extends Controller
 		$metadata = Upload::getMetadata($bundleId);
 
 		// Forcing file to expire
-		$metadata['expires_at'] = time() - 1000;
+		$metadata['expires_at'] = time() - (3600 * 24 * 30);
 
 		// Rewriting the metadata file
 		try {

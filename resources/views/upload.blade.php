@@ -10,12 +10,14 @@
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('upload', () => ({
 			bundle: null,
+			bundleIndex: null,
 			bundles: null,
 			dropzone: null,
 			uploadedFiles: [],
 			metadata: [],
 			completed: false,
 			step: 0,
+			maxFiles: maxFiles,
 			modal: {
 				show: false,
 				text: 'test'
@@ -54,33 +56,38 @@
 						this.step = 1
 					}
 				}
-
 			},
 
 			getBundle: function() {
 				// Getting all bundles store in local storage
 				bundles = localStorage.getItem('bundles')
+
 				// If not bundle found, back to homepage
 				if (bundles == null || bundles == '') {
 					window.location.href = '/'
 					return false
 				}
+
 				this.bundles = JSON.parse(bundles)
 
 				// Looking for the current bundle
-				this.bundles.forEach(element => {
-					if (element.bundle_id == this.metadata.bundle_id) {
-						this.bundle = element
-					}
-				})
+				if (this.bundles != null && Object.keys(this.bundles).length > 0) {
+					this.bundles.forEach( (element, index) => {
+						if (element.bundle_id == this.metadata.bundle_id) {
+							//this.bundle = Object.assign(element)
+							//this.bundleIndex = index
+							this.bundle = index
+						}
+					})
+				}
 
 				// If current bundle not found, aborting
-				if (this.bundle == null || this.bundle == '') {
+				if (this.bundle == null) {
 					window.location.href = '/'
 					return false
 				}
 
-				if (this.bundle.owner_token != this.metadata.owner_token) {
+				if (this.bundles[this.bundle].owner_token != this.metadata.owner_token) {
 					window.location.href = '/'
 					return false
 				}
@@ -124,11 +131,11 @@
 						description: this.metadata.description,
 						max_downloads: this.metadata.max_downloads,
 						password: this.metadata.password,
-						auth: this.bundle.owner_token
+						auth: this.bundles[this.bundle].owner_token
 					}
 				})
 				.then( (response) => {
-					this.metadata = response.data
+					this.syncData(response.data)
 					window.history.pushState(null, null, baseUrl+'/upload/'+this.metadata.bundle_id);
 					this.step = 2
 
@@ -149,13 +156,13 @@
 						url: '/upload/'+this.metadata.bundle_id+'/complete',
 						method: 'POST',
 						data: {
-							auth: this.bundle.owner_token
+							auth: this.bundles[this.bundle].owner_token
 						}
 
 					})
 					.then( (response) => {
 						this.step = 3
-						this.metadata = response.data
+						this.syncData(response.data)
 					})
 					.catch( (error) => {
 						// TODO: do something here
@@ -171,13 +178,13 @@
 
 			startDropzone: function() {
 				if (! this.dropzone) {
-					maxFiles = maxFiles - this.countFilesOnServer() >= 0 ? maxFiles - this.countFilesOnServer() : 0
+					this.maxFiles = this.maxFiles - this.countFilesOnServer() >= 0 ? this.maxFiles - this.countFilesOnServer() : 0
 
 					this.dropzone = new Dropzone('#upload-frm', {
 						url: '/upload/'+this.metadata.bundle_id+'/file',
 						method: 'POST',
 						headers: {
-							'X-Upload-Auth': this.bundle.owner_token
+							'X-Upload-Auth': this.bundles[this.bundle].owner_token
 						},
 						createImageThumbnails: false,
 						disablePreviews: true,
@@ -190,12 +197,10 @@
 						dictFileTooBig: '@lang('app.file-too-big')',
 						dictDefaultMessage: '@lang('app.dropzone-text')',
 						dictResponseError: '@lang('app.server-answered')',
-						// init: function()  {
-						// 	this.options.maxFiles = this.options.maxFiles - currentFilesCount
-						// }
 					})
 
 					this.dropzone.on("addedfile", (file) => {
+						console.log('added file')
 						this.metadata.files.push({
 							uuid: file.upload.uuid,
 							original: file.name,
@@ -226,6 +231,7 @@
 						this.metadata.files[fileIndex].progress = 0
 
 						if (file.status == 'success') {
+							this.maxFiles--
 							this.metadata.files[fileIndex].status = true
 						}
 					})
@@ -260,11 +266,11 @@
 							method: 'DELETE',
 							data: {
 								file: lfile.uuid,
-								auth: this.bundle.owner_token
+								auth: this.bundles[this.bundle].owner_token
 							}
 						})
 						.then( (response) => {
-							this.metadata = response.data
+							this.syncData(response.data)
 						})
 						.catch( (error) => {
 							// TODO: do something here
@@ -279,6 +285,14 @@
 				// File has not being uploaded, cannot delete file yet
 				else {
 					// Nothing here
+				}
+			},
+
+			syncData: function(metadata) {
+				if (Object.keys(metadata).length > 0) {
+					this.metadata = metadata
+					this.bundles[this.bundle] = metadata
+					localStorage.setItem('bundles', JSON.stringify(this.bundles))
 				}
 			},
 
@@ -345,12 +359,12 @@
 						url: '/upload/'+this.metadata.bundle_id+'/delete',
 						method: 'DELETE',
 						data: {
-							auth: this.bundle.owner_token
+							auth: this.bundles[this.bundle].owner_token
 						}
 					})
 					.then( (response) => {
 						if (! response.data.success) {
-							this.metadata = response.data
+							this.syncData(response.data)
 						}
 					})
 				})

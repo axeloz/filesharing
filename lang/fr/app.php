@@ -8,7 +8,7 @@ return [
 	'warning-bundle-expired'	=> 'L\'archive a expiré',
 	'download-all'	=> 'Tout télécharger',
 	'for'	=> 'pour',
-	'files'	=> 'fichier|fichiers',
+	'files'	=> 'fichier(s)',
 	'no-file-in-this-bundle' => 'Aucun fichier dans cette archive',
 	'maximum-filesize'	=> 'Taille maximum :',
 	'preview-link'	=> 'Lien de visualisation',
@@ -70,6 +70,12 @@ return [
 	'files-remaining-files' => 'Nombre de fichiers restants autorisés',
 	'delete-bundle'	=> 'Supprimer l\'archive',
 	'confirm-delete-bundle' => 'Voulez-vous supprimer cette archive ?',
-	'bundle-expired'	=> 'Cette archive a expiré'
+	'bundle-expired'	=> 'Cette archive a expiré',
+	'active'	=> 'Actifs',
+	'expired'	=> 'Expirés',
+	'existing-bundles' => 'Vos archives existantes',
+	'or-create'	=> 'Nouvelle archive',
+	'no-existing-bundle' => 'Aucune archive existante'
+
 
 ];

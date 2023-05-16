@@ -8,7 +8,7 @@ return [
 	'warning-bundle-expired'	=> 'Bundle has expired',
 	'download-all'	=> 'Download all',
 	'for'	=> 'for',
-	'files'	=> 'file|files',
+	'files'	=> 'file(s)',
 	'no-file-in-this-bundle' => 'No file into this bundle',
 	'maximum-filesize'	=> 'Max filesize :',
 	'preview-link'	=> 'Preview link',
@@ -70,6 +70,12 @@ return [
 	'files-remaining-files' => 'Number of remaining files allowed',
 	'delete-bundle'	=> 'Delete bundle',
 	'confirm-delete-bundle' => 'Do you really want to delete this bundle?',
-	'bundle-expired'	=> 'This bundle has expired'
+	'bundle-expired'	=> 'This bundle has expired',
+	'active'	=> 'Active',
+	'expired'	=> 'Expired',
+	'existing-bundles' => 'Your existing bundles',
+	'or-create'	=> 'New bundle',
+	'no-existing-bundle' => 'No existing bundle'
+
 
 ];
