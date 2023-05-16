@@ -15,7 +15,7 @@ This PHP application based on Laravel 10.9 allows to share files like Wetransfer
 
 It comes with a droplet. You may drag and drop some files or directories into the droplet, your files will be uploaded to the server as a bundle.
 
-A bundle is like a package containing is a various number of files. You may choose the expiration date of the bundle.
+A bundle is like a package containing a various number of files. You may choose the expiration date of the bundle.
 
 This application provides two links per bundle :
 - a bundle preview link : you can send this link to your recipients who will see the bundle content. For example: http://yourdomain/bundle/dda2d646b6746b96ea9b?auth=965242. The recipient can see all the files of the bundle, can download one given file only or the entire bundle.
@@ -46,7 +46,7 @@ Sorry about the design, I'm not very good at this, you're welcome to help and pa
 
 Basically, nothing more than Laravel itself:
 - PHP >= 8.1
-- CType PHP Extension
+- Ctype PHP Extension
 - OpenSSL PHP Extension
 - PDO PHP Extension
 - Mbstring PHP Extension
@@ -59,19 +59,24 @@ Plus:
 
 The application also uses:
 - http://www.dropzonejs.com/
+- https://alpinejs.dev/
+- https://tailwindcss.com/
+- https://momentjs.com/
+- https://axios-http.com/
+- https://lodash.com/
 
 ## Installation
 
 - configure your domain name. For example: files.yourdomain.com
 - clone the repo or download the sources into the webroot folder
-- configure your webserver to point your domain name to the public/ folder
+- configure your webserver to point your domain name to the `./public` folder
 - run `composer install`
-- run `yarn --production`
-- run `yarn build`
-- make sure that the PHP process has write permission on the ./storage folder
+- run `yarn --production` (or `npm install --production`)
+- run `yarn build` (or `npm run build`)
+- make sure that the PHP process has write permission on the `./storage` folder
 - generate the Laravel KEY: `php artisan key:generate`
-- start the Laravel scheduler (it will delete expired bundles of the storage). For example `* * * * * php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
 - run `cp .env.example .env` and edit `.env` to fit your needs
+- start the Laravel scheduler (it will delete expired bundles of the storage). For example `0 * * * * /usr/bin/php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
 
 
 Use your browser to navigate to your domain name (example: files.yourdomain.com) and **that's it**.
@@ -108,7 +113,6 @@ There are many ideas to come. You are welcome to **participate**.
 - add PHP unit testing
 - more testing on heavy files
 - customizable / white labeling (logo, name, terms of service, footer ...)
-- responsiveness (is it really useful?)
 
 ## Licence
 
