@@ -1,6 +1,8 @@
 # Files Sharing
 
-!! Version 2 just released !!
+> !!!
+> FILES SHARING VERSION 2 JUST RELEASED
+> !!!
 
 <p align="center"><img src="https://github.com/axeloz/filesharing/raw/main/public/images/capture.gif" width="700" /></p>
 
