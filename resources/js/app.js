@@ -12,6 +12,19 @@ moment().format();
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+window.axios.interceptors.response.use(function (response) {
+	return response;
+ }, function (error) {
+
+	// Authenticated user
+	if (error.response.status == 401) {
+		window.location.href = '/'
+	}
+	else {
+		return Promise.reject(error);
+	}
+  });
+
 import Dropzone from "dropzone";
 window.Dropzone = Dropzone;
 import "dropzone/dist/dropzone.css";

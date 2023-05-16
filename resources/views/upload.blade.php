@@ -1,5 +1,7 @@
 @extends('layout')
 
+@section('page_title', __('app.upload'))
+
 @push('scripts')
 <script>
 	let baseUrl		= @js($baseUrl);

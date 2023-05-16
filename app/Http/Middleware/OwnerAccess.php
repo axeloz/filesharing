@@ -17,10 +17,10 @@ class OwnerAccess
     public function handle(Request $request, Closure $next): Response
     {
 		// Aborting if request is not AJAX
-		abort_if(! $request->ajax(), 401);
+		abort_if(! $request->ajax(), 403);
 
 		// Aborting if Bundle ID is not present
-		abort_if(empty($request->route()->parameter('bundle')), 401);
+		abort_if(empty($request->route()->parameter('bundle')), 403);
 
 		// Aborting if auth is not present
 		$auth = null;
@@ -30,7 +30,7 @@ class OwnerAccess
 		else if (! empty($request->auth)) {
 			$auth = $request->auth;
 		}
-		abort_if(empty($auth), 401);
+		abort_if(empty($auth), 403);
 
 		// Getting metadata
 		$metadata = Upload::getMetadata($request->route()->parameter('bundle'));
@@ -39,7 +39,7 @@ class OwnerAccess
 		abort_if(empty($metadata), 404);
 
 		// Aborting if auth_token is different from URL param
-		abort_if($metadata['owner_token'] !== $auth, 401);
+		abort_if($metadata['owner_token'] !== $auth, 403);
 
         return $next($request);
     }

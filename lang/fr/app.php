@@ -75,7 +75,11 @@ return [
 	'expired'	=> 'Expirés',
 	'existing-bundles' => 'Vos archives existantes',
 	'or-create'	=> 'Nouvelle archive',
-	'no-existing-bundle' => 'Aucune archive existante'
+	'no-existing-bundle' => 'Aucune archive existante',
+	'authentication'	=> 'Authentification',
+	'login'	=> 'Identifiant',
+	'password' => 'Mot de passe',
+	'do-login' => 'S\'authentifier'
 
 
 ];

@@ -1,37 +1,32 @@
 # Files Sharing
 
-> !!!
+>  
 > FILES SHARING VERSION 2 JUST RELEASED
-> !!!
+>  
 
 <p align="center"><img src="https://github.com/axeloz/filesharing/raw/main/public/images/capture.gif" width="700" /></p>
 
-Powered by Laravel
+Powered by
 <p><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 ## Description
 
 This PHP application based on Laravel 10.9 allows to share files like Wetransfer. You may install it **on your own server**. It **does not require** any database system, it works with JSON files into the storage folder. It is **multilingual** and comes with english and french translations for now. You're welcome to help translating the app.
 
-It comes with a droplet. You may drag and drop some files or directories into the droplet, your files will be uploaded to the server as a bundle.
-
-A bundle is like a package containing a various number of files. You may choose the expiration date of the bundle.
-
 This application provides two links per bundle :
 - a bundle preview link : you can send this link to your recipients who will see the bundle content. For example: http://yourdomain/bundle/dda2d646b6746b96ea9b?auth=965242. The recipient can see all the files of the bundle, can download one given file only or the entire bundle.
 - a bundle download link : you can send this link yo your recipients who will download all the files of the bundle at once (without any preview). For example: http://yourdomain/bundle/dda2d646b6746b96ea9b/download?auth=965242.
 
-Each of these links comes with an authorization code. This code is the same for the preview and the download links. However it is  different for the deletion link for obvious reasons.
+Each of these links comes with an authorization code. This code is the same for the preview and the download links.
 
 The application also comes with a Laravel Artisan command as a background task who will physically remove expired bundle files of the storage disk. This command is configured to run every five minutes among the Laravel scheduled commands.
 
-Sorry about the design, I'm not very good at this, you're welcome to help and participate.
-
 ## Features
 
+- uploader access permission: IP based or login/password
 - creation of a new bundle
 - define settings : title, description, expiration date, number max of downloads, password...
-- upload one or more files via drag and drop or via browsing your computer
+- upload one or more files via drag and drop or via browsing your filesystem
 - ability to keep adding files to the bundle days later
 - sharing link with bundle content preview
 - ability to download the entire bundle as ZIP archive (password protected when applicable)
@@ -39,7 +34,6 @@ Sorry about the design, I'm not very good at this, you're welcome to help and pa
 - garbage collector which removes the expired bundles as a background task
 - multilingual (EN and FR)
 - easy installation, **no database required**
-- upload limitation based on client IP filtering
 - secured by tokens, authentication codes and non-publicly-accessible files
 
 ## Requirements
@@ -76,7 +70,9 @@ The application also uses:
 - make sure that the PHP process has write permission on the `./storage` folder
 - generate the Laravel KEY: `php artisan key:generate`
 - run `cp .env.example .env` and edit `.env` to fit your needs
-- start the Laravel scheduler (it will delete expired bundles of the storage). For example `0 * * * * /usr/bin/php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
+- (optional) you may create your first user `php artisan fs:create-user`
+- start the Laravel scheduler (it will delete expired bundles of the storage). For example `* * * * * /usr/bin/php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
+- (optional) to purge bundles manually, run `php artisan fs:purge-expired`
 
 
 Use your browser to navigate to your domain name (example: files.yourdomain.com) and **that's it**.
@@ -96,6 +92,21 @@ In order to configure your application, copy the .env.example file into .env. Th
 | `UPLOAD_LIMIT_IPS` | (*optional*) a comma separated list of IPs from which you may upload files. Different formats are supported : Full IP address (192.168.10.2), Wildcard format (192.168.10.*), CIDR Format (192.168.10/24 or 1.2.3.4/255.255.255.0) or Start-end IP (192.168.10.0-192.168.10.10). When missing, filtering is disabled. |
 | `APP_NAME`    | the title of the application |
 
+
+## Authentication
+
+You may provide a list of IPs to limit access to the upload feature.  
+Or you can create users with login/password credentials.   
+You can also **mix the two methods**.
+
+>  
+> Warning: if your leave the `UPLOAD_LIMIT_IPS` empty and you don't create users, the upload will be publicly accessible
+>  
+
+## Known issues
+
+If you are using Nginx, you might be required to do additional setup in order to increase the upload max size. Check the Nginx's documentation for `client_max_body_size`.
+
 ## Development
 
 If your want to modify the sources, you can use the Laravel Mix features:
@@ -109,7 +120,6 @@ If your want to modify the sources, you can use the Laravel Mix features:
 ## Roadmap / Ideas / Improvements
 
 There are many ideas to come. You are welcome to **participate**.
-- limit upload permission by a password (or passwords)
 - add PHP unit testing
 - more testing on heavy files
 - customizable / white labeling (logo, name, terms of service, footer ...)

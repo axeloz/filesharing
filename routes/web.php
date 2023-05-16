@@ -18,8 +18,10 @@ use App\Http\Middleware\UploadAccess;
 |
 */
 
+Route::get('/login', [WebController::class, 'login'])->name('login');
+Route::post('/login', [WebController::class, 'doLogin'])->name('login');
 
-Route::middleware(['upload'])->group(function() {
+Route::middleware(['can.upload'])->group(function() {
 	Route::get('/', [WebController::class, 'homepage'])->name('homepage');
 	Route::post('/new', [WebController::class, 'newBundle'])->name('bundle.new');
 

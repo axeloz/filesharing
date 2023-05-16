@@ -53,8 +53,8 @@ class UploadController extends Controller
 		$metadata = Upload::getMetadata($bundleId);
 
 		// Validating file
-		abort_if(! $request->hasFile('file'), 401);
-		abort_if(! $request->file('file')->isValid(), 401);
+		abort_if(! $request->hasFile('file'), 422);
+		abort_if(! $request->file('file')->isValid(), 422);
 
 		$this->validate($request, [
 			'file'	=> 'required|file|max:'.(Upload::fileMaxSize() / 1000)
@@ -101,7 +101,7 @@ class UploadController extends Controller
 
 		$metadata = Upload::getMetadata($bundleId);
 
-		abort_if(empty($request->file), 401);
+		abort_if(empty($request->file), 422);
 
 		try {
 			$metadata = Upload::deleteFile($bundleId, $request->file);

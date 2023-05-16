@@ -75,7 +75,11 @@ return [
 	'expired'	=> 'Expired',
 	'existing-bundles' => 'Your existing bundles',
 	'or-create'	=> 'New bundle',
-	'no-existing-bundle' => 'No existing bundle'
+	'no-existing-bundle' => 'No existing bundle',
+	'authentication'	=> 'Authentication',
+	'login'	=> 'Username',
+	'password' => 'Password',
+	'do-login' => 'Login now'
 
 
 ];

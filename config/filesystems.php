@@ -60,6 +60,22 @@ return [
 			]
         ],
 
+        'users' => [
+            'driver' => 'local',
+            'root'  => env('STORAGE_PATH', storage_path('app/users')),
+			'visibility' => 'private',
+			'permissions' => [
+				'file' => [
+					'public' => 0600,
+					'private' => 0600,
+				],
+				'dir' => [
+					'public' => 0755,
+					'private' => 0700,
+				],
+			]
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

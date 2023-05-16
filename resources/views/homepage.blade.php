@@ -110,7 +110,10 @@
 			</div>
 
 			<div class="p-5">
-				<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase">@lang('app.existing-bundles')</h2>
+				<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase flex items-center">
+					<p>@lang('app.existing-bundles')</p>
+					<p class="text-sm bg-primary rounded-full ml-2 text-white px-3" x-text="Object.keys(bundles).length"></p>
+				</h2>
 
 				<span x-show="bundles == null || Object.keys(bundles).length == 0">@lang('app.no-existing-bundle')</span>
 				<select
