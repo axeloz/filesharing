@@ -23,7 +23,7 @@
 							bundle.title = 'untitled'
 						}
 
-						bundle.title += ' - '+Object.keys(bundle.files).length+' {{ __('app.files') }} - {{ __('app.created-at') }} '+moment.unix(bundle.created_at).fromNow()
+						//bundle.title += ' - '+Object.keys(bundle.files).length+' {{ __('app.files') }} - {{ __('app.created-at') }} '+moment.unix(bundle.created_at).fromNow()
 
 						if (bundle.expires_at != null && moment.unix(bundle.expires_at).isBefore(moment())) {
 							this.bundles.expired.push(bundle)
