@@ -202,11 +202,9 @@
 					})
 
 					this.dropzone.on('addedfile', (file) => {
-						console.log('added file')
-
 						file.uuid = this.uuid()
 
-						this.metadata.files.push({
+						this.metadata.files.unshift({
 							uuid: file.uuid,
 							original: file.name,
 							filesize: file.size,
@@ -215,6 +213,7 @@
 							created_at: moment().unix(),
 							status: 'uploading'
 						});
+
 					})
 
 					this.dropzone.on('sending', (file, xhr, data) => {
@@ -224,15 +223,21 @@
 					this.dropzone.on('uploadprogress', (file, progress, bytes) => {
 						let fileIndex = null
 
-						if (fileIndex = this.findFileIndex(file.upload.uuid)) {
+						if (fileIndex = this.findFileIndex(file.uuid)) {
 							this.metadata.files[fileIndex].progress = Math.round(progress)
 						}
 					})
 
 					this.dropzone.on('error', (file, message) => {
-						let fileIndex = this.findFileIndex(file.upload.uuid)
+						let fileIndex = this.findFileIndex(file.uuid)
 						this.metadata.files[fileIndex].status = false
-						this.metadata.files[fileIndex].message = message
+
+						if (message.hasOwnProperty('error')) {
+							this.metadata.files[fileIndex].message = message.error
+						}
+						else {
+							this.metadata.files[fileIndex].message = message
+						}
 					})
 
 					this.dropzone.on('complete', (file) => {
@@ -606,10 +611,10 @@
 									</div>
 								</h3>
 
-								<span class="text-xs text-slate-400" x-show="countFilesOnServer() == 0">@lang('app.no-file')</span>
+								<span class="text-xs text-slate-400" x-show="Object.keys(metadata.files).length == 0">@lang('app.no-file')</span>
 
 								{{-- Files list --}}
-								<ul id="output" class="text-xs max-h-32 overflow-y-scroll pb-3" x-show="countFilesOnServer() > 0">
+								<ul id="output" class="text-xs max-h-32 overflow-y-scroll pb-3" x-show="Object.keys(metadata.files).length > 0">
 									<template x-for="(f, k) in metadata.files" :key="k">
 										<li
 											title="{{ __('app.click-to-remove') }}"

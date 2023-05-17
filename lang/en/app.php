@@ -81,4 +81,5 @@ return [
 	'password' => 'Password',
 	'do-login' => 'Login now',
 	'pending'	=> 'Drafts',
+	'duplicate-file' => 'This file already exists in the bundle'
 ];

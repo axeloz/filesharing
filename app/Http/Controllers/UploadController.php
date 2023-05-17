@@ -63,15 +63,25 @@ class UploadController extends Controller
 				$bundleId, $filename, 'uploads'
 			);
 
+			$size = Storage::disk('uploads')->size($fullpath);
+			if (config('sharing.upload_prevent_duplicates', true) === true && $size < Upload::humanReadableToBytes(config('sharing.hash_maxfilesize', '1G'))) {
+				$hash = sha1_file(Storage::disk('uploads')->path($fullpath));
+				if (Upload::isDuplicateFile($bundleId, $hash)) {
+					Storage::disk('uploads')->delete($fullpath);
+					throw new Exception(__('app.duplicate-file'));
+				}
+			}
+
 			// Generating file metadata
 			$file = [
 				'uuid'  				=> $request->uuid,
 				'original'  			=> $original,
-				'filesize'  			=> Storage::disk('uploads')->size($fullpath),
+				'filesize'  			=> $size,
 				'fullpath'  			=> $fullpath,
 				'filename'				=> $filename,
 				'created_at'			=> time(),
-				'status'				=> true
+				'status'				=> true,
+				'hash'					=> $hash ?? null
 			];
 
 			$metadata = Upload::addFileMetaData($bundleId, $file);

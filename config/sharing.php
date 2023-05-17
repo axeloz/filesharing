@@ -29,4 +29,11 @@ return [
      */
     'upload_ip_limit'		=> env('UPLOAD_LIMIT_IPS', null),
 
+	'upload_prevent_duplicates'	=> env('UPLOAD_PREVENT_DUPLICATES', true),
+
+	/**
+	 ** Max filesize hash processing
+	 ** TODO: find the best value to avoid too long time processing
+	 */
+	 'hash_maxfilesize'		=> env('HASH_MAX_FILESIZE', '1G')
 ];

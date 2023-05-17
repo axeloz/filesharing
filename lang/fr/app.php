@@ -81,4 +81,5 @@ return [
 	'password' => 'Mot de passe',
 	'do-login' => 'S\'authentifier',
 	'pending' => 'Brouillons',
+	'duplicate-file' => 'Ce fichier existe déjà dans l\'archive'
 ];

@@ -45,7 +45,7 @@ class Upload {
 			];
 		}
 
-		array_push($metadata['files'], $file);
+		array_unshift($metadata['files'], $file);
 		self::setMetadata($bundleId, $metadata);
 
 		return $metadata;
@@ -93,12 +93,7 @@ class Upload {
 		];
 
 		foreach ($values as $k => $v) {
-			$unit = preg_replace('/[^bkmgtpezy]/i', '', $v);
-			$size = preg_replace('/[^0-9\.]/', '', $v);
-			if ($unit) {
-				// Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
-				$values[$k] = round($size * pow(1024, stripos('bkmgtpezy', $unit[0])), 1);
-			}
+			$values[$k] = self::humanReadableToBytes($v);
 		}
 
 		$min = min($values);
@@ -106,6 +101,25 @@ class Upload {
 			return self::humanFilesize($min);
 		}
 		return $min;
+	}
+
+	public static function humanReadableToBytes($value) {
+		$unit = preg_replace('/[^bkmgtpezy]/i', '', $value);
+		$size = preg_replace('/[^0-9\.]/', '', $value);
+		if (! empty($unit)) {
+			$value = round($size * pow(1024, stripos('bkmgtpezy', $unit[0])), 1);
+		}
+		return $value;
+	}
+
+	public static function isDuplicateFile($bundleId, $hash) {
+		$metadata = self::getMetadata($bundleId);
+		foreach ($metadata['files'] as $f) {
+			if ($f['hash'] !== null && $f['hash'] == $hash) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public static function canUpload($current_ip) {
