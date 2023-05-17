@@ -4,10 +4,6 @@
 > FILES SHARING VERSION 2 JUST RELEASED
 >  
 
-<p align="center"><img src="https://github.com/axeloz/filesharing/raw/main/public/images/capture.gif" width="700" /></p>
-
-Powered by
-<p><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 ## Description
 
@@ -145,3 +141,7 @@ https://choosealicense.com/licenses/gpl-3.0/
 ## Welcome on board
 
 If you are willing to **participate** or if you just want to talk with me : axel@mabox.eu
+
+
+Powered by
+<p><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
