@@ -507,7 +507,7 @@
 
 						{{-- Expiration --}}
 						<div class="flex flex-wrap items-center mt-5">
-							<div class="w-1/3 px-2">
+							<div class="w-1/3 pr-2">
 								<p class="font-title uppercase">
 									@lang('app.upload-expiry')
 									<span class="text-base">*</span>
@@ -527,7 +527,7 @@
 							</div>
 
 							{{-- Max downloads --}}
-							<div class="w-1/3 px-2">
+							<div class="w-1/3 pr-2">
 								<p class="font-title uppercase">
 									@lang('app.max-downloads')
 								</p>
@@ -544,7 +544,7 @@
 							</div>
 
 							{{-- Password --}}
-							<div class="w-1/3 px-2">
+							<div class="w-1/3">
 								<span class="font-title uppercase">@lang('app.bundle-password')</span>
 
 								<input
