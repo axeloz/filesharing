@@ -36,6 +36,8 @@ The application also comes with a Laravel Artisan command as a background task w
 
 A video demo is available [on Youtube](https://youtu.be/hO4tRaZa4N4)
 
+![demo image](https://github.com/axeloz/filesharing/blob/main/public/images/capture.png "Demo Image")
+
 ## Requirements
 
 Basically, nothing more than Laravel itself:
