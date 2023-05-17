@@ -55,70 +55,68 @@
 
 @section('content')
 	<div x-data="login">
-		<div class="relative bg-white border border-primary rounded-lg overflow-hidden">
-			<div class="bg-gradient-to-r from-primary-light to-primary px-2 py-4 text-center">
-				<h1 class="relative font-title font-medium font-body text-4xl text-center text-white uppercase flex items-center">
+		<div class="bg-gradient-to-r from-primary-light to-primary px-2 py-4 text-center">
+			<h1 class="relative font-title font-medium font-body text-4xl text-center text-white uppercase flex items-center">
 
-					<div class="grow text-center">{{ config('app.name') }}</div>
-				</h1>
+				<div class="grow text-center">{{ config('app.name') }}</div>
+			</h1>
+		</div>
+
+		<div class="p-5">
+			<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase flex items-center">
+				<p>@lang('app.authentication')</p>
+			</h2>
+
+			<template x-if="error">
+				<div class="w-full my-3 rounded px-3 py-2 bg-red-100 text-red-600" x-text="error"></div>
+			</template>
+
+
+			{{-- Login --}}
+			<div class="">
+				<p class="font-title uppercase">
+					@lang('app.login')
+					<span class="text-base">*</span>
+				</p>
+
+				<input
+					x-model="user.login"
+					class="w-full p-0 bg-transparent text-slate-700 h-8 py-1 rounded-none border-b border-purple-300 outline-none invalid:border-b-red-500 invalid:bg-red-50"
+					type="text"
+					name="login"
+					id="user-login"
+					maxlength="40"
+					@keyup.enter="loginUser()"
+				/>
 			</div>
 
-			<div class="p-5">
-				<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase flex items-center">
-					<p>@lang('app.authentication')</p>
-				</h2>
+			{{-- Password --}}
+			<div class="mt-5">
+				<p class="font-title uppercase">
+					@lang('app.password')
+					<span class="text-base">*</span>
+				</p>
 
-				<template x-if="error">
-					<div class="w-full my-3 rounded px-3 py-2 bg-red-100 text-red-600" x-text="error"></div>
-				</template>
+				<input
+					x-model="user.password"
+					class="w-full p-0 bg-transparent text-slate-700 h-8 py-1 rounded-none border-b border-purple-300 outline-none invalid:border-b-red-500 invalid:bg-red-50"
+					type="password"
+					name="password"
+					id="user-password"
+					@keyup.enter="loginUser()"
+				/>
+			</div>
 
-
-				{{-- Login --}}
-				<div class="">
-					<p class="font-title uppercase">
-						@lang('app.login')
-						<span class="text-base">*</span>
-					</p>
-
-					<input
-						x-model="user.login"
-						class="w-full p-0 bg-transparent text-slate-700 h-8 py-1 rounded-none border-b border-purple-300 outline-none invalid:border-b-red-500 invalid:bg-red-50"
-						type="text"
-						name="login"
-						id="user-login"
-						maxlength="40"
-						@keyup.enter="loginUser()"
-					/>
-				</div>
-
-				{{-- Password --}}
-				<div class="mt-5">
-					<p class="font-title uppercase">
-						@lang('app.password')
-						<span class="text-base">*</span>
-					</p>
-
-					<input
-						x-model="user.password"
-						class="w-full p-0 bg-transparent text-slate-700 h-8 py-1 rounded-none border-b border-purple-300 outline-none invalid:border-b-red-500 invalid:bg-red-50"
-						type="password"
-						name="password"
-						id="user-password"
-						@keyup.enter="loginUser()"
-					/>
-				</div>
-
-				{{-- Buttons --}}
-				<div class="grid grid-cols-2 gap-10 mt-10 text-center">
-					<div>&nbsp;</div>
-					<div>
-						@include('partials.button', [
-							'way'		=> 'right',
-							'text'		=> __('app.do-login'),
-							'icon'		=> '<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />',
-							'action'	=> 'loginUser'
-						])
-					</div>
+			{{-- Buttons --}}
+			<div class="grid grid-cols-2 gap-10 mt-10 text-center">
+				<div>&nbsp;</div>
+				<div>
+					@include('partials.button', [
+						'way'		=> 'right',
+						'text'		=> __('app.do-login'),
+						'icon'		=> '<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />',
+						'action'	=> 'loginUser'
+					])
 				</div>
 			</div>
 		</div>

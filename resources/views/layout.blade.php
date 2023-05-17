@@ -16,7 +16,11 @@
 
 	<body class="font-display text-[13px] selection:bg-purple-100 outline-none select-none">
 
-		<div class="fixed min-w-xl max-w-3xl left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] md:w-2/3">@yield('content')</div>
+		<div class="md:fixed md:min-w-xl md:max-w-3xl md:left-[50%] md:top-[50%] md:translate-x-[-50%] md:translate-y-[-50%] md:w-2/3">
+			<div class="relative bg-white md:border border-primary md:rounded-lg md:overflow-hidden">
+				@yield('content')
+			</div>
+		</div>
 
         @stack('scripts')
 

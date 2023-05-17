@@ -400,337 +400,335 @@
 
 @section('content')
 	<div x-data="upload">
-		<div class="relative bg-white border border-primary rounded-lg overflow-hidden">
-			<div class="bg-gradient-to-r from-primary-light to-primary px-2 py-4 mb-3 text-center">
-				<h1 class="relative font-title font-medium font-body text-4xl text-center text-white uppercase flex items-center">
-					<div class="w-1/12 text-center">
-						{{-- If bundle is locked --}}
-						<p title="{{ __('app.bundle-locked') }}" x-show="metadata.completed">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-8 h-8 text-purple-200">
-							  	<path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+		<div class="bg-gradient-to-r from-primary-light to-primary px-2 py-4 mb-3 text-center">
+			<h1 class="relative font-title font-medium font-body text-4xl text-center text-white uppercase flex items-center">
+				<div class="w-1/12 text-center">
+					{{-- If bundle is locked --}}
+					<p title="{{ __('app.bundle-locked') }}" x-show="metadata.completed">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-8 h-8 text-purple-200">
+						  	<path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+						</svg>
+					</p>
+				</div>
+
+				{{-- App's title --}}
+				<div class="grow text-center">{{ config('app.name') }}</div>
+
+
+				{{-- Bundle status --}}
+				<div class="w-1/12 gap-2 item-right">
+					{{-- If bundle is expired --}}
+					<p title="{{ __('app.bundle-expired') }}" x-show="isBundleExpired()">
+						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-8 h-8 text-purple-200">
+							<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+						</svg>
+					</p>
+
+				</div>
+
+			</h1>
+		</div>
+
+		{{-- Modal box --}}
+		<template x-if="modal.show">
+			<div class="absolute z-40 top-0 left-0 right-0 bottom-0 w-full bg-[#848A97EE]">
+				<div class="absolute z-50 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-lg bg-white w-3/4 md:w-1/2 p-6 text-center shadow-lg border-2 border-gray-300">
+					<div class="w-full text-center">
+						<p class="relative mx-auto bg-orange-200 rounded-full w-14 h-14">
+							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-8 h-8 inline text-orange-600">
+				  			<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
 							</svg>
 						</p>
 					</div>
-
-					{{-- App's title --}}
-					<div class="grow text-center">{{ config('app.name') }}</div>
-
-
-					{{-- Bundle status --}}
-					<div class="w-1/12 gap-2 item-right">
-						{{-- If bundle is expired --}}
-						<p title="{{ __('app.bundle-expired') }}" x-show="isBundleExpired()">
-							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-8 h-8 text-purple-200">
-								<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-							</svg>
-						</p>
-
+					<p class="mt-4 font-title font-medium text-primary text-lg">{{ __('app.confirmation') }}</p>
+					<div class="mb-6 text-gray-500" x-text="modal.text"></div>
+					<div class="flex">
+						<div class="w-1/2 text-right px-1">
+							<button class="bg-gray-300 text-black rounded px-3 py-1" x-on:click="modal.show = false">{{ __('app.cancel') }}</button>
+						</div>
+						<div class="w-1/2 text-left px-1"><button class="bg-primary text-white rounded px-3 py-1" x-on:click="confirmModal()">{{ __('app.confirm') }}</button></div>
 					</div>
+				</div>
+			</div>
+		</template>
 
-				</h1>
+		<div class="p-5">
+			{{-- Steps --}}
+			<div class="rounded-t-md grid grid-cols-3 gap-2 leading-3 mb-10">
+				<template x-for="(s, i) in steps">
+					<div class="p-2">
+						<div class="rounded mb-4 w-full h-1" :class="(i + 1) <= step ? 'bg-primary' : 'bg-gray-200'"></div>
+
+						<div class="flex items-center">
+							<div x-html="s.icon"></div>
+							<div>
+								<p class="leading-[.9rem] font-title px-1 uppercase text-sm text-primary" x-text="'{{ __('app.step') }} '+ (i + 1)"></p>
+								<h2 class="leading-[.9rem] px-1 text-xs font-medium"  x-text="s.title"></h2>
+							</div>
+						</div>
+					</div>
+				</template>
 			</div>
 
-			{{-- Modal box --}}
-			<template x-if="modal.show">
-				<div class="absolute z-40 top-0 left-0 right-0 bottom-0 w-full bg-[#848A97EE]">
-					<div class="absolute z-50 top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] rounded-lg bg-white w-1/2 p-6 text-center shadow-lg border-2 border-gray-300">
-						<div class="w-full text-center">
-							<p class="relative mx-auto bg-orange-200 rounded-full w-14 h-14">
-								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] w-8 h-8 inline text-orange-600">
-					  			<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-								</svg>
-							</p>
-						</div>
-						<p class="mt-4 font-title font-medium text-primary text-lg">{{ __('app.confirmation') }}</p>
-						<div class="mb-6 text-gray-500" x-text="modal.text"></div>
-						<div class="flex">
-							<div class="w-1/2 text-right px-1">
-								<button class="bg-gray-300 text-black rounded px-3 py-1" x-on:click="modal.show = false">{{ __('app.cancel') }}</button>
-							</div>
-							<div class="w-1/2 text-left px-1"><button class="bg-primary text-white rounded px-3 py-1" x-on:click="confirmModal()">{{ __('app.confirm') }}</button></div>
-						</div>
+			<div class="mt-10">
+
+				{{-- STEP 1 --}}
+				<div x-cloak x-show="step == 1">
+					<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase">
+						@lang('app.upload-settings')
+					</h2>
+
+					{{-- Title --}}
+					<div class="">
+						<p class="font-title uppercase">
+							@lang('app.upload-title')
+							<span class="text-base">*</span>
+						</p>
+
+						<input
+							x-model="metadata.title"
+							class="w-full p-0 bg-transparent text-slate-700 h-8 py-1 rounded-none border-b border-purple-300 outline-none invalid:border-b-red-500 invalid:bg-red-50"
+							type="text"
+							name="title"
+							id="upload-title"
+							maxlength="70"
+						/>
 					</div>
-				</div>
-			</template>
 
-			<div class="p-5">
-				{{-- Steps --}}
-				<div class="rounded-t-md grid grid-cols-3 gap-2 leading-3 mb-10">
-					<template x-for="(s, i) in steps">
-						<div class="p-2">
-							<div class="rounded mb-4 w-full h-1" :class="(i + 1) <= step ? 'bg-primary' : 'bg-gray-200'"></div>
+					{{-- Description --}}
+					<div class="mt-5">
+						<span class="font-title uppercase">@lang('app.upload-description')</span>
 
-							<div class="flex items-center">
-								<div x-html="s.icon"></div>
-								<div>
-									<p class="leading-[.9rem] font-title px-1 uppercase text-sm text-primary" x-text="'{{ __('app.step') }} '+ (i + 1)"></p>
-									<h2 class="leading-[.9rem] px-1 text-xs font-medium"  x-text="s.title"></h2>
-								</div>
-							</div>
-						</div>
-					</template>
-				</div>
+						<textarea
+							x-model="metadata.description"
+							maxlength="300"
+							class="w-full p-0 bg-transparent text-slate-700 h-18 py-1 rounded-none border-b border-purple-300 outline-none  invalid:border-b-red-500 invalid:bg-red-50"
+							type="text"
+							name="description"
+							id="upload-description"
+						/></textarea>
+					</div>
 
-				<div class="mt-10">
-
-					{{-- STEP 1 --}}
-					<div x-cloak x-show="step == 1">
-						<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase">
-							@lang('app.upload-settings')
-						</h2>
-
-						{{-- Title --}}
-						<div class="">
+					{{-- Expiration --}}
+					<div class="flex flex-wrap items-center mt-5">
+						<div class="w-full mb-5 md:mb-0 md:w-1/3 pr-2">
 							<p class="font-title uppercase">
-								@lang('app.upload-title')
+								@lang('app.upload-expiry')
 								<span class="text-base">*</span>
 							</p>
 
+							<select
+								x-model="metadata.expiry""
+								class="w-full text-slate-700 bg-transparent h-8 p-0 py-1 border-b border-primary-superlight focus:ring-0 invalid:border-b-red-500 invalid:bg-red-50"
+								name="expiry"
+								id="upload-expiry"
+							>
+								<option value="0"></option>
+								@foreach (config('sharing.expiry_values') as $k => $e)
+									<option value="{{ Upload::getExpirySeconds($k) }}" {{ $e == config('sharing.default_expiry') ? 'selected' : '' }}>@lang('app.'.$e)</option>
+								@endforeach
+							</select>
+						</div>
+
+						{{-- Max downloads --}}
+						<div class="w-full mb-5 md:mb-0 md:w-1/3 pr-2">
+							<p class="font-title uppercase">
+								@lang('app.max-downloads')
+							</p>
+
 							<input
-								x-model="metadata.title"
+								x-model="metadata.max_downloads"
 								class="w-full p-0 bg-transparent text-slate-700 h-8 py-1 rounded-none border-b border-purple-300 outline-none invalid:border-b-red-500 invalid:bg-red-50"
-								type="text"
-								name="title"
-								id="upload-title"
-								maxlength="70"
+								type="number"
+								name="max_downloads"
+								id="upload-max-downloads"
+								min="0"
+								max="999"
 							/>
 						</div>
 
-						{{-- Description --}}
-						<div class="mt-5">
-							<span class="font-title uppercase">@lang('app.upload-description')</span>
+						{{-- Password --}}
+						<div class="w-full mb-5 md:mb-0 md:w-1/3">
+							<span class="font-title uppercase">@lang('app.bundle-password')</span>
 
-							<textarea
-								x-model="metadata.description"
-								maxlength="300"
-								class="w-full p-0 bg-transparent text-slate-700 h-18 py-1 rounded-none border-b border-purple-300 outline-none  invalid:border-b-red-500 invalid:bg-red-50"
+							<input
+								x-model="metadata.password"
+								class="w-full bg-transparent text-slate-700 h-8 p-0 py-1 rounded-none border-b border-primary-superlight outline-none invalid:border-b-red-500 invalid:bg-red-50"
+								placeholder="@lang('app.leave-empty')"
 								type="text"
-								name="description"
-								id="upload-description"
-							/></textarea>
-						</div>
-
-						{{-- Expiration --}}
-						<div class="flex flex-wrap items-center mt-5">
-							<div class="w-1/3 pr-2">
-								<p class="font-title uppercase">
-									@lang('app.upload-expiry')
-									<span class="text-base">*</span>
-								</p>
-
-								<select
-									x-model="metadata.expiry""
-									class="w-full text-slate-700 bg-transparent h-8 p-0 py-1 border-b border-primary-superlight focus:ring-0 invalid:border-b-red-500 invalid:bg-red-50"
-									name="expiry"
-									id="upload-expiry"
-								>
-									<option value="0"></option>
-									@foreach (config('sharing.expiry_values') as $k => $e)
-										<option value="{{ Upload::getExpirySeconds($k) }}" {{ $e == config('sharing.default_expiry') ? 'selected' : '' }}>@lang('app.'.$e)</option>
-									@endforeach
-								</select>
-							</div>
-
-							{{-- Max downloads --}}
-							<div class="w-1/3 pr-2">
-								<p class="font-title uppercase">
-									@lang('app.max-downloads')
-								</p>
-
-								<input
-									x-model="metadata.max_downloads"
-									class="w-full p-0 bg-transparent text-slate-700 h-8 py-1 rounded-none border-b border-purple-300 outline-none invalid:border-b-red-500 invalid:bg-red-50"
-									type="number"
-									name="max_downloads"
-									id="upload-max-downloads"
-									min="0"
-									max="999"
-								/>
-							</div>
-
-							{{-- Password --}}
-							<div class="w-1/3">
-								<span class="font-title uppercase">@lang('app.bundle-password')</span>
-
-								<input
-									x-model="metadata.password"
-									class="w-full bg-transparent text-slate-700 h-8 p-0 py-1 rounded-none border-b border-primary-superlight outline-none invalid:border-b-red-500 invalid:bg-red-50"
-									placeholder="@lang('app.leave-empty')"
-									type="text"
-									name="password"
-									id="upload-password"
-								/>
-							</div>
-						</div>
-
-						{{-- Buttons --}}
-						<div class="grid grid-cols-2 gap-10 mt-10 text-center">
-							<div>&nbsp;</div>
-							<div>
-								@include('partials.button', [
-									'way'		=> 'right',
-									'text'		=> __('app.start-uploading'),
-									'icon'		=> '<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />',
-									'action'	=> 'uploadStep'
-								])
-							</div>
+								name="password"
+								id="upload-password"
+							/>
 						</div>
 					</div>
 
-					{{-- STEP 2 --}}
-					<div x-cloak class="" x-show="step == 2">
+					{{-- Buttons --}}
+					<div class="grid grid-cols-2 gap-10 mt-10 text-center">
+						<div>&nbsp;</div>
+						<div>
+							@include('partials.button', [
+								'way'		=> 'right',
+								'text'		=> __('app.start-uploading'),
+								'icon'		=> '<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />',
+								'action'	=> 'uploadStep'
+							])
+						</div>
+					</div>
+				</div>
+
+				{{-- STEP 2 --}}
+				<div x-cloak class="" x-show="step == 2">
+					<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase">
+						@lang('app.upload-files-title')
+					</h2>
+
+					<div class="grid grid-cols-4 gap-2">
+						{{-- Dropzone --}}
+						<div>
+							<form class="relative dropzone border-primary border" id="upload-frm" enctype="multipart/form-data">
+								<div class="absolute right-2 bottom-1 text-[.6rem] text-slate-800 italic">
+									@lang('app.maximum-filesize')
+									{{ Upload::fileMaxSize(true) }}
+								</div>
+							</form>
+						</div>
+
+						<div class="col-span-3 ml-2">
+							<h3 class="font-title flex items-center text-base mb-2 text-primary font-medium uppercase">
+								<p>@lang('app.files-list')</p>
+								<div class="ml-3 flex text-xs bg-primary rounded-full px-1 text-center text-white divide-x">
+									<p
+										class="px-2 text-center"
+										x-text="countFilesOnServer()"
+										:title="'{{ __('app.files-count-on-server') }}'"
+									></p>
+									<p
+										class="px-2 text-center"
+										x-text="maxFiles"
+										:title="'{{ __('app.files-remaining-files') }}'"
+									></p>
+								</div>
+							</h3>
+
+							<span class="text-xs text-slate-400" x-show="Object.keys(metadata.files).length == 0">@lang('app.no-file')</span>
+
+							{{-- Files list --}}
+							<ul id="output" class="text-xs max-h-32 overflow-y-scroll pb-3" x-show="Object.keys(metadata.files).length > 0">
+								<template x-for="(f, k) in metadata.files" :key="k">
+									<li
+										title="{{ __('app.click-to-remove') }}"
+										class="relative flex items-center leading-5 list-inside even:bg-gray-50 rounded px-2 cursor-pointer overflow-hidden"
+										x-on:click="deleteFile(f)"
+									>
+										{{-- Progress bar --}}
+										<p class="absolute top-0 left-0 bottom-0 bg-[#9333EA66] w-0" :style="'width: '+f.progress+'%;'">&nbsp;</p>
+
+										{{-- Status icon --}}
+										<p class="w-[5%]">
+											<template x-if="f.status == true">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-4 h-4 text-green-600">
+													<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+												</svg>
+											</template>
+											<template x-if="f.status == false">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-4 h-4 text-red-600">
+												<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+												</svg>
+											</template>
+											<template x-if="f.status == 'uploading'">
+												<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-4 h-4 text-orange-600">
+												<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+												</svg>
+											</template>
+										</p>
+
+										{{-- File name --}}
+										<p class="w-[80%] overflow-hidden whitespace-nowrap relative">
+											<span x-text="f.original"></span>
+											<template x-if="f.message">
+												<span class="w-full px-1 rounded bg-red-100 absolute opacity-0 hover:opacity-95 transition-all duration-300 top-0 left-0" x-html="f.message"></span>
+											</template>
+										</p>
+
+										{{-- File size --}}
+										<p class="w-[15%] text-right" float-right text-xs" x-text="humanSize(f.filesize)"></p>
+									</li>
+								</template>
+							</ul>
+						</div>
+					</div>
+
+					{{-- Buttons --}}
+					<div class="grid grid-cols-2 gap-10 mt-10 text-center">
+						<div>
+							@include('partials.button', [
+								'way'		=> 'left',
+								'text'		=> __('app.back'),
+								'icon'		=> '<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />',
+								'action'	=> 'back'
+							])
+						</div>
+						<div>
+							@include('partials.button', [
+								'way'		=> 'right',
+								'text'		=> __('app.complete-upload'),
+								'icon'		=> '<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />',
+								'action'	=> 'completeStep'
+							])
+						</div>
+					</div>
+				</div>
+
+				{{-- STEP 3 --}}
+				<template x-if="step == 3">
+					<div class="" x-show="step == 3">
 						<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase">
-							@lang('app.upload-files-title')
+							@lang('app.download-links')
 						</h2>
 
-						<div class="grid grid-cols-4 gap-2">
-							{{-- Dropzone --}}
-							<div>
-								<form class="relative dropzone border-primary border" id="upload-frm" enctype="multipart/form-data">
-									<div class="absolute right-2 bottom-1 text-[.6rem] text-slate-800 italic">
-										@lang('app.maximum-filesize')
-										{{ Upload::fileMaxSize(true) }}
-									</div>
-								</form>
+						{{-- Preview link --}}
+						<div class="flex flex-wrap items-center">
+							<div class="w-1/3 text-right px-2">
+								@lang('app.preview-link')
 							</div>
+							<div class="w-2/3 shadow">
+								<input x-model="metadata.preview_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
+							</div>
+						</div>
 
-							<div class="col-span-3 ml-2">
-								<h3 class="font-title flex items-center text-base mb-2 text-primary font-medium uppercase">
-									<p>@lang('app.files-list')</p>
-									<div class="ml-3 flex text-xs bg-primary rounded-full px-1 text-center text-white divide-x">
-										<p
-											class="px-2 text-center"
-											x-text="countFilesOnServer()"
-											:title="'{{ __('app.files-count-on-server') }}'"
-										></p>
-										<p
-											class="px-2 text-center"
-											x-text="maxFiles"
-											:title="'{{ __('app.files-remaining-files') }}'"
-										></p>
-									</div>
-								</h3>
-
-								<span class="text-xs text-slate-400" x-show="Object.keys(metadata.files).length == 0">@lang('app.no-file')</span>
-
-								{{-- Files list --}}
-								<ul id="output" class="text-xs max-h-32 overflow-y-scroll pb-3" x-show="Object.keys(metadata.files).length > 0">
-									<template x-for="(f, k) in metadata.files" :key="k">
-										<li
-											title="{{ __('app.click-to-remove') }}"
-											class="relative flex items-center leading-5 list-inside even:bg-gray-50 rounded px-2 cursor-pointer overflow-hidden"
-											x-on:click="deleteFile(f)"
-										>
-											{{-- Progress bar --}}
-											<p class="absolute top-0 left-0 bottom-0 bg-[#9333EA66] w-0" :style="'width: '+f.progress+'%;'">&nbsp;</p>
-
-											{{-- Status icon --}}
-											<p class="w-[5%]">
-												<template x-if="f.status == true">
-													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-4 h-4 text-green-600">
-  													<path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-													</svg>
-												</template>
-												<template x-if="f.status == false">
-													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-4 h-4 text-red-600">
-													<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-													</svg>
-												</template>
-												<template x-if="f.status == 'uploading'">
-													<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-4 h-4 text-orange-600">
-													<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-													</svg>
-												</template>
-											</p>
-
-											{{-- File name --}}
-											<p class="w-[80%] overflow-hidden whitespace-nowrap relative">
-												<span x-text="f.original"></span>
-												<template x-if="f.message">
-													<span class="w-full px-1 rounded bg-red-100 absolute opacity-0 hover:opacity-95 transition-all duration-300 top-0 left-0" x-html="f.message"></span>
-												</template>
-											</p>
-
-											{{-- File size --}}
-											<p class="w-[15%] text-right" float-right text-xs" x-text="humanSize(f.filesize)"></p>
-										</li>
-									</template>
-								</ul>
+						{{-- Direct download link --}}
+						<div class="flex flex-wrap items-center mt-5">
+							<div class="w-1/3 text-right px-2">
+								@lang('app.direct-link')
+							</div>
+							<div class="w-2/3 shadow">
+								<input x-model="metadata.download_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
 							</div>
 						</div>
 
 						{{-- Buttons --}}
 						<div class="grid grid-cols-2 gap-10 mt-10 text-center">
 							<div>
-								@include('partials.button', [
-									'way'		=> 'left',
-									'text'		=> __('app.back'),
-									'icon'		=> '<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />',
-									'action'	=> 'back'
-								])
+								&nbsp;
 							</div>
 							<div>
-								@include('partials.button', [
-									'way'		=> 'right',
-									'text'		=> __('app.complete-upload'),
-									'icon'		=> '<path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />',
-									'action'	=> 'completeStep'
-								])
+								<template x-if="! isBundleExpired()">
+									@include('partials.button', [
+										'way'		=> 'right',
+										'text'		=> __('app.delete-bundle'),
+										'icon'		=> '<path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />',
+										'action'	=> 'deleteBundle'
+									])
+								</template>
+								<template x-if="isBundleExpired()">
+									<p class="text-xs">
+										@lang('app.bundle-expired')
+									</p>
+								</template>
 							</div>
 						</div>
 					</div>
-
-					{{-- STEP 3 --}}
-					<template x-if="step == 3">
-						<div class="" x-show="step == 3">
-							<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase">
-								@lang('app.download-links')
-							</h2>
-
-							{{-- Preview link --}}
-							<div class="flex flex-wrap items-center">
-								<div class="w-1/3 text-right px-2">
-									@lang('app.preview-link')
-								</div>
-								<div class="w-2/3 shadow">
-									<input x-model="metadata.preview_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
-								</div>
-							</div>
-
-							{{-- Direct download link --}}
-							<div class="flex flex-wrap items-center mt-5">
-								<div class="w-1/3 text-right px-2">
-									@lang('app.direct-link')
-								</div>
-								<div class="w-2/3 shadow">
-									<input x-model="metadata.download_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
-								</div>
-							</div>
-
-							{{-- Buttons --}}
-							<div class="grid grid-cols-2 gap-10 mt-10 text-center">
-								<div>
-									&nbsp;
-								</div>
-								<div>
-									<template x-if="! isBundleExpired()">
-										@include('partials.button', [
-											'way'		=> 'right',
-											'text'		=> __('app.delete-bundle'),
-											'icon'		=> '<path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />',
-											'action'	=> 'deleteBundle'
-										])
-									</template>
-									<template x-if="isBundleExpired()">
-										<p class="text-xs">
-											@lang('app.bundle-expired')
-										</p>
-									</template>
-								</div>
-							</div>
-						</div>
-					</template>
-				</div>
+				</template>
 			</div>
 		</div>
 	</div>
