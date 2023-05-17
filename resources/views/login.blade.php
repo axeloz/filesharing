@@ -87,6 +87,7 @@
 						name="login"
 						id="user-login"
 						maxlength="40"
+						@keyup.enter="loginUser()"
 					/>
 				</div>
 
@@ -103,6 +104,7 @@
 						type="password"
 						name="password"
 						id="user-password"
+						@keyup.enter="loginUser()"
 					/>
 				</div>
 
