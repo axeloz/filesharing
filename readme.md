@@ -91,7 +91,7 @@ In order to configure your application, copy the .env.example file into .env. Th
 | `APP_TIMEZONE` | change this to your current timezone |
 | `APP_LOCALE` | change this to "fr" or "en" |
 | `UPLOAD_PREVENT_DUPLICATES` | Should the app block duplicate files (true / false) |
-| `HASH_MAX_FILESIZE`| max filesize for hashing file to check for duplicate files. If files are higher, they will not be hashed. Find the best value to better time / memory consumption |
+| `HASH_MAX_FILESIZE`| max size for hashing file to check for duplicate files. If files are bigger than limit, they will not be hashed. Find the best value for better cpu / memory consumption |
 | `UPLOAD_MAX_FILES` | (*optional*) maximal number of files per bundle |
 | `UPLOAD_MAX_FILESIZE` | (*optional*) change this to the value you want (K, M, G, T, ...). Attention : you must configure your PHP settings too (`post_max_size`, `upload_max_filesize` and `memory_limit`). When missing, using PHP lowest configuration |
 | `UPLOAD_LIMIT_IPS` | (*optional*) a comma separated list of IPs from which you may upload files. Different formats are supported : Full IP address (192.168.10.2), Wildcard format (192.168.10.*), CIDR Format (192.168.10/24 or 1.2.3.4/255.255.255.0) or Start-end IP (192.168.10.0-192.168.10.10). When missing, filtering is disabled. |
