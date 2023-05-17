@@ -19,12 +19,12 @@ The application also comes with a Laravel Artisan command as a background task w
 
 ## Features
 
-- uploader access permission: IP based or login/password
-- creation of a new bundle
-- define settings : title, description, expiration date, number max of downloads, password...
+- **uploader access permission**: IP based or login/password
+- **bundle's settings**: title, description, expiration date, number max of downloads, password...
 - upload one or more files via drag and drop or via browsing your filesystem
 - ability to keep adding files to the bundle days later
 - sharing link with bundle content preview
+- download rate limiter
 - ability to download the entire bundle as ZIP archive (password protected when applicable)
 - direct download link (doesn't preview the bundle content)
 - garbage collector which removes the expired bundles as a background task
