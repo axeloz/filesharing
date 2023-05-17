@@ -79,7 +79,6 @@ return [
 	'authentication'	=> 'Authentication',
 	'login'	=> 'Username',
 	'password' => 'Password',
-	'do-login' => 'Login now'
-
-
+	'do-login' => 'Login now',
+	'pending'	=> 'Drafts',
 ];

@@ -79,7 +79,6 @@ return [
 	'authentication'	=> 'Authentification',
 	'login'	=> 'Identifiant',
 	'password' => 'Mot de passe',
-	'do-login' => 'S\'authentifier'
-
-
+	'do-login' => 'S\'authentifier',
+	'pending' => 'Brouillons',
 ];

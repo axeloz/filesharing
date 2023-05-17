@@ -6,8 +6,9 @@
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('bundle', () => ({
 			bundles: null,
-			active: null,
-			expired: null,
+			pending: [],
+			active: [],
+			expired: [],
 			currentBundle: null,
 
 			init: function() {
@@ -17,20 +18,25 @@
 				this.bundles = JSON.parse(bundles)
 
 				if (this.bundles != null && Object.keys(this.bundles).length > 0) {
-					this.active = []
-					this.expired = []
 
 					this.bundles.forEach( (bundle) => {
 						if (bundle.title == null || bundle.title == '') {
-							bundle.title = 'untitled'
+							bundle.label = 'untitled'
+						}
+						else {
+							bundle.label = bundle.title
 						}
 
 						if (bundle.expires_at != null && moment.unix(bundle.expires_at).isBefore(moment())) {
 							this.expired.push(bundle)
 						}
-						else {
+						else if (bundle.completed == true) {
 							this.active.push(bundle)
 						}
+						else {
+							this.pending.push(bundle)
+						}
+						bundle.label += ' - {{ __('app.created-at') }} '+moment.unix(bundle.created_at).fromNow()
 					})
 				}
 
@@ -124,10 +130,18 @@
 				>
 					<option>-</option>
 
+					<template x-if="Object.keys(pending).length > 0">
+						<optgroup label="{{ __('app.pending') }}">
+							<template x-for="bundle in pending">
+								<option :value="bundle.bundle_id" x-text="bundle.label"></option>
+							</template>
+						</optgroup>
+					</template>
+
 					<template x-if="Object.keys(active).length > 0">
 						<optgroup label="{{ __('app.active') }}">
 							<template x-for="bundle in active">
-								<option :value="bundle.bundle_id" x-text="bundle.title"></option>
+								<option :value="bundle.bundle_id" x-text="bundle.label"></option>
 							</template>
 						</optgroup>
 					</template>
@@ -135,7 +149,7 @@
 					<template x-if="Object.keys(expired).length > 0">
 						<optgroup label="{{ __('app.expired') }}">
 							<template x-for="bundle in expired">
-								<option :value="bundle.bundle_id" x-text="bundle.title"></option>
+								<option :value="bundle.bundle_id" x-text="bundle.label"></option>
 							</template>
 						</optgroup>
 					</template>
