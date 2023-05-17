@@ -36,6 +36,10 @@ The application also comes with a Laravel Artisan command as a background task w
 - easy installation, **no database required**
 - secured by tokens, authentication codes and non-publicly-accessible files
 
+## Demo
+
+A video demo is available [on Youtube](https://youtu.be/hO4tRaZa4N4)
+
 ## Requirements
 
 Basically, nothing more than Laravel itself:
