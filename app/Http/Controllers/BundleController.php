@@ -68,7 +68,28 @@ class BundleController extends Controller
 				// Adding the files into the Zip with their real names
 				foreach ($metadata['files'] as $k => $file) {
 					if (file_exists(config('filesystems.disks.uploads.root').'/'.$file['fullpath'])) {
-						$zip->addFile(config('filesystems.disks.uploads.root').'/'.$file['fullpath'], $file['original']);
+						$name = $file['original'];
+
+						// If a file in the archive has the same name
+						if (false !== $zip->locateName($name)) {
+							$i = 0;
+
+							// Exploding the basename and extension
+							$basename	= (false === strrpos($name, '.')) ? $name : substr($name, 0, strrpos($name, '.'));
+							$extension	= (false === strrpos($name, '.')) ? null : substr($name, strrpos($name, '.'));
+
+							// Looping to find the right name
+							do {
+								$i++;
+								$newname = $basename.'-'.$i.$extension;
+							}
+							while ($zip->locateName($newname));
+
+							// Final name was found
+							$name = $newname;
+						}
+						// Finally adding files
+						$zip->addFile(config('filesystems.disks.uploads.root').'/'.$file['fullpath'], $name);
 
 						if (! empty($metadata['password'])) {
 							$zip->setEncryptionIndex($k, ZipArchive::EM_AES_256);
@@ -83,14 +104,40 @@ class BundleController extends Controller
 				fclose($bundlezip);
 			}
 
+			// Getting file size
+			$filesize = filesize($filename);
+
+			// Should we limit the download rate?
+			$limit_rate = config('sharing.download_limit_rate', false);
+			if ($limit_rate !== false) {
+				$limit_rate = Upload::humanReadableToBytes($limit_rate);
+			}
+			else {
+				$limit_rate = $filesize;
+			}
+
 			// Let's download now
 			header('Content-Type: application/octet-stream');
 			header('Content-Disposition: attachment; filename="'.Str::slug($metadata['title']).'-'.time().'.zip'.'"');
 			header('Cache-Control: no-cache, must-revalidate');
 			header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
-			//TODO : fix this header('Content-Length: '.filesize($bundlezip));
-			readfile($filename);
+			header('Content-Length: '.$filesize);
+
+			flush();
+
+
+			$fh = fopen($filename, 'rb');
+			while (! feof($fh)) {
+				echo fread($fh, round($limit_rate));
+				flush();
+
+				if ($limit_rate !== false) {
+					sleep(1);
+				}
+			}
+			fclose($filename);
 			exit;
+
 		}
 
 		// Could not find the metadata file

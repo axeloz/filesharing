@@ -29,6 +29,8 @@ return [
      */
     'upload_ip_limit'		=> env('UPLOAD_LIMIT_IPS', null),
 
+	'download_limit_rate'	=> env('LIMIT_DOWNLOAD_RATE', false),
+
 	'upload_prevent_duplicates'	=> env('UPLOAD_PREVENT_DUPLICATES', true),
 
 	/**
