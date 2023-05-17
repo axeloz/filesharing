@@ -85,6 +85,7 @@ In order to configure your application, copy the .env.example file into .env. Th
 
 | Configuration | Description |
 | ------------- | ----------- |
+| `APP_NAME`    | the title of the application |
 | `APP_ENV`     | change this to `production` when in production (`local` otherwise) |
 | `APP_DEBUG` | change this to `false` when in production (`true` otherwise) |
 | `APP_TIMEZONE` | change this to your current timezone |
@@ -94,7 +95,6 @@ In order to configure your application, copy the .env.example file into .env. Th
 | `UPLOAD_MAX_FILES` | (*optional*) maximal number of files per bundle |
 | `UPLOAD_MAX_FILESIZE` | (*optional*) change this to the value you want (K, M, G, T, ...). Attention : you must configure your PHP settings too (`post_max_size`, `upload_max_filesize` and `memory_limit`). When missing, using PHP lowest configuration |
 | `UPLOAD_LIMIT_IPS` | (*optional*) a comma separated list of IPs from which you may upload files. Different formats are supported : Full IP address (192.168.10.2), Wildcard format (192.168.10.*), CIDR Format (192.168.10/24 or 1.2.3.4/255.255.255.0) or Start-end IP (192.168.10.0-192.168.10.10). When missing, filtering is disabled. |
-| `APP_NAME`    | the title of the application |
 
 
 ## Authentication
