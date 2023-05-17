@@ -29,8 +29,6 @@ class UploadController extends Controller
 	// The upload form
 	public function storeBundle(Request $request, String $bundleId) {
 
-		$original = Upload::getMetadata($bundleId);
-
 		$metadata = [
 			'expiry'		=> $request->expiry ?? null,
 			'password'  	=> $request->password ?? null,
@@ -49,15 +47,10 @@ class UploadController extends Controller
 
 	public function uploadFile(Request $request, String $bundleId) {
 
-		// Getting metadata
-		$metadata = Upload::getMetadata($bundleId);
-
-		// Validating file
-		abort_if(! $request->hasFile('file'), 422);
-		abort_if(! $request->file('file')->isValid(), 422);
-
-		$this->validate($request, [
-			'file'	=> 'required|file|max:'.(Upload::fileMaxSize() / 1000)
+		// Validating form data
+		$request->validate([
+			'uuid'		=> 'required|uuid',
+			'file'		=> 'required|file|max:'.(Upload::fileMaxSize() / 1000)
 		]);
 
 		// Generating the file name
@@ -72,7 +65,7 @@ class UploadController extends Controller
 
 			// Generating file metadata
 			$file = [
-				'uuid'  				=> Str::uuid(),
+				'uuid'  				=> $request->uuid,
 				'original'  			=> $original,
 				'filesize'  			=> Storage::disk('uploads')->size($fullpath),
 				'fullpath'  			=> $fullpath,
@@ -84,7 +77,8 @@ class UploadController extends Controller
 			$metadata = Upload::addFileMetaData($bundleId, $file);
 
 			return response()->json([
-				'result'	=> true
+				'result'	=> true,
+				'file'		=> $file
 			]);
 		}
 		catch (Exception $e) {
@@ -99,12 +93,12 @@ class UploadController extends Controller
 
 	public function deleteFile(Request $request, String $bundleId) {
 
-		$metadata = Upload::getMetadata($bundleId);
-
-		abort_if(empty($request->file), 422);
+		$request->validate([
+			'uuid'		=> 'required|uuid'
+		]);
 
 		try {
-			$metadata = Upload::deleteFile($bundleId, $request->file);
+			$metadata = Upload::deleteFile($bundleId, $request->uuid);
 			return response()->json($metadata);
 		}
 		catch (Exception $e) {

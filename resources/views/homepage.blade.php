@@ -6,6 +6,8 @@
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('bundle', () => ({
 			bundles: null,
+			active: null,
+			expired: null,
 			currentBundle: null,
 
 			init: function() {
@@ -15,25 +17,21 @@
 				this.bundles = JSON.parse(bundles)
 
 				if (this.bundles != null && Object.keys(this.bundles).length > 0) {
-					this.bundles.active = []
-					this.bundles.expired = []
+					this.active = []
+					this.expired = []
 
 					this.bundles.forEach( (bundle) => {
 						if (bundle.title == null || bundle.title == '') {
 							bundle.title = 'untitled'
 						}
 
-						//bundle.title += ' - '+Object.keys(bundle.files).length+' {{ __('app.files') }} - {{ __('app.created-at') }} '+moment.unix(bundle.created_at).fromNow()
-
 						if (bundle.expires_at != null && moment.unix(bundle.expires_at).isBefore(moment())) {
-							this.bundles.expired.push(bundle)
+							this.expired.push(bundle)
 						}
 						else {
-							this.bundles.active.push(bundle)
+							this.active.push(bundle)
 						}
 					})
-
-					console.log(this.bundles)
 				}
 
 				// If bundle is empty, initializing it
@@ -126,17 +124,17 @@
 				>
 					<option>-</option>
 
-					<template x-if="Object.keys(bundles.active).length > 0">
+					<template x-if="Object.keys(active).length > 0">
 						<optgroup label="{{ __('app.active') }}">
-							<template x-for="bundle in bundles.active">
+							<template x-for="bundle in active">
 								<option :value="bundle.bundle_id" x-text="bundle.title"></option>
 							</template>
 						</optgroup>
 					</template>
 
-					<template x-if="Object.keys(bundles.expired).length > 0">
+					<template x-if="Object.keys(expired).length > 0">
 						<optgroup label="{{ __('app.expired') }}">
-							<template x-for="bundle in bundles.expired">
+							<template x-for="bundle in expired">
 								<option :value="bundle.bundle_id" x-text="bundle.title"></option>
 							</template>
 						</optgroup>

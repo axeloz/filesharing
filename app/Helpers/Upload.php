@@ -24,7 +24,8 @@ class Upload {
 		return [];
 	}
 
-	public static function setMetadata(string $bundleId, array $metadata = []) {
+	public static function setMetadata(String $bundleId, Array $metadata = []) {
+
 		$origin 	= self::getMetadata($bundleId);
 		$updated	= array_merge($origin, $metadata);
 
@@ -35,7 +36,7 @@ class Upload {
 		return $updated;
 	}
 
-	public static function addFileMetaData(string $bundleId, array $file) {
+	public static function addFileMetaData(String $bundleId, Array $file) {
 		$metadata = self::getMetadata($bundleId);
 
 		if (empty($metadata)) {
@@ -45,15 +46,12 @@ class Upload {
 		}
 
 		array_push($metadata['files'], $file);
-
-		if (! Storage::disk('uploads')->put($bundleId.'/bundle.json', json_encode($metadata))) {
-			throw new Exception('Cannot store metadata');
-		}
+		self::setMetadata($bundleId, $metadata);
 
 		return $metadata;
 	}
 
-	public static function deleteFile(string $bundleId, string $uuid) {
+	public static function deleteFile(String $bundleId, String $uuid) {
 		$metadata = self::getMetadata($bundleId);
 
 		if (! empty($metadata['files'])) {
@@ -65,10 +63,8 @@ class Upload {
 					unset($metadata['files'][$key]);
 				}
 			}
-		}
 
-		if (! Storage::disk('uploads')->put($bundleId.'/bundle.json', json_encode($metadata))) {
-			throw new Exception('Cannot store metadata');
+			self::setMetadata($bundleId, $metadata);
 		}
 
 		return $metadata;
@@ -111,7 +107,6 @@ class Upload {
 		}
 		return $min;
 	}
-
 
 	public static function canUpload($current_ip) {
 

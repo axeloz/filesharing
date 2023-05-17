@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('page_title', __('app.upload'))
+@section('page_title', __('app.upload-files-title'))
 
 @push('scripts')
 <script>
@@ -201,10 +201,13 @@
 						dictResponseError: '@lang('app.server-answered')',
 					})
 
-					this.dropzone.on("addedfile", (file) => {
+					this.dropzone.on('addedfile', (file) => {
 						console.log('added file')
+
+						file.uuid = this.uuid()
+
 						this.metadata.files.push({
-							uuid: file.upload.uuid,
+							uuid: file.uuid,
 							original: file.name,
 							filesize: file.size,
 							fullpath: '',
@@ -212,24 +215,28 @@
 							created_at: moment().unix(),
 							status: 'uploading'
 						});
-					});
+					})
 
-					this.dropzone.on("uploadprogress", (file, progress, bytes) => {
+					this.dropzone.on('sending', (file, xhr, data) => {
+						data.append('uuid', file.uuid)
+					})
+
+					this.dropzone.on('uploadprogress', (file, progress, bytes) => {
 						let fileIndex = null
 
 						if (fileIndex = this.findFileIndex(file.upload.uuid)) {
 							this.metadata.files[fileIndex].progress = Math.round(progress)
 						}
-					}),
+					})
 
 					this.dropzone.on('error', (file, message) => {
 						let fileIndex = this.findFileIndex(file.upload.uuid)
 						this.metadata.files[fileIndex].status = false
 						this.metadata.files[fileIndex].message = message
-					}),
+					})
 
-					this.dropzone.on("complete", (file) => {
-						let fileIndex = this.findFileIndex(file.upload.uuid)
+					this.dropzone.on('complete', (file) => {
+						let fileIndex = this.findFileIndex(file.uuid)
 						this.metadata.files[fileIndex].progress = 0
 
 						if (file.status == 'success') {
@@ -238,23 +245,6 @@
 						}
 					})
 				}
-			},
-
-			findFile: function(uuid) {
-				let index = this.findFileIndex(uuid)
-				if (index != null) {
-					return this.metadata.files[index]
-				}
-				return null
-			},
-
-			findFileIndex: function (uuid) {
-				for (i in this.metadata.files) {
-					if (this.metadata.files[i].uuid == uuid) {
-						return i
-					}
-				}
-				return null
 			},
 
 			deleteFile: function(file) {
@@ -267,7 +257,7 @@
 							url: '/upload/'+this.metadata.bundle_id+'/file',
 							method: 'DELETE',
 							data: {
-								file: lfile.uuid,
+								uuid: lfile.uuid,
 								auth: this.bundles[this.bundle].owner_token
 							}
 						})
@@ -288,6 +278,40 @@
 				else {
 					// Nothing here
 				}
+			},
+
+			deleteBundle: function() {
+				this.showModal('{{ __('app.confirm-delete-bundle') }}', () => {
+					axios({
+						url: '/upload/'+this.metadata.bundle_id+'/delete',
+						method: 'DELETE',
+						data: {
+							auth: this.bundles[this.bundle].owner_token
+						}
+					})
+					.then( (response) => {
+						if (! response.data.success) {
+							this.syncData(response.data)
+						}
+					})
+				})
+			},
+
+			findFile: function(uuid) {
+				let index = this.findFileIndex(uuid)
+				if (index != null) {
+					return this.metadata.files[index]
+				}
+				return null
+			},
+
+			findFileIndex: function (uuid) {
+				for (i in this.metadata.files) {
+					if (this.metadata.files[i].uuid == uuid) {
+						return i
+					}
+				}
+				return null
 			},
 
 			syncData: function(metadata) {
@@ -311,6 +335,13 @@
 				else {
 					return val + ' o'
 				}
+			},
+
+			uuid: function() {
+				return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+					var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+					return v.toString(16);
+				});
 			},
 
 			showModal: function(text, callback) {
@@ -339,11 +370,14 @@
 
 			countFilesOnServer: function() {
 				count = 0
-				this.metadata.files.forEach( (file) => {
-					if (file.status == true) {
-						count ++
+
+				if (this.metadata.hasOwnProperty('files') && Object.keys(this.metadata.files).length > 0) {
+					for (i in this.metadata.files) {
+						if (this.metadata.files[i].status == true) {
+							count ++
+						}
 					}
-				});
+				}
 				return count
 			},
 
@@ -353,23 +387,6 @@
 				}
 
 				return moment.unix(this.metadata.expires_at).isBefore(moment())
-			},
-
-			deleteBundle: function() {
-				this.showModal('{{ __('app.confirm-delete-bundle') }}', () => {
-					axios({
-						url: '/upload/'+this.metadata.bundle_id+'/delete',
-						method: 'DELETE',
-						data: {
-							auth: this.bundles[this.bundle].owner_token
-						}
-					})
-					.then( (response) => {
-						if (! response.data.success) {
-							this.syncData(response.data)
-						}
-					})
-				})
 			}
 		}))
 	})
@@ -682,16 +699,6 @@
 								</div>
 								<div class="w-2/3 shadow">
 									<input x-model="metadata.download_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
-								</div>
-							</div>
-
-							{{-- Delete link --}}
-							<div class="flex flex-wrap items-center mt-5">
-								<div class="w-1/3 text-right px-2">
-									@lang('app.delete-link')
-								</div>
-								<div class="w-2/3 shadow">
-									<input x-model="metadata.deletion_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
 								</div>
 							</div>
 
