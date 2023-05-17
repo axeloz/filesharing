@@ -14,7 +14,7 @@ Powered by
 This PHP application based on Laravel 10.9 allows to share files like Wetransfer. You may install it **on your own server**. It **does not require** any database system, it works with JSON files into the storage folder. It is **multilingual** and comes with english and french translations for now. You're welcome to help translating the app.
 
 This application provides two links per bundle :
-- a bundle preview link : you can send this link to your recipients who will see the bundle content. For example: http://yourdomain/bundle/dda2d646b6746b96ea9b?auth=965242. The recipient can see all the files of the bundle, can download one given file only or the entire bundle.
+- a bundle preview link : you can send this link to your recipients who will see the bundle content. For example: http://yourdomain/bundle/dda2d646b6746b96ea9b?auth=965242. The recipient can see all the files of the bundle and download the bundle as a ZIP archive.
 - a bundle download link : you can send this link yo your recipients who will download all the files of the bundle at once (without any preview). For example: http://yourdomain/bundle/dda2d646b6746b96ea9b/download?auth=965242.
 
 Each of these links comes with an authorization code. This code is the same for the preview and the download links.
