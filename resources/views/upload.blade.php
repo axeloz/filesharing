@@ -64,7 +64,7 @@
 				// Getting all bundles store in local storage
 				bundles = localStorage.getItem('bundles')
 
-				// If not bundle found, back to homepage
+				// If no bundle found, back to homepage
 				if (bundles == null || bundles == '') {
 					window.location.href = '/'
 					return false
@@ -368,7 +368,7 @@
 				if (navigator.clipboard) {
 					navigator.clipboard.writeText(el.value)
 					.then(() => {
-						alert("Copied to clipboard");
+						//alert("Copied to clipboard");
 					});
 				}
 			},
@@ -400,35 +400,6 @@
 
 @section('content')
 	<div x-data="upload">
-		<div class="bg-gradient-to-r from-primary-light to-primary px-2 py-4 mb-3 text-center">
-			<h1 class="relative font-title font-medium font-body text-4xl text-center text-white uppercase flex items-center">
-				<div class="w-1/12 text-center">
-					{{-- If bundle is locked --}}
-					<p title="{{ __('app.bundle-locked') }}" x-show="metadata.completed">
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-8 h-8 text-purple-200">
-						  	<path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-						</svg>
-					</p>
-				</div>
-
-				{{-- App's title --}}
-				<div class="grow text-center">{{ config('app.name') }}</div>
-
-
-				{{-- Bundle status --}}
-				<div class="w-1/12 gap-2 item-right">
-					{{-- If bundle is expired --}}
-					<p title="{{ __('app.bundle-expired') }}" x-show="isBundleExpired()">
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-8 h-8 text-purple-200">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-						</svg>
-					</p>
-
-				</div>
-
-			</h1>
-		</div>
-
 		{{-- Modal box --}}
 		<template x-if="modal.show">
 			<div class="absolute z-40 top-0 left-0 right-0 bottom-0 w-full bg-[#848A97EE]">

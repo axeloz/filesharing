@@ -106,12 +106,6 @@
 
 @section('content')
 	<div x-data="bundle">
-		<div class="bg-gradient-to-r from-primary-light to-primary px-2 py-4 text-center">
-			<h1 class="relative font-title font-medium font-body text-4xl text-center text-white uppercase flex items-center">
-				<div class="grow text-center">{{ config('app.name') }}</div>
-			</h1>
-		</div>
-
 		<div class="p-5">
 			<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase flex items-center">
 				<p>@lang('app.existing-bundles')</p>
