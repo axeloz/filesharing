@@ -14,7 +14,7 @@ class CreateUser extends Command
      *
      * @var string
      */
-    protected $signature = 'fs:create-user {login?}';
+    protected $signature = 'fs:user:create {login?}';
 
     /**
      * The console command description.
@@ -28,16 +28,16 @@ class CreateUser extends Command
      */
     public function handle()
     {
-        $login = $this->argument('login');
+        $login = strtolower($this->argument('login'));
 
 		login:
 		// If user was not provided, asking for it
 		if (empty($login)) {
-			$login = $this->ask('Enter the user\'s login');
+			$login = strtolower($this->ask('Enter the user\'s login'));
 		}
 
-		if (! preg_match('~^[a-z0-9]{1,40}$~', $login)) {
-			$this->error('Invalid login format. Must only contains letters and numbers, between 1 and 40 chars');
+		if (! preg_match('~^[a-z0-9]{4,40}$~', $login)) {
+			$this->error('Invalid login format. Must only contains letters and numbers, between 4 and 40 chars');
 			unset($login);
 			goto login;
 		}
@@ -53,16 +53,17 @@ class CreateUser extends Command
 		// Asking for user's password
 		$password = $this->secret('Enter the user\'s password');
 
-		if (strlen($password) < 5) {
-			$this->error('Invalid password format. Must only contains 5 chars minimum');
+		if (! preg_match('~^.{4,100}$i~', $password)) {
+			$this->error('Invalid password format. Must contains between 5 and 100 chars');
 			unset($password);
 			goto password;
 		}
 
 		try {
 			Storage::disk('users')->put($login.'.json', json_encode([
-				'login'		=> $login,
-				'password'	=> Hash::make($password)
+				'username'	=> $login,
+				'password'	=> Hash::make($password),
+				'bundles'	=> []
 			]));
 
 			$this->info('User has been created');

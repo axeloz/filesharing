@@ -13,7 +13,7 @@ class PurgeFiles extends Command
 	 *
 	 * @var string
 	 */
-	protected $signature = 'fs:purge-expired';
+	protected $signature = 'fs:bundle:purge';
 
 	/**
 	 * The console command description.

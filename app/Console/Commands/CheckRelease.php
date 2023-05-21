@@ -12,7 +12,7 @@ class CheckRelease extends Command
      *
      * @var string
      */
-    protected $signature = 'fs:check-release';
+    protected $signature = 'fs:app:releases';
 
     /**
      * The console command description.
@@ -34,10 +34,6 @@ class CheckRelease extends Command
 		}
 		else {
 			foreach ($xml->entry as $e) {
-				// Title must be a version
-				if (! preg_match('~^[0-9]+\.[0-9]+~', $e->title)) {
-					continue;
-				}
 
 				// Looking for the release link
 				foreach ($e->link->attributes() as $k => $a) {
@@ -57,7 +53,7 @@ class CheckRelease extends Command
 			// Displaying the releases
 			if (count($releases) > 0) {
 				$this->table([
-						'Version', 'Updated', 'Link'
+					'Version', 'Updated', 'Link'
 					], $releases
 				);
 			}

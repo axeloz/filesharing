@@ -80,9 +80,9 @@ The application also uses:
 - make sure that the PHP process has write permission on the `./storage` folder
 - generate the Laravel KEY: `php artisan key:generate`
 - run `cp .env.example .env` and edit `.env` to fit your needs
-- (optional) you may create your first user `php artisan fs:create-user`
+- (optional) you may create your first user `php artisan fs:user:create`
 - start the Laravel scheduler (it will delete expired bundles of the storage). For example `* * * * * /usr/bin/php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
-- (optional) to purge bundles manually, run `php artisan fs:purge-expired`
+- (optional) to purge bundles manually, run `php artisan fs:bundle:purge`
 
 
 Use your browser to navigate to your domain name (example: files.yourdomain.com) and **that's it**.
