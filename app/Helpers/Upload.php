@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Storage;
 
 class Upload {
 
-	public static function getMetadata(string $bundleId) {
+	public static function getMetadata(String $bundleId):Array {
 		// Making sure the metadata file exists
 		if (! Storage::disk('uploads')->exists($bundleId.'/bundle.json')) {
 			return [];
@@ -24,7 +24,7 @@ class Upload {
 		return [];
 	}
 
-	public static function setMetadata(String $bundleId, Array $metadata = []) {
+	public static function setMetadata(String $bundleId, Array $metadata = []):Array {
 
 		$origin 	= self::getMetadata($bundleId);
 		$updated	= array_merge($origin, $metadata);
@@ -36,7 +36,7 @@ class Upload {
 		return $updated;
 	}
 
-	public static function addFileMetaData(String $bundleId, Array $file) {
+	public static function addFileMetaData(String $bundleId, Array $file):Array {
 		$metadata = self::getMetadata($bundleId);
 
 		if (empty($metadata)) {
@@ -51,7 +51,7 @@ class Upload {
 		return $metadata;
 	}
 
-	public static function deleteFile(String $bundleId, String $uuid) {
+	public static function deleteFile(String $bundleId, String $uuid):Array {
 		$metadata = self::getMetadata($bundleId);
 
 		if (! empty($metadata['files'])) {
@@ -70,8 +70,7 @@ class Upload {
 		return $metadata;
 	}
 
-	public static function humanFilesize($size, $precision = 2)
-	{
+	public static function humanFilesize(Float $size, Int $precision = 2):Int {
 		if ($size > 0) {
 			$size = (int) $size;
 			$base = log($size) / log(1024);
@@ -84,7 +83,7 @@ class Upload {
 		}
 	}
 
-	public static function fileMaxSize($human = false) {
+	public static function fileMaxSize(Bool $human = false):String {
 		$values = [
 			'post'		=> ini_get('post_max_size'),
 			'upload'	=> ini_get('upload_max_filesize'),
@@ -103,7 +102,7 @@ class Upload {
 		return $min;
 	}
 
-	public static function humanReadableToBytes($value) {
+	public static function humanReadableToBytes(String $value):Int {
 		$unit = preg_replace('/[^bkmgtpezy]/i', '', $value);
 		$size = preg_replace('/[^0-9\.]/', '', $value);
 		if (! empty($unit)) {
@@ -112,17 +111,17 @@ class Upload {
 		return $value;
 	}
 
-	public static function isDuplicateFile($bundleId, $hash) {
+	public static function isDuplicateFile(String $bundleId, String $hash):Bool {
 		$metadata = self::getMetadata($bundleId);
 		foreach ($metadata['files'] as $f) {
-			if ($f['hash'] !== null && $f['hash'] == $hash) {
+			if ($f['hash'] !== null && $f['hash'] === $hash) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public static function canUpload($current_ip) {
+	public static function canUpload(String $current_ip):Bool {
 
 		// Getting the IP limit configuration
 		$ips = config('sharing.upload_ip_limit');
@@ -156,7 +155,7 @@ class Upload {
 		return true;
 	}
 
-	public static function isValidIp($ip, $range) {
+	public static function isValidIp(String $ip, String $range):Bool {
 
 		// Range is in CIDR format
 		if (strpos($range, '/') !== false) {
@@ -217,7 +216,7 @@ class Upload {
 		return false;
 	}
 
-	public static function getExpirySeconds($expiry) {
+	public static function getExpirySeconds(String $expiry):Int {
 		$unit_multipliers = [
 			'h'	=> 3600,
 			'd'	=> 86400,
