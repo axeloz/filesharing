@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 use App\Helpers\Upload;
+use App\Helpers\User;
 use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\Storage;
 
 class WebController extends Controller
 {
@@ -23,38 +21,29 @@ class WebController extends Controller
 		abort_if(! $request->ajax(), 403);
 
 		$request->validate([
-			'login'		=> 'required',
-			'password'	=> 'required'
+			'login'		=> 'required|alphanum|min:4|max:40',
+			'password'	=> 'required|min:5|max:100'
 		]);
 
 		try {
-			if (Storage::disk('users')->missing($request->login.'.json')) {
-				throw new Exception('Authentication failed');
+			if (true === User::loginUser($request->login, $request->password)) {
+				return response()->json([
+					'result'	=> true,
+				]);
 			}
-
-			$json = Storage::disk('users')->get($request->login.'.json');
-
-			if (! $user = json_decode($json, true)) {
-				throw new Exception('Cannot decode JSON file');
-			}
-
-			if (! Hash::check($request->password, $user['password'])) {
-				throw new Exception('Authentication failed');
-			}
-
-			$request->session()->put('login', $request->login);
-			$request->session()->put('authenticated', true);
-
-			return response()->json([
-				'result'	=> true,
-			]);
 		}
 		catch (Exception $e) {
 			return response()->json([
 				'result'	=> false,
-				'error'		=> $e->getMessage()
-			]);
+				'error'		=> 'Authentication failed, please try again.'
+			], 403);
 		}
+
+		// This should never happen
+		return response()->json([
+			'result'	=> false,
+			'error'		=> 'Unexpected error'
+		]);
 	}
 
 	function newBundle(Request $request) {
@@ -66,7 +55,22 @@ class WebController extends Controller
 			'owner_token'	=> 'required'
 		]);
 
+		$owner = null;
+		if (User::isLogged()) {
+			$user = User::getLoggedUserDetails();
+			$owner = $user['username'];
+
+			// If bundle dimension is not initialized
+			if (empty($user['bundles']) || ! is_array($user['bundles'])) {
+				$user['bundles'] = [];
+			}
+
+			array_push($user['bundles'], $request->bundle_id);
+			User::setUserDetails($user['username'], $user);
+		}
+
 		$metadata = [
+			'owner'			=> $owner,
 			'created_at'	=> time(),
 			'completed' 	=> false,
 			'expiry'		=> config('sharing.default-expiry', 86400),

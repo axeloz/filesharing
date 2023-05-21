@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Helpers\Upload;
+use App\Helpers\User;
 use Illuminate\Support\Facades\Storage;
 
 class UploadAccess
@@ -25,11 +26,8 @@ class UploadAccess
 		}
 
 		// Checking credentials auth
-		if ($request->session()->get('authenticated', false) === true && $request->session()->has('login')) {
-			// If user still exists
-			if (Storage::disk('users')->exists($request->session()->get('login').'.json')) {
-				return $next($request);
-			}
+		if (User::isLogged()) {
+			return $next($request);
 		}
 
 		// Fallback, authentication required
