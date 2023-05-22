@@ -4,14 +4,13 @@
 
 @push('scripts')
 <script>
-	let auth		  	= @js($auth);
-	let bundleId  		= @js($bundleId);
+	let bundle  		= @js($bundle);
 	let bundle_expires	= '{{ __('app.warning-bundle-expiration') }}'
 	let bundle_expired	= '{{ __('app.warning-bundle-expired') }}'
 
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('download', () => ({
-			metadata: @js($metadata),
+			metadata: @js($bundle),
 			created_at: null,
 			expires_at: null,
 			expired: null,
@@ -25,13 +24,10 @@
 			},
 
 			updateTimes: function() {
-				this.created_at = moment.unix(this.metadata.created_at).fromNow()
+				this.created_at = moment(this.metadata.created_at).fromNow()
 
-				if (this.isExpired()) {
-					this.expires_at = bundle_expired
-				}
-				else {
-					this.expires_at = bundle_expires+' '+moment.unix(this.metadata.expires_at).fromNow()
+				if (! this.isExpired()) {
+					this.expires_at =moment(this.metadata.expires_at).fromNow()
 				}
 			},
 
@@ -78,26 +74,50 @@
 				@lang('app.preview-bundle')
 			</h2>
 
-			<div class="flex flex-wrap items-center">
-				<p class="w-6/12 px-1">
+			<div class="flex flex-wrap justify-between items-center text-xs">
+				<p class="w-full px-1">
 					<span class="font-title text-xs text-primary uppercase mr-1">
 						@lang('app.upload-title')
 					</span>
 					<span x-text="metadata.title"></span>
 				</p>
-				<p class="w-4/12 px-1">
+				<p class="w-1/2 px-1 mt-1">
 					<span class="font-title text-xs text-primary uppercase mr-1">
 						@lang('app.created-at')
 					</span>
 					<span x-text="created_at"></span>
 				</p>
-				<p class="w-2/12 px-1">
+				<p class="w-1/2 px-1 mt-1">
+					<span class="font-title text-xs text-primary uppercase mr-1">
+						@lang('app.upload-expiry')
+					</span>
+					<span x-text="expires_at"></span>
+				</p>
+				<p class="w-1/2 px-1 mt-1">
 					<span class="font-title text-xs text-primary uppercase mr-1">
 						@lang('app.fullsize')
 					</span>
 					<span x-text="humanSize(metadata.fullsize)"></span>
 				</p>
-				<p class="w-full px-1" x-show="metadata.description">
+				<p class="w-1/2 px-1 mt-1">
+					<span class="font-title text-xs text-primary uppercase mr-1">
+						@lang('app.max-downloads')
+					</span>
+					<span x-text="metadata.max_downloads > 0 ? metadata.max_download : '∞'"></span>
+				</p>
+				<p class="w-1/2 px-1 mt-1">
+					<span class="font-title text-xs text-primary uppercase mr-1">
+						@lang('app.current-downloads')
+					</span>
+					<span x-text="metadata.downloads"></span>
+				</p>
+				<p class="w-1/2 px-1 mt-1">
+					<span class="font-title text-xs text-primary uppercase mr-1">
+						@lang('app.password')
+					</span>
+					<span x-text="metadata.password ? 'yes': 'no'"></span>
+				</p>
+				<p class="w-full px-1 mt-1" x-show="metadata.description">
 					<span class="font-title text-xs text-primary uppercase mr-1">
 						@lang('app.upload-description')
 					</span>
@@ -121,12 +141,7 @@
 
 			<div class="grid grid-cols-2 gap-10 mt-10 text-center items-center">
 				<div>
-					<p class="font-xs font-medium">
-						<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="inline w-4 h-4">
-							<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-						</svg>
-				    	<span x-text="expires_at"></span>
-					</p>
+					&nbsp;
 				</div>
 				<div>
 					@include('partials.button', [

@@ -61,6 +61,7 @@ return [
     'created-at'    => 'Created',
     'fullsize'  => 'Total',
 	'max-downloads'	=> 'Max downloads',
+	'current-downloads' => 'Downloads',
 	'create-new-upload'	=> 'Create a new upload bundle',
 	'page-not-found'	=> 'Page not found',
 	'permission-denied'	=> 'Permission denied',
@@ -81,5 +82,8 @@ return [
 	'password' => 'Password',
 	'do-login' => 'Login now',
 	'pending'	=> 'Drafts',
-	'duplicate-file' => 'This file already exists in the bundle'
+	'duplicate-file' => 'This file already exists in the bundle',
+	'unexpected-error' => 'An unexpected error has occurred',
+	'login-to-get-bundles' => 'to get your bundles',
+	'you-are-logged-in' => 'You are logged in as ":username"'
 ];

@@ -98,6 +98,18 @@ return [
 
     'fallback_locale' => 'en',
 
+	/*
+	|--------------------------------------------------------------------------
+	| Application supported locales
+	|--------------------------------------------------------------------------
+	|
+	| List of all the supported locales of this application
+	|
+	*/
+	'supported_locales' => [
+		'en', 'fr'
+	],
+
     /*
     |--------------------------------------------------------------------------
     | Faker Locale

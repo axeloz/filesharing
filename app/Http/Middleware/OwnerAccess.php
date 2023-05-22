@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Helpers\Upload;
+use App\Models\Bundle;
 
 class OwnerAccess
 {
@@ -21,6 +22,8 @@ class OwnerAccess
 
 		// Aborting if Bundle ID is not present
 		abort_if(empty($request->route()->parameter('bundle')), 403);
+		$bundle = $request->route()->parameters()['bundle'];
+		abort_if(! is_a($bundle, Bundle::class), 404);
 
 		// Aborting if auth is not present
 		$auth = null;
@@ -30,16 +33,11 @@ class OwnerAccess
 		else if (! empty($request->auth)) {
 			$auth = $request->auth;
 		}
+		// Aborting if no auth token provided
 		abort_if(empty($auth), 403);
 
-		// Getting metadata
-		$metadata = Upload::getMetadata($request->route()->parameter('bundle'));
-
-		// Aborting if metadata are empty
-		abort_if(empty($metadata), 404);
-
-		// Aborting if auth_token is different from URL param
-		abort_if($metadata['owner_token'] !== $auth, 403);
+		// Aborting if owner token is wrong
+		abort_if($bundle->owner_token !== $auth, 403);
 
         return $next($request);
     }

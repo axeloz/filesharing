@@ -1,16 +1,26 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Helpers\Upload;
-use App\Helpers\User;
+use App\Helpers\Auth;
 use Exception;
 use Illuminate\Http\Request;
+use App\Http\Resources\BundleResource;
+use App\Models\Bundle;
 
 class WebController extends Controller
 {
 	public function homepage()
 	{
-		return view('homepage');
+		// Getting user bundles
+		if (Auth::isLogged()) {
+			$bundles = Auth::getLoggedUserDetails()->bundles;
+			if (! empty($bundles) && $bundles->count() > 0) {
+				$bundles = BundleResource::collection($bundles) ;
+			}
+		}
+		return view('homepage', [
+			'bundles'	=> $bundles ?? []
+		]);
 	}
 
 	public function login() {
@@ -26,7 +36,7 @@ class WebController extends Controller
 		]);
 
 		try {
-			if (true === User::loginUser($request->login, $request->password)) {
+			if (true === Auth::loginUser($request->login, $request->password)) {
 				return response()->json([
 					'result'	=> true,
 				]);
@@ -35,63 +45,55 @@ class WebController extends Controller
 		catch (Exception $e) {
 			return response()->json([
 				'result'	=> false,
-				'error'		=> 'Authentication failed, please try again.'
+				'message'	=> 'Authentication failed, please try again.'
 			], 403);
 		}
 
 		// This should never happen
 		return response()->json([
 			'result'	=> false,
-			'error'		=> 'Unexpected error'
-		]);
+			'message'	=> 'Unexpected error'
+		], 500);
 	}
 
 	function newBundle(Request $request) {
 		// Aborting if request is not AJAX
 		abort_if(! $request->ajax(), 403);
 
-		$request->validate([
-			'bundle_id'		=> 'required',
-			'owner_token'	=> 'required'
-		]);
-
-		$owner = null;
-		if (User::isLogged()) {
-			$user = User::getLoggedUserDetails();
-			$owner = $user['username'];
-
-			// If bundle dimension is not initialized
-			if (empty($user['bundles']) || ! is_array($user['bundles'])) {
-				$user['bundles'] = [];
-			}
-
-			array_push($user['bundles'], $request->bundle_id);
-			User::setUserDetails($user['username'], $user);
+		if (Auth::isLogged()) {
+			$user = Auth::getLoggedUserDetails();
 		}
 
-		$metadata = [
-			'owner'			=> $owner,
-			'created_at'	=> time(),
-			'completed' 	=> false,
-			'expiry'		=> config('sharing.default-expiry', 86400),
-			'expires_at'	=> null,
-			'password'  	=> null,
-			'bundle_id'		=> $request->bundle_id,
-			'owner_token'	=> $request->owner_token,
-			'preview_token'	=> null,
-			'fullsize'		=> 0,
-			'files'			=> [],
-			'title'			=> null,
-			'description'	=> null,
-			'max_downloads'	=> 0,
-			'downloads'		=> 0
-		];
+		try {
+			$bundle = new Bundle([
+				'user_username'	=> $user->username ?? null,
+				'created_at'	=> time(),
+				'completed' 	=> false,
+				'expiry'		=> config('sharing.default-expiry', 86400),
+				'expires_at'	=> null,
+				'password'  	=> null,
+				'slug'			=> substr(sha1(uniqid('slug_', true)), 0, rand(35, 40)),
+				'owner_token'	=> substr(sha1(uniqid('preview_', true)), 0, 15),
+				'preview_token'	=> substr(sha1(uniqid('preview_', true)), 0, 15),
+				'fullsize'		=> 0,
+				'title'			=> null,
+				'description'	=> null,
+				'max_downloads'	=> 0,
+				'downloads'		=> 0
+			]);
+			$bundle->save();
 
-		if (Upload::setMetadata($metadata['bundle_id'], $metadata)) {
-			return response()->json($metadata);
+			return response()->json([
+				'result'	=> true,
+				'redirect'	=> route('upload.create.show', ['bundle' => $bundle->slug]),
+				'bundle'	=> new BundleResource($bundle)
+			]);
 		}
-		else {
-			abort(500);
+		catch (Exception $e) {
+			return response()->json([
+				'result'	=> false,
+				'message'	=> $e->getMessage()
+			], 500);
 		}
 	}
 }

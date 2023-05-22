@@ -43,9 +43,9 @@
 					if (response.data.result == true) {
 						window.location.href = '/'
 					}
-					else {
-						this.error = response.data.error
-					}
+				})
+				.catch( (error) => {
+					this.error = error.response.data.message
 				})
 			}
 		}))

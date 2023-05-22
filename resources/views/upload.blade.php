@@ -3,20 +3,18 @@
 @section('page_title', __('app.upload-files-title'))
 
 @push('scripts')
+
 <script>
 	let baseUrl		= @js($baseUrl);
-	let metadata	= @js($metadata ?? []);
+	let bundle		= @js($bundle);
 	let maxFiles	= @js(config('sharing.max_files'));
 	let maxFileSize = @js(Upload::fileMaxSize());
 
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('upload', () => ({
 			bundle: null,
-			bundleIndex: null,
-			bundles: null,
 			dropzone: null,
 			uploadedFiles: [],
-			metadata: [],
 			completed: false,
 			step: 0,
 			maxFiles: maxFiles,
@@ -43,14 +41,14 @@
 			],
 
 			init: function() {
-				this.metadata = metadata
+				this.bundle = bundle
 
 				if (this.getBundle()) {
 					// Steps router
-					if (this.metadata.completed == true) {
+					if (this.bundle.completed == true) {
 						this.step = 3
 					}
-					else if (this.metadata.title) {
+					else if (this.bundle.title) {
 						this.step = 2
 						this.startDropzone()
 					}
@@ -61,39 +59,6 @@
 			},
 
 			getBundle: function() {
-				// Getting all bundles store in local storage
-				bundles = localStorage.getItem('bundles')
-
-				// If no bundle found, back to homepage
-				if (bundles == null || bundles == '') {
-					window.location.href = '/'
-					return false
-				}
-
-				this.bundles = JSON.parse(bundles)
-
-				// Looking for the current bundle
-				if (this.bundles != null && Object.keys(this.bundles).length > 0) {
-					this.bundles.forEach( (element, index) => {
-						if (element.bundle_id == this.metadata.bundle_id) {
-							//this.bundle = Object.assign(element)
-							//this.bundleIndex = index
-							this.bundle = index
-						}
-					})
-				}
-
-				// If current bundle not found, aborting
-				if (this.bundle == null) {
-					window.location.href = '/'
-					return false
-				}
-
-				if (this.bundles[this.bundle].owner_token != this.metadata.owner_token) {
-					window.location.href = '/'
-					return false
-				}
-
 				return true
 			},
 
@@ -105,17 +70,17 @@
 				document.getElementById('upload-password').setCustomValidity('')
 				document.getElementById('upload-max-downloads').setCustomValidity('')
 
-				if (this.metadata.title == null || this.metadata.title == '') {
+				if (this.bundle.title == null || this.bundle.title == '') {
 					document.getElementById('upload-title').setCustomValidity('Field is required')
 					errors = true
 				}
 
-				if (this.metadata.expiry == null || this.metadata.expiry == '') {
+				if (this.bundle.expiry == null || this.bundle.expiry == '') {
 					document.getElementById('upload-expiry').setCustomValidity('Field is required')
 					errors = true
 				}
 
-				if (this.metadata.max_downloads < 0 || this.metadata.max_downloads > 999) {
+				if (this.bundle.max_downloads < 0 || this.bundle.max_downloads > 999) {
 					document.getElementById('upload-max-downloads').setCustomValidity('Invalid number of max downloads')
 					errors = true
 				}
@@ -125,20 +90,20 @@
 				}
 
 				axios({
-					url: '/upload/'+this.metadata.bundle_id,
+					url: '/upload/'+this.bundle.slug,
 					method: 'POST',
 					data: {
-						expiry: this.metadata.expiry,
-						title: this.metadata.title,
-						description: this.metadata.description,
-						max_downloads: this.metadata.max_downloads,
-						password: this.metadata.password,
-						auth: this.bundles[this.bundle].owner_token
+						expiry: this.bundle.expiry,
+						title: this.bundle.title,
+						description: this.bundle.description,
+						max_downloads: this.bundle.max_downloads,
+						password: this.bundle.password,
+						auth: this.bundle.owner_token
 					}
 				})
 				.then( (response) => {
 					this.syncData(response.data)
-					window.history.pushState(null, null, baseUrl+'/upload/'+this.metadata.bundle_id);
+					window.history.pushState(null, null, baseUrl+'/upload/'+this.bundle.slug);
 					this.step = 2
 
 					this.startDropzone()
@@ -149,16 +114,16 @@
 			},
 
 			completeStep: function() {
-				if (Object.keys(this.metadata.files).length == 0) {
+				if (Object.keys(this.bundle.files).length == 0) {
 					return false;
 				}
 
 				this.showModal('{{ __('app.confirm-complete') }}', () => {
 					axios({
-						url: '/upload/'+this.metadata.bundle_id+'/complete',
+						url: '/upload/'+this.bundle.slug+'/complete',
 						method: 'POST',
 						data: {
-							auth: this.bundles[this.bundle].owner_token
+							auth: this.bundle.owner_token
 						}
 
 					})
@@ -183,10 +148,10 @@
 					this.maxFiles = this.maxFiles - this.countFilesOnServer() >= 0 ? this.maxFiles - this.countFilesOnServer() : 0
 
 					this.dropzone = new Dropzone('#upload-frm', {
-						url: '/upload/'+this.metadata.bundle_id+'/file',
+						url: '/upload/'+this.bundle.slug+'/file',
 						method: 'POST',
 						headers: {
-							'X-Upload-Auth': this.bundles[this.bundle].owner_token
+							'X-Upload-Auth': this.bundle.owner_token
 						},
 						createImageThumbnails: false,
 						disablePreviews: true,
@@ -204,7 +169,7 @@
 					this.dropzone.on('addedfile', (file) => {
 						file.uuid = this.uuid()
 
-						this.metadata.files.unshift({
+						this.bundle.files.unshift({
 							uuid: file.uuid,
 							original: file.name,
 							filesize: file.size,
@@ -224,29 +189,29 @@
 						let fileIndex = null
 
 						if (fileIndex = this.findFileIndex(file.uuid)) {
-							this.metadata.files[fileIndex].progress = Math.round(progress)
+							this.bundle.files[fileIndex].progress = Math.round(progress)
 						}
 					})
 
 					this.dropzone.on('error', (file, message) => {
 						let fileIndex = this.findFileIndex(file.uuid)
-						this.metadata.files[fileIndex].status = false
+						this.bundle.files[fileIndex].status = false
 
-						if (message.hasOwnProperty('error')) {
-							this.metadata.files[fileIndex].message = message.error
+						if (message.hasOwnProperty('message')) {
+							this.bundle.files[fileIndex].message = message.message
 						}
 						else {
-							this.metadata.files[fileIndex].message = message
+							this.bundle.files[fileIndex].message = message
 						}
 					})
 
 					this.dropzone.on('complete', (file) => {
 						let fileIndex = this.findFileIndex(file.uuid)
-						this.metadata.files[fileIndex].progress = 0
+						this.bundle.files[fileIndex].progress = 0
 
 						if (file.status == 'success') {
 							this.maxFiles--
-							this.metadata.files[fileIndex].status = true
+							this.bundle.files[fileIndex].status = true
 						}
 					})
 				}
@@ -259,11 +224,11 @@
 						let lfile = file
 
 						axios({
-							url: '/upload/'+this.metadata.bundle_id+'/file',
+							url: '/upload/'+this.bundle.slug+'/file',
 							method: 'DELETE',
 							data: {
 								uuid: lfile.uuid,
-								auth: this.bundles[this.bundle].owner_token
+								auth: this.bundle.owner_token
 							}
 						})
 						.then( (response) => {
@@ -277,7 +242,7 @@
 				// File not valid, no need to remove it from server, just locally
 				else if (file.status == false) {
 					let fileIndex = this.findFileIndex(file.uuid)
-					this.metadata.files.splice(fileIndex, 1)
+					this.bundle.files.splice(fileIndex, 1)
 				}
 				// File has not being uploaded, cannot delete file yet
 				else {
@@ -288,16 +253,17 @@
 			deleteBundle: function() {
 				this.showModal('{{ __('app.confirm-delete-bundle') }}', () => {
 					axios({
-						url: '/upload/'+this.metadata.bundle_id+'/delete',
+						url: '/upload/'+this.bundle.slug+'/delete',
 						method: 'DELETE',
 						data: {
-							auth: this.bundles[this.bundle].owner_token
+							auth: this.bundle.owner_token
 						}
 					})
 					.then( (response) => {
-						if (! response.data.success) {
-							this.syncData(response.data)
-						}
+						this.syncData(response.data)
+					})
+					.catch( (error) => {
+
 					})
 				})
 			},
@@ -305,25 +271,23 @@
 			findFile: function(uuid) {
 				let index = this.findFileIndex(uuid)
 				if (index != null) {
-					return this.metadata.files[index]
+					return this.bundle.files[index]
 				}
 				return null
 			},
 
 			findFileIndex: function (uuid) {
-				for (i in this.metadata.files) {
-					if (this.metadata.files[i].uuid == uuid) {
+				for (i in this.bundle.files) {
+					if (this.bundle.files[i].uuid == uuid) {
 						return i
 					}
 				}
 				return null
 			},
 
-			syncData: function(metadata) {
-				if (Object.keys(metadata).length > 0) {
-					this.metadata = metadata
-					this.bundles[this.bundle] = metadata
-					localStorage.setItem('bundles', JSON.stringify(this.bundles))
+			syncData: function(bundle) {
+				if (Object.keys(bundle).length > 0) {
+					this.bundle = bundle
 				}
 			},
 
@@ -376,9 +340,9 @@
 			countFilesOnServer: function() {
 				count = 0
 
-				if (this.metadata.hasOwnProperty('files') && Object.keys(this.metadata.files).length > 0) {
-					for (i in this.metadata.files) {
-						if (this.metadata.files[i].status == true) {
+				if (this.bundle.hasOwnProperty('files') && Object.keys(this.bundle.files).length > 0) {
+					for (i in this.bundle.files) {
+						if (this.bundle.files[i].status == true) {
 							count ++
 						}
 					}
@@ -387,11 +351,11 @@
 			},
 
 			isBundleExpired: function() {
-				if (this.metadata.expires_at == null || this.metadata.expires_at == '') {
+				if (this.bundle.expires_at == null || this.bundle.expires_at == '') {
 					return false;
 				}
 
-				return moment.unix(this.metadata.expires_at).isBefore(moment())
+				return moment.unix(this.bundle.expires_at).isBefore(moment())
 			}
 		}))
 	})
@@ -457,7 +421,7 @@
 						</p>
 
 						<input
-							x-model="metadata.title"
+							x-model="bundle.title"
 							class="w-full p-0 bg-transparent text-slate-700 h-8 py-1 rounded-none border-b border-purple-300 outline-none invalid:border-b-red-500 invalid:bg-red-50"
 							type="text"
 							name="title"
@@ -471,7 +435,7 @@
 						<span class="font-title uppercase">@lang('app.upload-description')</span>
 
 						<textarea
-							x-model="metadata.description"
+							x-model="bundle.description"
 							maxlength="300"
 							class="w-full p-0 bg-transparent text-slate-700 h-18 py-1 rounded-none border-b border-purple-300 outline-none  invalid:border-b-red-500 invalid:bg-red-50"
 							type="text"
@@ -489,7 +453,7 @@
 							</p>
 
 							<select
-								x-model="metadata.expiry""
+								x-model="bundle.expiry""
 								class="w-full text-slate-700 bg-transparent h-8 p-0 py-1 border-b border-primary-superlight focus:ring-0 invalid:border-b-red-500 invalid:bg-red-50"
 								name="expiry"
 								id="upload-expiry"
@@ -508,7 +472,7 @@
 							</p>
 
 							<input
-								x-model="metadata.max_downloads"
+								x-model="bundle.max_downloads"
 								class="w-full p-0 bg-transparent text-slate-700 h-8 py-1 rounded-none border-b border-purple-300 outline-none invalid:border-b-red-500 invalid:bg-red-50"
 								type="number"
 								name="max_downloads"
@@ -523,7 +487,7 @@
 							<span class="font-title uppercase">@lang('app.bundle-password')</span>
 
 							<input
-								x-model="metadata.password"
+								x-model="bundle.password"
 								class="w-full bg-transparent text-slate-700 h-8 p-0 py-1 rounded-none border-b border-primary-superlight outline-none invalid:border-b-red-500 invalid:bg-red-50"
 								placeholder="@lang('app.leave-empty')"
 								type="text"
@@ -581,11 +545,11 @@
 								</div>
 							</h3>
 
-							<span class="text-xs text-slate-400" x-show="Object.keys(metadata.files).length == 0">@lang('app.no-file')</span>
+							<span class="text-xs text-slate-400" x-show="Object.keys(bundle.files).length == 0">@lang('app.no-file')</span>
 
 							{{-- Files list --}}
-							<ul id="output" class="text-xs max-h-32 overflow-y-scroll pb-3" x-show="Object.keys(metadata.files).length > 0">
-								<template x-for="(f, k) in metadata.files" :key="k">
+							<ul id="output" class="text-xs max-h-32 overflow-y-scroll pb-3" x-show="Object.keys(bundle.files).length > 0">
+								<template x-for="(f, k) in bundle.files" :key="k">
 									<li
 										title="{{ __('app.click-to-remove') }}"
 										class="relative flex items-center leading-5 list-inside even:bg-gray-50 rounded px-2 cursor-pointer overflow-hidden"
@@ -663,7 +627,7 @@
 								@lang('app.preview-link')
 							</div>
 							<div class="w-2/3 shadow">
-								<input x-model="metadata.preview_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
+								<input x-model="bundle.preview_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
 							</div>
 						</div>
 
@@ -673,7 +637,7 @@
 								@lang('app.direct-link')
 							</div>
 							<div class="w-2/3 shadow">
-								<input x-model="metadata.download_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
+								<input x-model="bundle.download_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
 							</div>
 						</div>
 

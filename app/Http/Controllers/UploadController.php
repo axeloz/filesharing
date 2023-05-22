@@ -8,44 +8,44 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Http\Resources\BundleResource;
+use App\Http\Resources\FileResource;
+
+use App\Models\Bundle;
+use App\Models\File;
 
 class UploadController extends Controller
 {
-	public function createBundle(Request $request, String $bundleId = null) {
-		$metadata = Upload::getMetadata($bundleId);
-
-		abort_if(empty($metadata), 404);
-
+	public function createBundle(Request $request, Bundle $bundle) {
 		return view('upload', [
-			'metadata'  	=> $metadata ?? null,
+			'bundle'  		=> $bundle->toArray(),
 			'baseUrl'		=> config('app.url')
 		]);
 	}
 
-	public function getMetadata(Request $request, String $bundleId) {
-		return response()->json(Upload::getMetadata($bundleId));
-	}
-
 	// The upload form
-	public function storeBundle(Request $request, String $bundleId) {
+	public function storeBundle(Request $request, Bundle $bundle) {
 
-		$metadata = [
-			'expiry'		=> $request->expiry ?? null,
-			'password'  	=> $request->password ?? null,
-			'title'			=> $request->title ?? null,
-			'description'	=> $request->description ?? null,
-			'max_downloads'	=> $request->max_downloads ?? 0
-		];
+		try {
+			$bundle->update([
+				'expiry'		=> $request->expiry ?? null,
+				'password'  	=> $request->password ?? null,
+				'title'			=> $request->title ?? null,
+				'description'	=> $request->description ?? null,
+				'max_downloads'	=> $request->max_downloads ?? 0
+			]);
 
-		$metadata = Upload::setMetaData($bundleId, $metadata);
-
-		// Creating the bundle folder
-		Storage::disk('uploads')->makeDirectory($bundleId);
-
-		return response()->json($metadata);
+			return response()->json(new BundleResource($bundle));
+		}
+		catch (Exception $e) {
+			return response()->json([
+				'result'	=> false,
+				'message'	=> $e->getMessage()
+			], 500);
+		}
 	}
 
-	public function uploadFile(Request $request, String $bundleId) {
+	public function uploadFile(Request $request, Bundle $bundle) {
 
 		// Validating form data
 		$request->validate([
@@ -59,22 +59,23 @@ class UploadController extends Controller
 
 		// Moving file to final destination
 		try {
-			$fullpath = $request->file('file')->storeAs(
-				$bundleId, $filename, 'uploads'
-			);
-
-			$size = Storage::disk('uploads')->size($fullpath);
+			$size = $request->file->getSize();
 			if (config('sharing.upload_prevent_duplicates', true) === true && $size < Upload::humanReadableToBytes(config('sharing.hash_maxfilesize', '1G'))) {
-				$hash = sha1_file(Storage::disk('uploads')->path($fullpath));
-				if (Upload::isDuplicateFile($bundleId, $hash)) {
-					Storage::disk('uploads')->delete($fullpath);
+				$hash = sha1_file($request->file->getPathname());
+
+				$existing = $bundle->files->whereNotNull('hash')->where('hash', $hash)->count();
+				if (! empty($existing) && $existing > 0) {
 					throw new Exception(__('app.duplicate-file'));
 				}
 			}
 
+			$fullpath = $request->file('file')->storeAs(
+				$bundle->slug, $filename, 'uploads'
+			);
 			// Generating file metadata
-			$file = [
+			$file = new File([
 				'uuid'  				=> $request->uuid,
+				'bundle_slug'			=> $bundle->slug,
 				'original'  			=> $original,
 				'filesize'  			=> $size,
 				'fullpath'  			=> $fullpath,
@@ -82,78 +83,72 @@ class UploadController extends Controller
 				'created_at'			=> time(),
 				'status'				=> true,
 				'hash'					=> $hash ?? null
-			];
-
-			$metadata = Upload::addFileMetaData($bundleId, $file);
-
-			return response()->json([
-				'result'	=> true,
-				'file'		=> $file
 			]);
+			$file->save();
+
+			return response()->json(new FileResource($file));
 		}
 		catch (Exception $e) {
 			return response()->json([
 				'result' 	=> false,
-				'error'		=> $e->getMessage(),
-				'file'  	=> $e->getFile(),
-				'line'  	=> $e->getLine()
+				'message'	=> $e->getMessage()
 			], 500);
 		}
 	}
 
-	public function deleteFile(Request $request, String $bundleId) {
+	public function deleteFile(Request $request, Bundle $bundle) {
 
 		$request->validate([
 			'uuid'		=> 'required|uuid'
 		]);
 
 		try {
-			$metadata = Upload::deleteFile($bundleId, $request->uuid);
-			return response()->json($metadata);
+			// Getting file model
+			$file = File::findOrFail($request->uuid);
+
+			// Physically deleting the file
+			if (! Storage::disk('uploads')->delete($file->fullpath)) {
+				throw new Exception('Cannot delete file from disk');
+			}
+
+			// Destroying the model
+			$file->delete();
+
+			return response()->json(new BundleResource($bundle));
 		}
 		catch (Exception $e) {
 			return response()->json([
 				'result' 	=> false,
-				'error'		=> $e->getMessage(),
-				'file'  	=> $e->getFile(),
-				'line'  	=> $e->getLine()
+				'message'	=> $e->getMessage()
 			], 500);
 		}
 	}
 
 
-	public function completeBundle(Request $request, String $bundleId) {
-
-		$metadata = Upload::getMetadata($bundleId);
+	public function completeBundle(Request $request, Bundle $bundle) {
 
 		// Processing size
-		if (! empty($metadata['files'])) {
-			$size = 0;
-			foreach ($metadata['files'] as $f) {
-				$size += $f['filesize'];
-			}
+		$size = 0;
+		foreach ($bundle->files as $f) {
+			$size += $f['filesize'];
 		}
 
 		// Saving metadata
 		try {
-			$preview_token = substr(sha1(uniqid('dbdl', true)), 0, rand(10, 15));
+			$bundle->completed		= true;
+			$bundle->expires_at		= time()+$bundle->expiry;
+			$bundle->fullsize		= $size;
+			$bundle->preview_link	= route('bundle.preview', ['bundle' => $bundle, 'auth' => $bundle->preview_token]);
+			$bundle->download_link	= route('bundle.zip.download', ['bundle' => $bundle, 'auth' => $bundle->preview_token]);
+			$bundle->deletion_link	= route('upload.bundle.delete', ['bundle' => $bundle]);
+			$bundle->save();
 
-			$metadata = Upload::setMetadata($bundleId, [
-				'completed'		=> true,
-				'expires_at'	=> time()+$metadata['expiry'],
-				'fullsize'		=> $size,
-				'preview_token'	=> $preview_token,
-				'preview_link'	=> route('bundle.preview', ['bundle' => $bundleId, 'auth' => $preview_token]),
-				'download_link'	=> route('bundle.zip.download', ['bundle' => $bundleId, 'auth' => $preview_token]),
-				'deletion_link'	=> route('upload.bundle.delete', ['bundle' => $bundleId])
-			]);
-
-			return response()->json($metadata);
+			return response()->json(new BundleResource($bundle));
 		}
 		catch (\Exception $e) {
 			return response()->json([
 				'result'		=> false,
-				'error'			=> $e->getMessage()
+				'message'		=> $e->getMessage()
 			], 500);
 		}
 	}
@@ -164,23 +159,25 @@ class UploadController extends Controller
 	 * We invalidate the expiry date and let the CRON
 	 * task do the hard work
 	 */
-	public function deleteBundle(Request $request, $bundleId) {
+	public function deleteBundle(Request $request, Bundle $bundle) {
 
-		// Tries to get the metadata file
-		$metadata = Upload::getMetadata($bundleId);
-
-		// Forcing file to expire
-		$metadata['expires_at'] = time() - (3600 * 24 * 30);
-
-		// Rewriting the metadata file
 		try {
-			$metadata = Upload::setMetadata($bundleId, $metadata);
-			return response()->json($metadata);
+			// Forcing bundle to expire
+			$bundle->expires_at = time() - (3600 * 24 * 30);
+			$bundle->save();
+
+			// Then deleting file models
+			foreach ($bundle->files as $f) {
+				$f->forceDelete();
+			}
+
+			return response()->json(new BundleResource($bundle));
 		}
 		catch (Exception $e) {
 			return response()->json([
-				'success'		=> false
-			]);
+				'success'		=> false,
+				'message'		=> $e->getMessage()
+			], 500);
 		}
 	}
 

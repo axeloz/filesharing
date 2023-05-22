@@ -61,6 +61,7 @@ return [
 	'created-at'    => 'Créé',
 	'fullsize'  => 'Total',
 	'max-downloads'	=> 'Téléchargements maximum',
+	'current-downloads' => 'Téléchargements',
 	'create-new-upload'	=> 'Créer une nouvelle archive',
 	'page-not-found'	=> 'Page non trouvée',
 	'permission-denied'	=> 'Permission refusée',
@@ -79,7 +80,10 @@ return [
 	'authentication'	=> 'Authentification',
 	'login'	=> 'Identifiant',
 	'password' => 'Mot de passe',
-	'do-login' => 'S\'authentifier',
+	'do-login' => 'Authentifiez-vous',
 	'pending' => 'Brouillons',
-	'duplicate-file' => 'Ce fichier existe déjà dans l\'archive'
+	'duplicate-file' => 'Ce fichier existe déjà dans l\'archive',
+	'unexpected-error' => 'Une erreur inattendue est survenue',
+	'to-get-bundles' => 'pour accéder à vos archives',
+	'you-are-logged-in' => 'Vous êtes connecté(e) en tant que ":username"'
 ];

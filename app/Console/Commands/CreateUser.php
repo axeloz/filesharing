@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\User;
 use Exception;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Hash;
@@ -42,8 +43,8 @@ class CreateUser extends Command
 			goto login;
 		}
 
-		// Checking login unicity
-		if (Storage::disk('users')->exists($login.'.json')) {
+		$existing = User::find($login);
+		if (! empty($existing) && $existing->count() > 0) {
 			$this->error('User "'.$login.'" already exists');
 			unset($login);
 			goto login;
@@ -53,18 +54,17 @@ class CreateUser extends Command
 		// Asking for user's password
 		$password = $this->secret('Enter the user\'s password');
 
-		if (! preg_match('~^.{4,100}$i~', $password)) {
-			$this->error('Invalid password format. Must contains between 5 and 100 chars');
+		if (! preg_match('~^[^\s]{5,100}$~', $password)) {
+			$this->error('Invalid password format. Must contains between 5 and 100 chars without space');
 			unset($password);
 			goto password;
 		}
 
 		try {
-			Storage::disk('users')->put($login.'.json', json_encode([
+			User::create([
 				'username'	=> $login,
-				'password'	=> Hash::make($password),
-				'bundles'	=> []
-			]));
+				'password'	=> Hash::make($password)
+			]);
 
 			$this->info('User has been created');
 		}

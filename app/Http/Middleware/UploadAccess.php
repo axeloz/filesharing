@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Helpers\Upload;
-use App\Helpers\User;
+use App\Helpers\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class UploadAccess
@@ -26,7 +26,7 @@ class UploadAccess
 		}
 
 		// Checking credentials auth
-		if (User::isLogged()) {
+		if (Auth::isLogged()) {
 			return $next($request);
 		}
 

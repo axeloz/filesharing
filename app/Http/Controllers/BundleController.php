@@ -4,31 +4,20 @@ namespace App\Http\Controllers;
 
 use ZipArchive;
 use Exception;
-use Carbon\Carbon;
 use App\Helpers\Upload;
+use App\Models\Bundle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use App\Http\Resources\BundleResource;
 
 class BundleController extends Controller
 {
 
 	// The bundle content preview
-	public function previewBundle(Request $request, $bundleId) {
-
-		// Getting bundle metadata
-		abort_if(! $metadata = Upload::getMetadata($bundleId), 404);
-
-		// Handling dates as Carbon
-		Carbon::setLocale(config('app.locale'));
-		$metadata['created_at_carbon'] = Carbon::createFromTimestamp($metadata['created_at']);
-		$metadata['expires_at_carbon'] = Carbon::createFromTimestamp($metadata['expires_at']);
-
+	public function previewBundle(Request $request, Bundle $bundle) {
 		return view('download', [
-			'bundleId'		=> $bundleId,
-			'metadata'		=> $metadata,
-			'auth'  		=> $metadata['preview_token']
+			'bundle'		=> new BundleResource($bundle)
 		]);
 
 	}
@@ -36,23 +25,18 @@ class BundleController extends Controller
 	// The download method
 	// - the bundle
 	// - or just one file
-	public function downloadZip(Request $request, $bundleId) {
-
-		// Getting bundle metadata
-		abort_if(! $metadata = Upload::getMetadata($bundleId), 404);
+	public function downloadZip(Request $request, Bundle $bundle) {
 
 		try {
 			// Download of the full bundle
 			// We must create a Zip archive
-			Upload::setMetadata($bundleId, [
-				'downloads'		=> $metadata['downloads'] + 1
-			]);
+			$bundle->downloads ++;
+			$bundle->save();
 
-			$filename	= config('filesystems.disks.uploads.root').'/'.$metadata['bundle_id'].'/bundle.zip';
-			if (1 == 1 || ! file_exists($filename)) {
-				// Timestamped filename
+
+			$filename	= Storage::disk('uploads')->path('').'/'.$bundle->slug.'/bundle.zip';
+			if (! file_exists($filename)) {
 				$bundlezip 	= fopen($filename, 'w');
-				//chmod($filename, 0600);
 
 				// Creating the archive
 				$zip = new ZipArchive;
@@ -61,14 +45,14 @@ class BundleController extends Controller
 				}
 
 				// Setting password when required
-				if (! empty($metadata['password'])) {
-					$zip->setPassword($metadata['password']);
+				if (! empty($bundle->password)) {
+					$zip->setPassword($bundle->password);
 				}
 
 				// Adding the files into the Zip with their real names
-				foreach ($metadata['files'] as $k => $file) {
-					if (file_exists(config('filesystems.disks.uploads.root').'/'.$file['fullpath'])) {
-						$name = $file['original'];
+				foreach ($bundle->files as $k => $file) {
+					if (file_exists(config('filesystems.disks.uploads.root').'/'.$file->fullpath)) {
+						$name = $file->original;
 
 						// If a file in the archive has the same name
 						if (false !== $zip->locateName($name)) {
@@ -89,9 +73,9 @@ class BundleController extends Controller
 							$name = $newname;
 						}
 						// Finally adding files
-						$zip->addFile(config('filesystems.disks.uploads.root').'/'.$file['fullpath'], $name);
+						$zip->addFile(config('filesystems.disks.uploads.root').'/'.$file->fullpath, $name);
 
-						if (! empty($metadata['password'])) {
+						if (! empty($bundle->password)) {
 							$zip->setEncryptionIndex($k, ZipArchive::EM_AES_256);
 						}
 					}
@@ -116,16 +100,17 @@ class BundleController extends Controller
 				$limit_rate = $filesize;
 			}
 
+			// Flushing everything
+			flush();
+
 			// Let's download now
 			header('Content-Type: application/octet-stream');
-			header('Content-Disposition: attachment; filename="'.Str::slug($metadata['title']).'-'.time().'.zip'.'"');
+			header('Content-Disposition: attachment; filename="'.Str::slug($bundle->title).'-'.time().'.zip'.'"');
 			header('Cache-Control: no-cache, must-revalidate');
 			header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
 			header('Content-Length: '.$filesize);
 
-			flush();
-
-
+			// Downloading
 			$fh = fopen($filename, 'rb');
 			while (! feof($fh)) {
 				echo fread($fh, round($limit_rate));

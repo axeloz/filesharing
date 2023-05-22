@@ -70,7 +70,7 @@ class Upload {
 		return $metadata;
 	}
 
-	public static function humanFilesize(Float $size, Int $precision = 2):Int {
+	public static function humanFilesize(Float $size, Int $precision = 2):String {
 		if ($size > 0) {
 			$size = (int) $size;
 			$base = log($size) / log(1024);

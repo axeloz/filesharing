@@ -6,6 +6,8 @@ import axios from 'axios';
 window.axios = axios;
 
 import moment from 'moment';
+import 'moment/locale/fr';
+moment.locale('fr');
 window.moment = moment;
 moment().format();
 

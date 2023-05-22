@@ -5,8 +5,9 @@ namespace App\Helpers;
 use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
-class User {
+class Auth {
 
 	static function isLogged():Bool {
 		// Checking credentials auth
@@ -27,7 +28,7 @@ class User {
 			$user = self::getUserDetails($username);
 
 			// Checking password
-			if (true !== Hash::check($password, $user['password'])) {
+			if (true !== Hash::check($password, $user->password)) {
 				throw new Exception('Invalid password');
 			}
 
@@ -41,28 +42,17 @@ class User {
 		}
 	}
 
-	static function getLoggedUserDetails():Array {
+	static function getLoggedUserDetails():User {
 		if (self::isLogged()) {
 			return self::getUserDetails(session()->get('username'));
 		}
 		throw new UnauthenticatedUser('User is not logged in');
 	}
 
-	static function getUserDetails(String $username):Array {
-
-		// Checking user existence
-		if (Storage::disk('users')->missing($username.'.json')) {
+	static function getUserDetails(String $username):User {
+		$user = User::find($username);
+		if (empty($user)) {
 			throw new Exception('No such user');
-		}
-
-		// Getting user.json
-		if (! $json = Storage::disk('users')->get($username.'.json')) {
-			throw new Exception('Could not fetch user details');
-		}
-
-		// Decoding JSON
-		if (! $user = json_decode($json, true)) {
-			throw new Exception('Cannot decode JSON file');
 		}
 
 		return $user;

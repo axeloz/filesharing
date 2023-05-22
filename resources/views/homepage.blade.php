@@ -3,22 +3,29 @@
 
 @push('scripts')
 <script>
+	let bundles = @js($bundles)
+
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('bundle', () => ({
-			bundles: null,
+			bundles: [],
 			pending: [],
 			active: [],
 			expired: [],
 			currentBundle: null,
+			ownerToken: null,
 
 			init: function() {
-				// Getting bundles stored locally
-				bundles = localStorage.getItem('bundles');
-				// And JSON decoding it
-				this.bundles = JSON.parse(bundles)
+				// Generating anonymous owner token
+				this.ownerToken = localStorage.getItem('owner_token')
+				if (this.ownerToken === null) {
+					this.ownerToken = this.generateStr(15)
+					localStorage.setItem('owner_token', this.ownerToken)
+				}
+
+				// Loading existing bundles
+				this.bundles = bundles
 
 				if (this.bundles != null && Object.keys(this.bundles).length > 0) {
-
 					this.bundles.forEach( (bundle) => {
 						if (bundle.title == null || bundle.title == '') {
 							bundle.label = 'untitled'
@@ -27,7 +34,7 @@
 							bundle.label = bundle.title
 						}
 
-						if (bundle.expires_at != null && moment.unix(bundle.expires_at).isBefore(moment())) {
+						if (bundle.expires_at != null && moment(bundle.expires_at).isBefore(moment())) {
 							this.expired.push(bundle)
 						}
 						else if (bundle.completed == true) {
@@ -36,38 +43,20 @@
 						else {
 							this.pending.push(bundle)
 						}
-						bundle.label += ' - {{ __('app.created-at') }} '+moment.unix(bundle.created_at).fromNow()
+						bundle.label += ' - {{ __('app.created-at') }} '+moment(bundle.created_at).fromNow()
 					})
-				}
-
-				// If bundle is empty, initializing it
-				if (this.bundles == null || this.bundles == '') {
-					this.bundles = []
 				}
 			},
 
 			newBundle: function() {
-				// Generating a new bundle key pair
-				const pair = {
-					bundle_id: this.generateStr(30),
-					owner_token: this.generateStr(15),
-					created_at: moment().unix()
-				}
-				this.bundles.unshift(pair)
-
-				// Storing them locally
-				localStorage.setItem('bundles', JSON.stringify(this.bundles))
-
 				axios({
 					url: '/new',
-					method: 'POST',
-					data: {
-						bundle_id: pair.bundle_id,
-						owner_token: pair.owner_token
-					}
+					method: 'POST'
 				})
 				.then( (response) => {
-					window.location.href = '/upload/'+response.data.bundle_id
+					if (response.data.result === true) {
+						window.location.href = response.data.redirect
+					}
 				})
 				.catch( (error) => {
 					//TODO: do something here
@@ -107,46 +96,59 @@
 @section('content')
 	<div x-data="bundle">
 		<div class="p-5">
-			<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase flex items-center">
-				<p>@lang('app.existing-bundles')</p>
-				<p class="text-sm bg-primary rounded-full ml-2 text-white px-3" x-text="Object.keys(bundles).length"></p>
-			</h2>
 
-			<span x-show="bundles == null || Object.keys(bundles).length == 0">@lang('app.no-existing-bundle')</span>
-			<select
-				class="w-full py-4 text-slate-700 bg-transparent h-8 p-0 py-1 border-b border-primary-superlight focus:ring-0 invalid:border-b-red-500 invalid:bg-red-50"
-				name="expiry"
-				id="upload-expiry"
-				x-model="currentBundle"
-				x-on:change="redirectToBundle()"
-				x-show="bundles != null && Object.keys(bundles).length > 0"
-			>
-				<option>-</option>
+			<div>
+				<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase flex items-center">
+					<p>@lang('app.existing-bundles')</p>
+					<p class="text-sm bg-primary rounded-full ml-2 text-white px-3" x-text="Object.keys(bundles).length"></p>
+				</h2>
 
-				<template x-if="Object.keys(pending).length > 0">
-					<optgroup label="{{ __('app.pending') }}">
-						<template x-for="bundle in pending">
-							<option :value="bundle.bundle_id" x-text="bundle.label"></option>
+				@if (App\Helpers\Auth::isLogged())
+					<p class="text-center">
+						<span x-show="bundles == null || Object.keys(bundles).length == 0">@lang('app.no-existing-bundle')</span>
+					</p>
+
+					<select
+						class="w-full py-4 text-slate-700 bg-transparent h-8 p-0 py-1 border-b border-primary-superlight focus:ring-0 invalid:border-b-red-500 invalid:bg-red-50"
+						name="expiry"
+						id="upload-expiry"
+						x-model="currentBundle"
+						x-on:change="redirectToBundle()"
+						x-show="bundles != null && Object.keys(bundles).length > 0"
+					>
+						<option>-</option>
+
+						<template x-if="Object.keys(pending).length > 0">
+							<optgroup label="{{ __('app.pending') }}">
+								<template x-for="bundle in pending">
+									<option :value="bundle.slug" x-text="bundle.label"></option>
+								</template>
+							</optgroup>
 						</template>
-					</optgroup>
-				</template>
 
-				<template x-if="Object.keys(active).length > 0">
-					<optgroup label="{{ __('app.active') }}">
-						<template x-for="bundle in active">
-							<option :value="bundle.bundle_id" x-text="bundle.label"></option>
+						<template x-if="Object.keys(active).length > 0">
+							<optgroup label="{{ __('app.active') }}">
+								<template x-for="bundle in active">
+									<option :value="bundle.slug" x-text="bundle.label"></option>
+								</template>
+							</optgroup>
 						</template>
-					</optgroup>
-				</template>
 
-				<template x-if="Object.keys(expired).length > 0">
-					<optgroup label="{{ __('app.expired') }}">
-						<template x-for="bundle in expired">
-							<option :value="bundle.bundle_id" x-text="bundle.label"></option>
+						<template x-if="Object.keys(expired).length > 0">
+							<optgroup label="{{ __('app.expired') }}">
+								<template x-for="bundle in expired">
+									<option :value="bundle.slug" x-text="bundle.label"></option>
+								</template>
+							</optgroup>
 						</template>
-					</optgroup>
-				</template>
-			</select>
+					</select>
+				@else
+					<p class="text-center">
+						<a href="/login" class="text-primary font-bold hover:underline">@lang('app.do-login')</a>
+						@lang('app.to-get-bundles')
+					</p>
+				@endif
+			</div>
 
 			<h2 class="mt-10 font-title text-2xl mb-5 text-primary font-medium uppercase">@lang('app.or-create')</h2>
 

@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use \Orbit\Concerns\Orbital;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Model;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use Orbital;
 
     /**
      * The attributes that are mass assignable.
@@ -18,8 +19,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
-        'email',
+        'username',
         'password',
     ];
 
@@ -30,15 +30,30 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        'remember_token',
     ];
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @var array<string, string>
-     */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+
+	public $incrementing = false;
+
+
+	public function getKeyName()
+	{
+		return 'username';
+	}
+
+	public function getIncrementing()
+	{
+		return false;
+	}
+
+	public static function schema(Blueprint $table)
+	{
+		$table->string('username');
+		$table->string('password');
+	}
+
+	public function bundles() {
+		return $this->hasMany(Bundle::class);
+	}
+
 }
