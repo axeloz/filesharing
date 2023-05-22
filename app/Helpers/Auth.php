@@ -68,6 +68,12 @@ class Auth {
 
 		throw new Exception('Could not update user\'s details');
 	}
+
+	static function logout() {
+		if (self::isLogged()) {
+			session()->invalidate();
+		}
+	}
 }
 
 

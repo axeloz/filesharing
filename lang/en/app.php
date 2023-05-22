@@ -85,5 +85,6 @@ return [
 	'duplicate-file' => 'This file already exists in the bundle',
 	'unexpected-error' => 'An unexpected error has occurred',
 	'login-to-get-bundles' => 'to get your bundles',
-	'you-are-logged-in' => 'You are logged in as ":username"'
+	'you-are-logged-in' => 'You are logged in as ":username"',
+	'logout'	=> 'Logout'
 ];

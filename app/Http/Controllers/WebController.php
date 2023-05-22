@@ -96,4 +96,9 @@ class WebController extends Controller
 			], 500);
 		}
 	}
+
+	public function logout(Request $request) {
+		Auth::logout();
+		return redirect()->route('homepage');
+	}
 }
