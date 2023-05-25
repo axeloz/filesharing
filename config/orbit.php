@@ -11,7 +11,7 @@ return [
     ],
 
     'paths' => [
-        'content' => base_path('content'),
+        'content' => storage_path('content'),
         'cache' => storage_path('framework/cache/orbit'),
     ],
 
