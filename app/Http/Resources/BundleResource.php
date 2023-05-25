@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\Auth;
+use App\Helpers\Upload;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Route;
@@ -22,11 +24,8 @@ class BundleResource extends JsonResource
 		Do not return private data on the preview page
 		 */
 		$full = false;
-		$middleware = Route::current()->gatherMiddleware('access.guest');
-		foreach ($middleware as $m) {
-			if ($m === 'access.owner') {
-				$full = true;
-			}
+		if (Auth::isLogged() || Upload::canUpload($request->ip())) {
+			$full = true;
 		}
 
 		$response = [

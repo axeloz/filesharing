@@ -18,7 +18,7 @@ class UploadController extends Controller
 {
 	public function createBundle(Request $request, Bundle $bundle) {
 		return view('upload', [
-			'bundle'  		=> $bundle->toArray(),
+			'bundle'  		=> new BundleResource($bundle),
 			'baseUrl'		=> config('app.url')
 		]);
 	}
