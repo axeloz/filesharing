@@ -32,6 +32,9 @@ class User extends Authenticatable
         'password',
     ];
 
+	protected $casts = [
+		'connected_at' => 'datetime',
+	];
 
 	public $incrementing = false;
 
@@ -50,6 +53,7 @@ class User extends Authenticatable
 	{
 		$table->string('username');
 		$table->string('password');
+		$table->timestamp('connected_at')->nullable();
 	}
 
 	public function bundles() {

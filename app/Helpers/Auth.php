@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
+use Carbon\Carbon;
 
 class Auth {
 
@@ -35,6 +36,10 @@ class Auth {
 			// OK, user's credentials are OK
 			session()->put('username', $username);
 			session()->put('authenticated', true);
+
+			$user->connected_at = Carbon::now();
+			$user->save();
+
 			return true;
 		}
 		catch (Exception $e) {
