@@ -60,6 +60,7 @@ Basically, nothing more than Laravel itself:
 Plus:
 - JSON PHP Extension (included after PHP 5.2+)
 - ZipArchive PHP Extension (included after PHP 5.3+)
+- SQLite
 
 The application also uses:
 - http://www.dropzonejs.com/
