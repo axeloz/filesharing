@@ -34,7 +34,7 @@ Upload routes
 */
 Route::middleware(['can.upload'])->group(function() {
 	Route::get('/', [WebController::class, 'homepage'])->name('homepage');
-	Route::get('/new', [WebController::class, 'newBundle'])->name('bundle.new');
+	Route::post('/new', [WebController::class, 'newBundle'])->name('bundle.new');
 
 	Route::prefix('/upload/{bundle}')->controller(UploadController::class)->name('upload.')->group(function() {
 		Route::get('/', 'createBundle')->name('create.show');
