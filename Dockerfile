@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-RUN apt-get update -y && apt-get install -y libmcrypt-dev libonig-dev build-essential libxml2-dev libzip-dev gnupg
+RUN apt-get update -y && apt-get install -y libmcrypt-dev libonig-dev build-essential libxml2-dev libzip-dev gnupg unzip curl wget findutils tar grep
 RUN docker-php-ext-install \
         bcmath \
         ctype \
@@ -18,12 +18,16 @@ ENV WEB_DOCUMENT_ROOT /app/public
 ENV APP_ENV production
 
 WORKDIR /app
-COPY . /app
+RUN curl -stdout "https://api.github.com/repos/axeloz/filesharing/releases/latest" | grep -E -o '[^"]+tarball[^"]+' | xargs wget -O latest.tar -q
+RUN tar zxvf latest.tar --strip-components=1
+
+
 COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-RUN chown -R www-data:www-data /app && a2enmod rewrite
 RUN composer install --no-interaction --optimize-autoloader --no-dev
+RUN chown -R www-data:www-data /app
+RUN a2enmod rewrite
 
 RUN cp -n .env.example .env
 RUN php artisan key:generate
