@@ -46,7 +46,7 @@ return [
 
         'uploads' => [
             'driver' => 'local',
-            'root'  => env('STORAGE_PATH', storage_path('app/uploads')),
+            'root'  => env('STORAGE_PATH', storage_path('content/uploads')),
 			'visibility' => 'private',
 			'permissions' => [
 				'file' => [
@@ -62,7 +62,7 @@ return [
 
         'users' => [
             'driver' => 'local',
-            'root'  => env('STORAGE_PATH', storage_path('app/users')),
+            'root'  => env('STORAGE_PATH', storage_path('content/users')),
 			'visibility' => 'private',
 			'permissions' => [
 				'file' => [

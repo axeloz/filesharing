@@ -12,7 +12,7 @@ return [
 
     'paths' => [
         'content' => storage_path('content'),
-        'cache' => storage_path('framework/cache/orbit'),
+        'cache' => storage_path('content/orbit'),
     ],
 
 ];
