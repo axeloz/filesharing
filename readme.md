@@ -72,6 +72,8 @@ The application also uses:
 
 ## Installation
 
+### Standalone
+
 - configure your domain name. For example: files.yourdomain.com
 - clone the repo or download the sources into the webroot folder
 - configure your webserver to point your domain name to the `./public` folder
@@ -84,6 +86,19 @@ The application also uses:
 - (optional) you may create your first user `php artisan fs:user:create`
 - start the Laravel scheduler (it will delete expired bundles of the storage). For example `* * * * * /usr/bin/php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
 - (optional) to purge bundles manually, run `php artisan fs:bundle:purge`
+
+### Docker [WIP]
+
+This is a Work In Progress.
+
+
+```
+docker run -d \
+-p 8080:80 \
+-v <local_path>:/app/storage/content \
+--name filesharing \
+axeloz/filesharing
+```
 
 
 Use your browser to navigate to your domain name (example: files.yourdomain.com) and **that's it**.
