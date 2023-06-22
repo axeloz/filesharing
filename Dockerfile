@@ -1,6 +1,6 @@
 FROM php:8.2-apache
 
-RUN apt-get update -y && apt-get install -y libmcrypt-dev libonig-dev build-essential libxml2-dev libzip-dev gnupg unzip curl wget findutils tar grep
+RUN apt-get update -y && apt-get install -y libmcrypt-dev libonig-dev build-essential libxml2-dev libzip-dev gnupg unzip curl wget findutils tar grep nano
 RUN docker-php-ext-install \
         bcmath \
         ctype \
