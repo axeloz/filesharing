@@ -91,6 +91,31 @@ axeloz/filesharing:<version>
 - you may pass env variables with the `-e` option
 - you can use a reverse proxy for SSL termination (example: nginx)
 
+You can also use in docker compose with the following template:
+
+```yaml
+version: '3'
+services:
+  app:
+    image: axeloz/filesharing:2.10
+    environment:
+      UPLOAD_MAX_FILESIZE: "1G"
+      UPLOAD_MAX_FILES: "100"
+      UPLOAD_LIMIT_IPS: "127.0.0.1"
+      UPLOAD_PREVENT_DUPLICATES: true
+      HASH_MAX_FILESIZE: "1G"
+      LIMIT_DOWNLOAD_RATE: "1M"
+    volumes:
+      - files_v:/app/storage/content
+    ports:
+      - 8080:80
+
+volumes:
+  files_v:
+    driver: local
+```
+
+
 ### Standalone
 
 - configure your domain name. For example: files.yourdomain.com
