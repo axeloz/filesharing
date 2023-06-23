@@ -72,6 +72,25 @@ The application also uses:
 
 ## Installation
 
+### Docker
+
+You may now install FileSharing via Docker. 
+See [https://hub.docker.com/r/axeloz/filesharing](https://hub.docker.com/r/axeloz/filesharing)
+
+```
+docker run -d \
+-p 8080:80 \
+-v <local_path>:/app/storage/content \
+--name filesharing \
+-e UPLOAD_MAX_FILESIZE="1G"
+axeloz/filesharing:<version>
+```
+- use the -v option to bind your local storage to the docker instance (persisting data)
+- replace <version> with latest FileSharing version
+- adapt the -p option to listen to the port you need
+- you may pass env variables with the -e option
+- you can use a reverse proxy for SSL termination (example: nginx)
+
 ### Standalone
 
 - configure your domain name. For example: files.yourdomain.com
@@ -86,19 +105,6 @@ The application also uses:
 - (optional) you may create your first user `php artisan fs:user:create`
 - start the Laravel scheduler (it will delete expired bundles of the storage). For example `* * * * * /usr/bin/php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
 - (optional) to purge bundles manually, run `php artisan fs:bundle:purge`
-
-### Docker [WIP]
-
-This is a Work In Progress.
-
-
-```
-docker run -d \
--p 8080:80 \
--v <local_path>:/app/storage/content \
---name filesharing \
-axeloz/filesharing
-```
 
 
 Use your browser to navigate to your domain name (example: files.yourdomain.com) and **that's it**.
