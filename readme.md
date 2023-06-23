@@ -82,7 +82,7 @@ docker run -d \
 -p 8080:80 \
 -v <local_path>:/app/storage/content \
 --name filesharing \
--e UPLOAD_MAX_FILESIZE="1G"
+-e UPLOAD_MAX_FILESIZE="1G" \
 axeloz/filesharing:<version>
 ```
 - use the -v option to bind your local storage to the docker instance (persisting data)
