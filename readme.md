@@ -83,10 +83,9 @@ docker run -d \
 -v <local_path>:/app/storage/content \
 --name filesharing \
 -e UPLOAD_MAX_FILESIZE="1G" \
-axeloz/filesharing:<version>
+axeloz/filesharing:latest
 ```
 - use the `-v` option to bind your local storage to the docker instance (persisting data)
-- replace `<version>` with latest FileSharing version
 - adapt the `-p` option to listen to the port you need
 - you may pass env variables with the `-e` option
 - you can use a reverse proxy for SSL termination (example: nginx)
@@ -97,7 +96,7 @@ You can also use in docker compose with the following template:
 version: '3'
 services:
   app:
-    image: axeloz/filesharing:2.10
+    image: axeloz/filesharing:latest
     environment:
       UPLOAD_MAX_FILESIZE: "1G"
       UPLOAD_MAX_FILES: "100"
