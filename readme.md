@@ -181,6 +181,8 @@ If your want to modify the sources, you can use the Laravel Mix features:
 There are many ideas to come. You are welcome to **participate**.
 - add PHP unit testing
 - more testing on heavy files
+- background process for creating Zips asynchronously after completion of the bundle
+- invitation to external users to upload file into existing bundle 
 - customizable / white labeling (logo, name, terms of service, footer ...)
 
 ## Licence
