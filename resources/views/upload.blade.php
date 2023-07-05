@@ -103,7 +103,6 @@
 				})
 				.then( (response) => {
 					this.syncData(response.data)
-					window.history.pushState(null, null, baseUrl+'/upload/'+this.bundle.slug);
 					this.step = 2
 
 					this.startDropzone()
