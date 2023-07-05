@@ -29,11 +29,10 @@ RUN apt-get update && apt-get install -y yarn
 # SETTING WORKDIR AND ENV
 ENV WEB_DOCUMENT_ROOT /app/public
 ENV APP_ENV production
+COPY . /app
 WORKDIR /app
 
-# DOWNLOADING LATEST PACKAGE OF FILESHARING
-RUN curl -stdout "https://api.github.com/repos/axeloz/filesharing/releases/latest" | grep -E -o '[^"]+tarball[^"]+' | xargs wget -O latest.tar -q
-RUN tar zxvf latest.tar --strip-components=1
+
 
 # INSTALLING THE CRONTAB
 RUN { echo "* * * * * php /app/artisan schedule:run >> /dev/null 2>&1"; } | crontab -
@@ -43,9 +42,8 @@ RUN composer install --no-interaction --optimize-autoloader --no-dev
 RUN chown -R www-data:www-data /app
 
 # SETUP OF FILESHARING
-RUN cp -n .env.example .env
-RUN php artisan key:generate
-RUN php artisan config:cache
+RUN cp .docker/.env .
+RUN php artisan key:generate --force
 RUN php artisan route:cache
 RUN php artisan view:cache
 RUN php artisan orbit:clear
