@@ -72,6 +72,49 @@ The application also uses:
 
 ## Installation
 
+### Docker
+
+You may now install FileSharing via Docker. 
+See [https://hub.docker.com/r/axeloz/filesharing](https://hub.docker.com/r/axeloz/filesharing)
+
+```
+docker run -d \
+-p 8080:80 \
+-v <local_path>:/app/storage/content \
+--name filesharing \
+-e UPLOAD_MAX_FILESIZE="1G" \
+axeloz/filesharing:latest
+```
+- use the `-v` option to bind your local storage to the docker instance (persisting data)
+- adapt the `-p` option to listen to the port you need
+- you may pass env variables with the `-e` option
+- you can use a reverse proxy for SSL termination (example: nginx)
+
+You can also use in docker compose with the following template:
+
+```yaml
+version: '3'
+services:
+  app:
+    image: axeloz/filesharing:latest
+    environment:
+      UPLOAD_MAX_FILESIZE: "1G"
+      UPLOAD_MAX_FILES: "100"
+      UPLOAD_LIMIT_IPS: "127.0.0.1"
+      UPLOAD_PREVENT_DUPLICATES: true
+      HASH_MAX_FILESIZE: "1G"
+      LIMIT_DOWNLOAD_RATE: "1M"
+    volumes:
+      - files_v:/app/storage/content
+    ports:
+      - 8080:80
+
+volumes:
+  files_v:
+    driver: local
+```
+
+
 ### Standalone
 
 - configure your domain name. For example: files.yourdomain.com
@@ -86,19 +129,6 @@ The application also uses:
 - (optional) you may create your first user `php artisan fs:user:create`
 - start the Laravel scheduler (it will delete expired bundles of the storage). For example `* * * * * /usr/bin/php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
 - (optional) to purge bundles manually, run `php artisan fs:bundle:purge`
-
-### Docker [WIP]
-
-This is a Work In Progress.
-
-
-```
-docker run -d \
--p 8080:80 \
--v <local_path>:/app/storage/content \
---name filesharing \
-axeloz/filesharing
-```
 
 
 Use your browser to navigate to your domain name (example: files.yourdomain.com) and **that's it**.
@@ -151,6 +181,8 @@ If your want to modify the sources, you can use the Laravel Mix features:
 There are many ideas to come. You are welcome to **participate**.
 - add PHP unit testing
 - more testing on heavy files
+- background process for creating Zips asynchronously after completion of the bundle
+- invitation to external users to upload file into existing bundle 
 - customizable / white labeling (logo, name, terms of service, footer ...)
 
 ## Licence
