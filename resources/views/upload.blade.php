@@ -259,7 +259,8 @@
 						}
 					})
 					.then( (response) => {
-						this.syncData(response.data)
+						//this.syncData(response.data)
+						window.location.href = '/'
 					})
 					.catch( (error) => {
 
@@ -457,9 +458,9 @@
 								name="expiry"
 								id="upload-expiry"
 							>
-								<option value="0"></option>
+								<option value="forever">@lang('app.forever')</option>
 								@foreach (config('sharing.expiry_values') as $k => $e)
-									<option value="{{ Upload::getExpirySeconds($k) }}" {{ $e == config('sharing.default_expiry') ? 'selected' : '' }}>@lang('app.'.$e)</option>
+									<option value="{{ Upload::getExpirySeconds($k) }}">@lang('app.'.$e)</option>
 								@endforeach
 							</select>
 						</div>

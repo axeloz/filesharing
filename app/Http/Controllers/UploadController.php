@@ -136,7 +136,14 @@ class UploadController extends Controller
 		// Saving metadata
 		try {
 			$bundle->completed		= true;
-			$bundle->expires_at		= time()+$bundle->expiry;
+
+			// Infinite expiry
+			if ($bundle->expiry == 'forever') {
+				$bundle->expires_at = null;
+			}
+			else {
+				$bundle->expires_at		= time()+$bundle->expiry;
+			}
 			$bundle->fullsize		= $size;
 			$bundle->preview_link	= route('bundle.preview', ['bundle' => $bundle, 'auth' => $bundle->preview_token]);
 			$bundle->download_link	= route('bundle.zip.download', ['bundle' => $bundle, 'auth' => $bundle->preview_token]);
@@ -171,7 +178,12 @@ class UploadController extends Controller
 				$f->forceDelete();
 			}
 
-			return response()->json(new BundleResource($bundle));
+			// Finally deleting bundle
+			$bundle->forceDelete();
+
+			return response()->json([
+				'success'	=> true
+			]);
 		}
 		catch (Exception $e) {
 			return response()->json([

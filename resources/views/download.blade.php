@@ -14,20 +14,24 @@
 			created_at: null,
 			expires_at: null,
 			expired: null,
+			interval: null,
 
 			init: function() {
 				this.updateTimes()
 
-				window.setInterval( () => {
+				this.interval = window.setInterval( () => {
 					this.updateTimes()
 				}, 5000)
+
 			},
 
 			updateTimes: function() {
 				this.created_at = moment(this.metadata.created_at).fromNow()
 
-				if (! this.isExpired()) {
-					this.expires_at =moment(this.metadata.expires_at).fromNow()
+				if (this.metadata.expiry) {
+					if (! this.isExpired()) {
+						this.expires_at = moment(this.metadata.expires_at).fromNow()
+					}
 				}
 			},
 
@@ -91,7 +95,18 @@
 					<span class="font-title text-xs text-primary uppercase mr-1">
 						@lang('app.upload-expiry')
 					</span>
-					<span x-text="expires_at"></span>
+					<template x-if="expires_at">
+						<span x-text="expires_at"></span>
+					</template>
+					<template x-if="! expires_at">
+						<span>@lang('app.forever')</span>
+					</template>
+				</p>
+				<p class="w-1/2 px-1 mt-1">
+					<span class="font-title text-xs text-primary uppercase mr-1">
+						@lang('app.files')
+					</span>
+					<span x-text="Object.keys(metadata.files).length"></span>
 				</p>
 				<p class="w-1/2 px-1 mt-1">
 					<span class="font-title text-xs text-primary uppercase mr-1">
@@ -101,21 +116,15 @@
 				</p>
 				<p class="w-1/2 px-1 mt-1">
 					<span class="font-title text-xs text-primary uppercase mr-1">
-						@lang('app.max-downloads')
-					</span>
-					<span x-text="metadata.max_downloads > 0 ? metadata.max_download : '∞'"></span>
-				</p>
-				<p class="w-1/2 px-1 mt-1">
-					<span class="font-title text-xs text-primary uppercase mr-1">
 						@lang('app.current-downloads')
 					</span>
 					<span x-text="metadata.downloads"></span>
 				</p>
 				<p class="w-1/2 px-1 mt-1">
 					<span class="font-title text-xs text-primary uppercase mr-1">
-						@lang('app.password')
+						@lang('app.max-downloads')
 					</span>
-					<span x-text="metadata.password ? 'yes': 'no'"></span>
+					<span x-text="metadata.max_downloads > 0 ? metadata.max_downloads : '∞'"></span>
 				</p>
 				<p class="w-full px-1 mt-1" x-show="metadata.description">
 					<span class="font-title text-xs text-primary uppercase mr-1">

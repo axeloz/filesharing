@@ -86,5 +86,8 @@ return [
 	'unexpected-error' => 'An unexpected error has occurred',
 	'login-to-get-bundles' => 'to get your bundles',
 	'you-are-logged-in' => 'You are logged in as ":username"',
-	'logout'	=> 'Logout'
+	'logout'	=> 'Logout',
+	'forever'	=> 'Forever',
+	'yes'	=> 'Yes',
+	'no'	=> 'No',
 ];

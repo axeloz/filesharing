@@ -86,5 +86,8 @@ return [
 	'unexpected-error' => 'Une erreur inattendue est survenue',
 	'to-get-bundles' => 'pour accéder à vos archives',
 	'you-are-logged-in' => 'Vous êtes connecté(e) en tant que ":username"',
-	'logout'	=> 'Déconnexion'
+	'logout'	=> 'Déconnexion',
+	'forever' => 'Infinie',
+	'yes'	=> 'Oui',
+	'no'	=> 'Non',
 ];

@@ -30,7 +30,9 @@ class GuestAccess
 		abort_if($bundle->preview_token !== $request->auth, 403);
 
 		// Aborting if bundle expired
-		abort_if($bundle->expires_at->isBefore(Carbon::now()), 404);
+		if (! empty($bundle->expires_at)) {
+			abort_if($bundle->expires_at->isBefore(Carbon::now()), 404);
+		}
 
 		// Aborting if max download is reached
 		abort_if( ($bundle->max_downloads ?? 0) > 0 && $bundle->downloads >= $bundle->max_downloads, 404);
