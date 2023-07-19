@@ -82,13 +82,42 @@ docker run -d \
 -p 8080:80 \
 -v <local_path>:/app/storage/content \
 --name filesharing \
+-e APP_NAME="FileSharing" \
+-e APP_URL="<your_url>" \
+-e ASSET_URL="<your_asset_url>" \
 -e UPLOAD_MAX_FILESIZE="1G" \
+-e APP_TIMEZONE="Europe/Paris" \
+-e UPLOAD_PREVENT_DUPLICATES=true \
+-e HASH_MAX_FILESIZE="1G" \
+-e UPLOAD_MAX_FILES=100 \
+-e UPLOAD_MAX_FILESIZE="1M" \
+-e LIMIT_DOWNLOAD_RATE="100K" \
 axeloz/filesharing:latest
 ```
 - use the `-v` option to bind your local storage to the docker instance (persisting data)
 - adapt the `-p` option to listen to the port you need
 - you may pass env variables with the `-e` option
 - you can use a reverse proxy for SSL termination (example: nginx)
+
+Simple config for Nginx:
+
+```
+server {
+	server_name filesharing.box.webinno.fr;
+	charset utf-8;
+
+	location / {
+		proxy_set_header Host $host;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_pass http://localhost:8080;
+	}
+
+	listen [::]:443 ssl http2;
+	listen 443 ssl http2;
+	ssl_certificate [...]
+	ssl_certificate_key [...]
+}
+```
 
 You can also use in docker compose with the following template:
 
