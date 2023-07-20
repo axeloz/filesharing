@@ -91,18 +91,6 @@ class BundleController extends Controller
 			// Getting file size
 			$filesize = filesize($filename);
 
-			// Should we limit the download rate?
-			$limit_rate = config('sharing.download_limit_rate', false);
-			if ($limit_rate !== false) {
-				$limit_rate = Upload::humanReadableToBytes($limit_rate);
-			}
-			else {
-				$limit_rate = $filesize;
-			}
-
-			// Flushing everything
-			flush();
-
 			// Let's download now
 			header('Content-Type: application/octet-stream');
 			header('Content-Disposition: attachment; filename="'.Str::slug($bundle->title).'-'.time().'.zip'.'"');
@@ -111,16 +99,20 @@ class BundleController extends Controller
 			header('Content-Length: '.$filesize);
 
 			// Downloading
-			$fh = fopen($filename, 'rb');
-			while (! feof($fh)) {
-				echo fread($fh, round($limit_rate));
-				flush();
+			if (config('sharing.download_limit_rate', false) !== false) {
+				$limit_rate = Upload::humanReadableToBytes(config('sharing.download_limit_rate'));
 
-				if ($limit_rate !== false) {
+				$fh = fopen($filename, 'rb');
+				while (! feof($fh)) {
+					echo fread($fh, round($limit_rate));
+					flush();
 					sleep(1);
 				}
+				fclose($filename);
 			}
-			fclose($filename);
+			else {
+				readfile($filename);
+			}
 			exit;
 
 		}
