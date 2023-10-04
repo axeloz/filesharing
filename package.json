@@ -16,7 +16,7 @@
         "global": "^4.4.0",
         "lodash": "^4.17.21",
         "moment": "^2.29.4",
-        "postcss": "^8.4.23",
+        "postcss": "^8.4.31",
         "tailwindcss": "^3.3.2"
     }
 }
