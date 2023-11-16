@@ -293,16 +293,16 @@
 
 			humanSize: function(val) {
 				if (val >= 100000000) {
-					return (val / 1000000000).toFixed(1) + ' Go'
+					return (val / 1000000000).toFixed(1) + ' Gb'
 				}
 				else if (val >= 1000000) {
-					return (val / 1000000).toFixed(1) + ' Mo'
+					return (val / 1000000).toFixed(1) + ' Mb'
 				}
 				else if (val >= 1000) {
-					return (val / 1000).toFixed(1) + ' Ko'
+					return (val / 1000).toFixed(1) + ' Kb'
 				}
 				else {
-					return val + ' o'
+					return val + ' B'
 				}
 			},
 
