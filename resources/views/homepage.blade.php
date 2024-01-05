@@ -50,7 +50,7 @@
 
 			newBundle: function() {
 				axios({
-					url: '/new',
+					url: BASE_URL+'/new',
 					method: 'POST'
 				})
 				.then( (response) => {
@@ -144,7 +144,7 @@
 					</select>
 				@else
 					<p class="text-center">
-						<a href="/login" class="text-primary font-bold hover:underline">@lang('app.do-login')</a>
+						<a href="{{ route('login') }}" class="text-primary font-bold hover:underline">@lang('app.do-login')</a>
 						@lang('app.to-get-bundles')
 					</p>
 				@endif

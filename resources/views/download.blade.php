@@ -130,7 +130,7 @@
 					<span class="font-title text-xs text-primary uppercase mr-1">
 						@lang('app.upload-description')
 					</span>
-					<span x-text="metadata.description"></span>
+					<span x-html="metadata.description_html"></span>
 				</p>
 			</div>
 

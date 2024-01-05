@@ -32,7 +32,7 @@
 				}
 
 				axios({
-					url: '/login',
+					url: BASE_URL+'/login',
 					method: 'POST',
 					data: {
 						login: this.user.login,

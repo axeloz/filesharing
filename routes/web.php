@@ -24,8 +24,8 @@ use App\Http\Middleware\UploadAccess;
 Public route for login
 */
 Route::controller(WebController::class)->group(function() {
-	Route::get('/login', 'login');
-	Route::post('/login', 'doLogin');
+	Route::get('/login', 'login')->name('login');
+	Route::post('/login', 'doLogin')->name('login.post');
 	Route::get('/logout', 'logout')->name('logout');
 });
 

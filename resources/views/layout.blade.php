@@ -12,6 +12,10 @@
         @stack('styles')
         @vite('resources/js/app.js')
 
+		<script>
+			const BASE_URL = '{{ route('homepage') }}'
+		</script>
+
 	</head>
 
 	<body class="font-display text-[13px] selection:bg-purple-100 outline-none select-none">

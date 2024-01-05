@@ -7,6 +7,7 @@ use App\Helpers\Upload;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 use App\Http\Resources\UserResource;
 use App\Http\Resources\FileResource;
@@ -37,6 +38,7 @@ class BundleResource extends JsonResource
 			'fullsize'			=> (int)$this->fullsize,
 			'title'				=> $this->title,
 			'description'		=> $this->description,
+			'description_html'	=> ! empty($this->description) ? Str::markdown($this->description) : null,
 			'max_downloads'		=> (int)$this->max_downloads,
 			'downloads'			=> (int)$this->downloads,
 			'files'				=> FileResource::collection($this->files),

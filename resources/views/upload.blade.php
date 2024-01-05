@@ -3,8 +3,11 @@
 @section('page_title', __('app.upload-files-title'))
 
 @push('scripts')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
 
 <script>
+
 	let baseUrl		= @js($baseUrl);
 	let bundle		= @js($bundle);
 	let maxFiles	= @js(config('sharing.max_files'));
@@ -14,6 +17,7 @@
 		Alpine.data('upload', () => ({
 			bundle: null,
 			dropzone: null,
+			easymde: null,
 			uploadedFiles: [],
 			completed: false,
 			step: 0,
@@ -55,6 +59,15 @@
 					else {
 						this.step = 1
 					}
+
+					this.easymde = new EasyMDE({
+						maxHeight: '50px',
+						forceSync: false,
+						initialValue: this.bundle.description,
+						spellChecker: false,
+						status: false,
+						autofocus: false
+					});
 				}
 			},
 
@@ -90,12 +103,12 @@
 				}
 
 				axios({
-					url: '/upload/'+this.bundle.slug,
+					url: BASE_URL+'/upload/'+this.bundle.slug,
 					method: 'POST',
 					data: {
 						expiry: this.bundle.expiry,
 						title: this.bundle.title,
-						description: this.bundle.description,
+						description: this.easymde.value(),
 						max_downloads: this.bundle.max_downloads,
 						password: this.bundle.password,
 						auth: this.bundle.owner_token
@@ -119,7 +132,7 @@
 
 				this.showModal('{{ __('app.confirm-complete') }}', () => {
 					axios({
-						url: '/upload/'+this.bundle.slug+'/complete',
+						url: BASE_URL+'/upload/'+this.bundle.slug+'/complete',
 						method: 'POST',
 						data: {
 							auth: this.bundle.owner_token
@@ -147,7 +160,7 @@
 					this.maxFiles = this.maxFiles - this.countFilesOnServer() >= 0 ? this.maxFiles - this.countFilesOnServer() : 0
 
 					this.dropzone = new Dropzone('#upload-frm', {
-						url: '/upload/'+this.bundle.slug+'/file',
+						url: BASE_URL+'/upload/'+this.bundle.slug+'/file',
 						method: 'POST',
 						headers: {
 							'X-Upload-Auth': this.bundle.owner_token
@@ -223,7 +236,7 @@
 						let lfile = file
 
 						axios({
-							url: '/upload/'+this.bundle.slug+'/file',
+							url: BASE_URL+'/upload/'+this.bundle.slug+'/file',
 							method: 'DELETE',
 							data: {
 								uuid: lfile.uuid,
@@ -252,7 +265,7 @@
 			deleteBundle: function() {
 				this.showModal('{{ __('app.confirm-delete-bundle') }}', () => {
 					axios({
-						url: '/upload/'+this.bundle.slug+'/delete',
+						url: BASE_URL+'/upload/'+this.bundle.slug+'/delete',
 						method: 'DELETE',
 						data: {
 							auth: this.bundle.owner_token
