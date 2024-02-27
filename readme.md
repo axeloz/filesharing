@@ -194,7 +194,13 @@ You can also **mix the two methods**.
 
 ## Known issues
 
-If you are using Nginx, you might be required to do additional setup in order to increase the upload max size. Check the Nginx's documentation for `client_max_body_size`.
+1.) If you are using Nginx, you might be required to do additional setup in order to increase the upload max size. Check the Nginx's documentation for `client_max_body_size`.
+
+2.) Set Folder to apache2/nginx user `chown -R www-data:www-data /path/to/app/dir`
+
+2.1) Set correct files permission `find /path/to/app/dir -type f -exec chmod 644 {} \;` 
+
+2.2) Set correct folder permission `find /path/to/app/dir -type d -exec chmod 755 {} \;`
 
 ## Development
 
