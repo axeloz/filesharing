@@ -84,7 +84,7 @@ return [
 	'pending'	=> 'Entwürfe',
 	'duplicate-file' => 'Diese Datei ist bereits Teil des Pakets',
 	'unexpected-error' => 'Ein unerwarteter Fehler ist aufgetreten',
-	'login-to-get-bundles' => 'um Ihre Pakete zu sehen',
+	'to-get-bundles' => 'um Ihre Pakete zu sehen',
 	'you-are-logged-in' => 'Sie sind eingelogged als ":username"',
 	'logout'	=> 'Logout',
 	'forever'	=> 'Für immer',

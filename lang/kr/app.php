@@ -84,7 +84,7 @@ return [
 	'pending'	=> 'Drafts',
 	'duplicate-file' => '이 파일이 번들에 이미 있습니다',
 	'unexpected-error' => '예기치 않은 오류가 발생했습니다',
-	'login-to-get-bundles' => 'to get your bundles',
+	'to-get-bundles' => 'to get your bundles',
 	'you-are-logged-in' => '"username"로 로그인 했습니다',
 	'logout'	=> '로그아웃',
 	'forever'	=> '로그인 기억',
