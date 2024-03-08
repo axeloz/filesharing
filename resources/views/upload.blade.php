@@ -22,6 +22,10 @@
 			completed: false,
 			step: 0,
 			maxFiles: maxFiles,
+			copynotify: {
+				preview: false,
+				direct_download: false,
+			},
 			modal: {
 				show: false,
 				text: 'test'
@@ -340,12 +344,33 @@
 			},
 
 			selectCopy: function(el) {
-				el.select();
-
 				if (navigator.clipboard) {
 					navigator.clipboard.writeText(el.value)
 					.then(() => {
-						//alert("Copied to clipboard");
+						// check if the element is preview or direct download
+						if (el.id == 'copy-preview') {
+							// check if its already set to true
+							if (this.copynotify.preview == false) {
+								this.copynotify.preview = true
+								// timeout in 2s
+								setTimeout(() => {
+									// if still true, set it to false
+									if (this.copynotify.preview == true) {
+										this.copynotify.preview = false
+									}
+								}, 2000)
+							}
+						}
+						else if (el.id == 'copy-direct-download') {
+							if (this.copynotify.direct_download == false) {
+								this.copynotify.direct_download = true
+								setTimeout(() => {
+									if (this.copynotify.direct_download == true) {
+										this.copynotify.direct_download = false
+									}
+								}, 2000)
+							}
+						}
 					});
 				}
 			},
@@ -629,28 +654,36 @@
 
 				{{-- STEP 3 --}}
 				<template x-if="step == 3">
-					<div class="" x-show="step == 3">
+					<div  x-show="step == 3">
 						<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase">
 							@lang('app.download-links')
 						</h2>
 
 						{{-- Preview link --}}
-						<div class="flex flex-wrap items-center">
+						<div class="flex flex-wrap items-center relative">
 							<div class="w-1/3 text-right px-2">
 								@lang('app.preview-link')
 							</div>
-							<div class="w-2/3 shadow">
-								<input x-model="bundle.preview_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
+							<x-tooltip x-show="copynotify.preview" x-on:click.away="copynotify.preview = false" />
+							<div class="w-2/3 shadow flex items-center">
+								<input id="copy-preview" x-model="bundle.preview_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
+								<a class="p-1" title="Open in a new Tab" :href="bundle.preview_link" target="_blank">
+									<x-newtab />
+								</a>
 							</div>
 						</div>
 
 						{{-- Direct download link --}}
-						<div class="flex flex-wrap items-center mt-5">
+						<div class="flex flex-wrap items-center mt-5 relative">
 							<div class="w-1/3 text-right px-2">
 								@lang('app.direct-link')
 							</div>
-							<div class="w-2/3 shadow">
-								<input x-model="bundle.download_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
+							<x-tooltip x-show="copynotify.direct_download" x-on:click.away="copynotify.direct_download = false" />
+							<div class="w-2/3 flex items-center shadow">
+								<input id="copy-direct-download" x-model="bundle.download_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
+								<a class="p-1" title="Open in a new Tab" :href="bundle.download_link" target="_blank">
+									<x-newtab />
+								</a>
 							</div>
 						</div>
 
