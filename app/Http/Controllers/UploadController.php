@@ -16,7 +16,8 @@ use App\Models\File;
 
 class UploadController extends Controller
 {
-	public function createBundle(Request $request, Bundle $bundle) {
+	public function createBundle(Request $request, Bundle $bundle)
+	{
 		return view('upload', [
 			'bundle'  		=> new BundleResource($bundle),
 			'baseUrl'		=> config('app.url')
@@ -24,7 +25,8 @@ class UploadController extends Controller
 	}
 
 	// The upload form
-	public function storeBundle(Request $request, Bundle $bundle) {
+	public function storeBundle(Request $request, Bundle $bundle)
+	{
 
 		try {
 			$bundle->update([
@@ -36,8 +38,7 @@ class UploadController extends Controller
 			]);
 
 			return response()->json(new BundleResource($bundle));
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			return response()->json([
 				'result'	=> false,
 				'message'	=> $e->getMessage()
@@ -45,17 +46,18 @@ class UploadController extends Controller
 		}
 	}
 
-	public function uploadFile(Request $request, Bundle $bundle) {
+	public function uploadFile(Request $request, Bundle $bundle)
+	{
 
 		// Validating form data
 		$request->validate([
 			'uuid'		=> 'required|uuid',
-			'file'		=> 'required|file|max:'.(Upload::fileMaxSize() / 1000)
+			'file'		=> 'required|file|max:' . (Upload::fileMaxSize() / 1000)
 		]);
 
 		// Generating the file name
 		$original   = $request->file->getClientOriginalName();
-		$filename 	= substr(sha1($original.time()), 0, rand(20, 30));
+		$filename 	= substr(sha1($original . time()), 0, rand(20, 30));
 
 		// Moving file to final destination
 		try {
@@ -64,13 +66,14 @@ class UploadController extends Controller
 				$hash = sha1_file($request->file->getPathname());
 
 				$existing = $bundle->files->whereNotNull('hash')->where('hash', $hash)->count();
-				if (! empty($existing) && $existing > 0) {
+				if (!empty($existing) && $existing > 0) {
 					throw new Exception(__('app.duplicate-file'));
 				}
 			}
 
 			$fullpath = $request->file('file')->storeAs(
-				$bundle->slug, $filename, 'uploads'
+				$bundle->slug,
+				$filename
 			);
 			// Generating file metadata
 			$file = new File([
@@ -87,8 +90,7 @@ class UploadController extends Controller
 			$file->save();
 
 			return response()->json(new FileResource($file));
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			return response()->json([
 				'result' 	=> false,
 				'message'	=> $e->getMessage()
@@ -96,7 +98,8 @@ class UploadController extends Controller
 		}
 	}
 
-	public function deleteFile(Request $request, Bundle $bundle) {
+	public function deleteFile(Request $request, Bundle $bundle)
+	{
 
 		$request->validate([
 			'uuid'		=> 'required|uuid'
@@ -107,7 +110,7 @@ class UploadController extends Controller
 			$file = File::findOrFail($request->uuid);
 
 			// Physically deleting the file
-			if (! Storage::disk('uploads')->delete($file->fullpath)) {
+			if (!Storage::delete($file->fullpath)) {
 				throw new Exception('Cannot delete file from disk');
 			}
 
@@ -115,8 +118,7 @@ class UploadController extends Controller
 			$file->delete();
 
 			return response()->json(new BundleResource($bundle));
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			return response()->json([
 				'result' 	=> false,
 				'message'	=> $e->getMessage()
@@ -125,7 +127,8 @@ class UploadController extends Controller
 	}
 
 
-	public function completeBundle(Request $request, Bundle $bundle) {
+	public function completeBundle(Request $request, Bundle $bundle)
+	{
 
 		// Processing size
 		$size = 0;
@@ -140,9 +143,8 @@ class UploadController extends Controller
 			// Infinite expiry
 			if ($bundle->expiry == 'forever') {
 				$bundle->expires_at = null;
-			}
-			else {
-				$bundle->expires_at		= time()+$bundle->expiry;
+			} else {
+				$bundle->expires_at		= time() + $bundle->expiry;
 			}
 			$bundle->fullsize		= $size;
 			$bundle->preview_link	= route('bundle.preview', ['bundle' => $bundle, 'auth' => $bundle->preview_token]);
@@ -151,8 +153,7 @@ class UploadController extends Controller
 			$bundle->save();
 
 			return response()->json(new BundleResource($bundle));
-		}
-		catch (\Exception $e) {
+		} catch (\Exception $e) {
 			return response()->json([
 				'result'		=> false,
 				'message'		=> $e->getMessage()
@@ -166,7 +167,8 @@ class UploadController extends Controller
 	 * We invalidate the expiry date and let the CRON
 	 * task do the hard work
 	 */
-	public function deleteBundle(Request $request, Bundle $bundle) {
+	public function deleteBundle(Request $request, Bundle $bundle)
+	{
 
 		try {
 			// Forcing bundle to expire
@@ -184,13 +186,11 @@ class UploadController extends Controller
 			return response()->json([
 				'success'	=> true
 			]);
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			return response()->json([
 				'success'		=> false,
 				'message'		=> $e->getMessage()
 			], 500);
 		}
 	}
-
 }
