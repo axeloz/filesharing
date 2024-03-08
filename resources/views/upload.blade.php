@@ -344,6 +344,8 @@
 			},
 
 			selectCopy: function(el) {
+				el.select();
+
 				if (navigator.clipboard) {
 					navigator.clipboard.writeText(el.value)
 					.then(() => {
@@ -654,7 +656,7 @@
 
 				{{-- STEP 3 --}}
 				<template x-if="step == 3">
-					<div  x-show="step == 3">
+					<div x-show="step == 3">
 						<h2 class="font-title text-2xl mb-5 text-primary font-medium uppercase">
 							@lang('app.download-links')
 						</h2>
