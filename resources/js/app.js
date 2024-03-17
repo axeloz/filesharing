@@ -20,7 +20,7 @@ window.axios.interceptors.response.use(function (response) {
 
 	// Authenticated user
 	if (error.response.status == 401) {
-		window.location.href = '/'
+		window.location.href = BASE_URL+'/'
 	}
 	else {
 		return Promise.reject(error);

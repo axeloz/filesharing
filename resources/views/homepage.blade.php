@@ -77,7 +77,7 @@
 
 			redirectToBundle: function() {
 				if (this.currentBundle != null) {
-					window.location.href = '/upload/'+this.currentBundle
+					window.location.href = BASE_URL+'/upload/'+this.currentBundle
 				}
 			},
 

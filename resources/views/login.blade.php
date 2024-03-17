@@ -41,7 +41,7 @@
 				})
 				.then( (response) => {
 					if (response.data.result == true) {
-						window.location.href = '/'
+						window.location.href = BASE_URL+'/'
 					}
 				})
 				.catch( (error) => {
