@@ -7,7 +7,7 @@
 
 ## Description
 
-This PHP application based on Laravel 10.9 allows to share files like Wetransfer. You may install it **on your own server**. It **does not require** any database system, it works with JSON files into the storage folder. It is **multilingual** and comes with english, french and korean translations for now. You're welcome to help translating the app.
+This PHP application based on Laravel 10.9 allows to share files like Wetransfer. You may install it **on your own server**. It **does not require** any database system, it works with JSON files into the storage folder. It is **multilingual** and comes with english, french, german and korean translations for now. You're welcome to help translating the app.
 
 This application provides two links per bundle :
 - a bundle preview link : you can send this link to your recipients who will see the bundle content. For example: http://yourdomain/bundle/dda2d646b6746b96ea9b?auth=965242. The recipient can see all the files of the bundle and download the bundle as a ZIP archive.
@@ -28,7 +28,7 @@ The application also comes with a Laravel Artisan command as a background task w
 - ability to download the entire bundle as ZIP archive (password protected when applicable)
 - direct download link (doesn't preview the bundle content)
 - garbage collector which removes the expired bundles as a background task
-- multilingual (EN and FR)
+- multilingual (EN, FR, DE and KR)
 - easy installation, **no database required**
 - secured by tokens, authentication codes and non-publicly-accessible files
 
@@ -108,6 +108,8 @@ server {
 	location / {
 		proxy_set_header Host $host;
 		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header   X-Forwarded-Proto $scheme;
+		proxy_set_header   X-Scheme $scheme;
 		proxy_pass http://localhost:8080;
 	}
 
@@ -171,7 +173,7 @@ In order to configure your application, copy the .env.example file into .env. Th
 | `APP_ENV`     | change this to `production` when in production (`local` otherwise) |
 | `APP_DEBUG` | change this to `false` when in production (`true` otherwise) |
 | `APP_TIMEZONE` | change this to your current timezone |
-| `APP_LOCALE` | change this to "fr", "en" or "kr" |
+| `APP_LOCALE` | change this to "fr", "en", "de" or "kr" |
 | `UPLOAD_PREVENT_DUPLICATES` | Should the app block duplicate files (true / false) |
 | `HASH_MAX_FILESIZE`| max size for hashing file to check for duplicate files. If files are bigger than limit, they will not be hashed. Find the best value for better cpu / memory consumption |
 | `UPLOAD_MAX_FILES` | (*optional*) maximal number of files per bundle |
