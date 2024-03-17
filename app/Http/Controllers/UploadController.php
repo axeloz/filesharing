@@ -55,7 +55,7 @@ class UploadController extends Controller
 
 		// Generating the file name
 		$original   = $request->file->getClientOriginalName();
-		$filename 	= substr(sha1($original.time()), 0, rand(20, 30));
+		$filename 	= substr(sha1($original.time()), 0, mt_rand(20, 30));
 
 		// Moving file to final destination
 		try {
@@ -72,6 +72,11 @@ class UploadController extends Controller
 			$fullpath = $request->file('file')->storeAs(
 				$bundle->slug, $filename, 'uploads'
 			);
+
+			if (false === $fullpath) {
+				throw new Exception('An error occurred while storing the file');
+			}
+
 			// Generating file metadata
 			$file = new File([
 				'uuid'  				=> $request->uuid,
