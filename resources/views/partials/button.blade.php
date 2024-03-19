@@ -3,7 +3,7 @@
 @endif
 
 <button
-    class="inline-flex items-center w-full py-1 rounded bg-primary hover:bg-primary-light text-center text-white text-base text-center"
+    class="inline-flex items-center w-full py-1 rounded bg-primary hover:bg-primary-light text-white text-base text-center"
     x-on:click="{{ $action }}()"
 >
     <p class="w-10/12 {{ $way == 'left' ? 'order-last' : '' }}">{{ $text }}</p>
