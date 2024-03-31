@@ -1,4 +1,4 @@
-<svg class="w-6 h-6 fill-primary"
+<svg class="w-5 h-5 fill-primary"
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg">
     <g stroke-width="0"></g>

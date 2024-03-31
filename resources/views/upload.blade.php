@@ -667,9 +667,9 @@
 								@lang('app.preview-link')
 							</div>
 							<x-tooltip x-show="copynotify.preview" x-on:click.away="copynotify.preview = false" />
-							<div class="w-2/3 shadow flex items-center">
-								<input id="copy-preview" x-model="bundle.preview_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
-								<a class="p-1" title="Open in a new Tab" :href="bundle.preview_link" target="_blank">
+							<div class="w-2/3 shadow flex items-center border border-primary-superlight ">
+								<input id="copy-preview" x-model="bundle.preview_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none outline-none" type="text" readonly x-on:click="selectCopy($el)" />
+								<a class="p-1" title="@lang('app.open-in-a-new-tab')" :href="bundle.preview_link" target="_blank">
 									<x-newtab />
 								</a>
 							</div>
@@ -681,9 +681,9 @@
 								@lang('app.direct-link')
 							</div>
 							<x-tooltip x-show="copynotify.direct_download" x-on:click.away="copynotify.direct_download = false" />
-							<div class="w-2/3 flex items-center shadow">
-								<input id="copy-direct-download" x-model="bundle.download_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none border border-primary-superlight outline-none" type="text" readonly x-on:click="selectCopy($el)" />
-								<a class="p-1" title="Open in a new Tab" :href="bundle.download_link" target="_blank">
+							<div class="w-2/3 flex items-center shadow border border-primary-superlight">
+								<input id="copy-direct-download" x-model="bundle.download_link" class="w-full bg-transparent text-slate-700 h-8 px-2 py-1 rounded-none outline-none" type="text" readonly x-on:click="selectCopy($el)" />
+								<a class="p-1" title="@lang('app.open-in-a-new-tab')" :href="bundle.download_link" target="_blank">
 									<x-newtab />
 								</a>
 							</div>
