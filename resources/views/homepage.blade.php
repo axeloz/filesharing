@@ -109,7 +109,7 @@
 					</p>
 
 					<select
-						class="w-full py-4 text-slate-700 bg-transparent h-8 p-0 py-1 border-b border-primary-superlight focus:ring-0 invalid:border-b-red-500 invalid:bg-red-50"
+						class="w-full text-slate-700 bg-transparent h-8 p-0 py-1 border-b border-primary-superlight focus:ring-0 invalid:border-b-red-500 invalid:bg-red-50"
 						name="expiry"
 						id="upload-expiry"
 						x-model="currentBundle"

@@ -90,4 +90,6 @@ return [
 	'forever'	=> '로그인 기억',
 	'yes'	=> '네',
 	'no'	=> '아니요',
+	'open-in-a-new-tab'	=> 'Open in a new tab',
+	'copied'	=> 'Copied',
 ];

@@ -90,4 +90,6 @@ return [
 	'forever'	=> 'Für immer',
 	'yes'	=> 'Ja',
 	'no'	=> 'Nein',
+	'open-in-a-new-tab'	=> 'Open in a new tab',
+	'copied'	=> 'Copied',
 ];
