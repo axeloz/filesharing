@@ -36,7 +36,7 @@ The application also comes with a Laravel Artisan command as a background task w
 
 ### Online Demo
 
-You may visit my [Online Demo](https://filesharing.box.webinno.fr/)
+You may visit my [Online Demo](https://filesharing.webinno.fr/)
 
 ### Video Demo
 
