@@ -12,7 +12,7 @@
         "laravel/sanctum": "^3.2",
         "laravel/tinker": "^2.8",
         "league/flysystem-aws-s3-v3": "^3.0",
-        "ryangjchandler/orbit": "^1.4"
+        "ryangjchandler/orbit": "^1.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

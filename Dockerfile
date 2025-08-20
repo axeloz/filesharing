@@ -1,19 +1,23 @@
 FROM php:8.2-apache
 MAINTAINER axeloz
 
+SHELL ["/bin/bash", "-c"]
+
 # INSTALLING SYSTEM DEPENDENCIES
 RUN apt-get update -y
-RUN apt-get install -y libmcrypt-dev libonig-dev build-essential libxml2-dev libzip-dev gnupg unzip curl wget findutils tar grep nano cron
+RUN apt-get install -y libmcrypt-dev libonig-dev build-essential libxml2-dev \
+	libzip-dev gnupg unzip curl wget findutils tar grep nano cron \
+	nodejs npm
 
 # INSTALLING PHP DEPENDENCIES
 RUN docker-php-ext-install \
-        bcmath \
-        ctype \
-        fileinfo \
-        mbstring \
-		opcache \
-        xml \
-		zip
+	bcmath \
+	ctype \
+	fileinfo \
+	mbstring \
+	opcache \
+	xml \
+	zip
 
 # ADDING VHOST
 COPY .docker/vhost.conf /etc/apache2/sites-available/000-default.conf
@@ -28,17 +32,12 @@ ENV APP_ENV=production
 COPY . /app
 WORKDIR /app
 
-# INSTALLING NODEJS
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-RUN \. "$HOME/.nvm/nvm.sh"
-RUN nvm install 22
-
 
 # INSTALLING THE CRONTAB
 RUN { echo "* * * * * php /app/artisan schedule:run >> /dev/null 2>&1"; } | crontab -
 
 # INSTALLING COMPOSER DEPENDENCIES
-RUN composer install --no-interaction --optimize-autoloader --no-dev
+RUN composer update --no-interaction --optimize-autoloader --no-dev
 RUN chown -R www-data:www-data /app
 
 # SETUP OF FILESHARING
