@@ -20,5 +20,6 @@
         "postcss": "^8.4.23",
         "tailwindcss": "^3.3.2"
     },
-    "version": "2.13.2"
+    "version": "2.13.2",
+	"type": "module"
 }
