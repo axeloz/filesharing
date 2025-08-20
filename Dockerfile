@@ -2,7 +2,8 @@ FROM php:8.2-apache
 MAINTAINER axeloz
 
 # INSTALLING SYSTEM DEPENDENCIES
-RUN apt-get update -y && apt-get install -y libmcrypt-dev libonig-dev build-essential libxml2-dev libzip-dev gnupg unzip curl wget findutils tar grep nano cron
+RUN apt-get update -y
+RUN apt-get install -y libmcrypt-dev libonig-dev build-essential libxml2-dev libzip-dev gnupg unzip curl wget findutils tar grep nano cron
 
 # INSTALLING PHP DEPENDENCIES
 RUN docker-php-ext-install \
@@ -21,17 +22,16 @@ RUN a2enmod rewrite
 # ADDING COMPOSER
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# INSTALLING YARN
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
-RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-RUN apt-get update && apt-get install -y yarn
-
 # SETTING WORKDIR AND ENV
-ENV WEB_DOCUMENT_ROOT /app/public
-ENV APP_ENV production
+ENV WEB_DOCUMENT_ROOT=/app/public
+ENV APP_ENV=production
 COPY . /app
 WORKDIR /app
 
+# INSTALLING NODEJS
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+RUN \. "$HOME/.nvm/nvm.sh"
+RUN nvm install 22
 
 
 # INSTALLING THE CRONTAB
@@ -49,8 +49,8 @@ RUN php artisan view:cache
 RUN php artisan orbit:clear
 
 # INSTALLING YARN DEPENDENCIES AND BUILDING
-RUN yarn
-RUN yarn build
+RUN npm i
+RUN npm run build
 
 # EXPOSING VOLUME
 VOLUME /app/storage
