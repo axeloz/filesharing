@@ -68,6 +68,7 @@ Plus:
 - JSON PHP Extension (included after PHP 5.2+)
 - ZipArchive PHP Extension (included after PHP 5.3+)
 - SQLite PHP extension
+- CRON tasks access in order to execute the bundles deletion
 
 The application also uses:
 - http://www.dropzonejs.com/
@@ -164,7 +165,7 @@ volumes:
 - run `cp .env.example .env` and edit `.env` to fit your needs
 - (optional) you may create your first user `php artisan fs:user:create`
 - start the Laravel scheduler (it will delete expired bundles of the storage). For example `* * * * * /usr/bin/php /path-to-your-project/artisan schedule:run >> /dev/null 2>&1`
-- (optional) to purge bundles manually, run `php artisan fs:bundle:purge`
+- (optional) to purge expired or deleted bundles manually, run `php artisan fs:bundle:purge`
 
 
 Use your browser to navigate to your domain name (example: files.yourdomain.com) and **that's it**.
