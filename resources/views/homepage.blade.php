@@ -116,7 +116,7 @@
 						x-on:change="redirectToBundle()"
 						x-show="bundles != null && Object.keys(bundles).length > 0"
 					>
-						<option>-</option>
+						<option>@lang('app.select-existing-bundle')</option>
 
 						<template x-if="Object.keys(pending).length > 0">
 							<optgroup label="{{ __('app.pending') }}">
