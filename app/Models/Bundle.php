@@ -35,7 +35,7 @@ class Bundle extends Model
     ];
 
     protected $casts = [
-        //'expires_at' => 'datetime:Y-m-d',
+        'expires_at' => 'datetime:Y-m-d',
     ];
 
     public function getKeyName(): string
