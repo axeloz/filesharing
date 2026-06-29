@@ -49,18 +49,25 @@ A video demo is available [on Youtube](https://youtu.be/hO4tRaZa4N4)
 ## Requirements
 
 Basically, nothing more than Laravel itself:
-- PHP >= 8.1
+- PHP >= 8.3
 - Ctype PHP Extension
-- OpenSSL PHP Extension
-- PDO PHP Extension
+- cURL PHP Extension
+- DOM PHP Extension
+- Fileinfo PHP Extension
+- Filter PHP Extension
+- Hash PHP Extension
 - Mbstring PHP Extension
+- OpenSSL PHP Extension
+- PCRE PHP Extension
+- PDO PHP Extension
+- Session PHP Extension
 - Tokenizer PHP Extension
 - XML PHP Extension
 
 Plus:
 - JSON PHP Extension (included after PHP 5.2+)
 - ZipArchive PHP Extension (included after PHP 5.3+)
-- SQLite
+- SQLite PHP extension
 
 The application also uses:
 - http://www.dropzonejs.com/
@@ -86,7 +93,6 @@ docker run -d \
 -e APP_URL="<your_url>" \
 -e ASSET_URL="<your_asset_url>" \
 -e UPLOAD_MAX_FILESIZE="1G" \
--e APP_TIMEZONE="Europe/Paris" \
 -e UPLOAD_PREVENT_DUPLICATES=true \
 -e HASH_MAX_FILESIZE="1G" \
 -e UPLOAD_MAX_FILES=100 \
@@ -172,7 +178,6 @@ In order to configure your application, copy the .env.example file into .env. Th
 | `APP_NAME`    | the title of the application |
 | `APP_ENV`     | change this to `production` when in production (`local` otherwise) |
 | `APP_DEBUG` | change this to `false` when in production (`true` otherwise) |
-| `APP_TIMEZONE` | change this to your current timezone |
 | `APP_LOCALE` | change this to "fr", "en", "de" or "kr" |
 | `UPLOAD_PREVENT_DUPLICATES` | Should the app block duplicate files (true / false) |
 | `HASH_MAX_FILESIZE`| max size for hashing file to check for duplicate files. If files are bigger than limit, they will not be hashed. Find the best value for better cpu / memory consumption |
