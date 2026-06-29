@@ -3,7 +3,7 @@
 
 return [
     'preview-bundle'		=> 'Contenu de l\'archive',
-    'bundle-preview-intro'	=> 'Here is the list of the files you can download:',
+    'bundle-preview-intro'	=> 'Voici la liste des fichiers que vous pouvez télécharger :',
     'warning-bundle-expiration'	=> 'L\'archive expire',
     'warning-bundle-expired'	=> 'L\'archive a expiré',
     'download-all'	=> 'Tout télécharger',
