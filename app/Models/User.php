@@ -8,6 +8,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -39,24 +40,24 @@ class User extends Authenticatable
 	public $incrementing = false;
 
 
-	public function getKeyName()
+	public function getKeyName(): string
 	{
 		return 'username';
 	}
 
-	public function getIncrementing()
+	public function getIncrementing(): bool
 	{
 		return false;
 	}
 
-	public static function schema(Blueprint $table)
+	public static function schema(Blueprint $table): void
 	{
 		$table->string('username');
 		$table->string('password');
 		$table->timestamp('connected_at')->nullable();
 	}
 
-	public function bundles() {
+	public function bundles(): HasMany {
 		return $this->hasMany(Bundle::class);
 	}
 

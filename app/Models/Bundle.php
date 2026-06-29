@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use \Orbit\Concerns\Orbital;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -36,15 +38,15 @@ class Bundle extends Model
 		'expires_at' => 'datetime:Y-m-d',
 	];
 
-	public function getKeyName() {
+	public function getKeyName(): string {
 		return 'slug';
 	}
 
-	public function getIncrementing() {
+	public function getIncrementing(): bool {
 		return false;
 	}
 
-	public static function schema(Blueprint $table) {
+	public static function schema(Blueprint $table): void {
 		$table->string('slug');
 		$table->string('title')->nullable();
 		$table->longText('description')->nullable();
@@ -63,11 +65,11 @@ class Bundle extends Model
 		$table->string('user_username')->nullable();
 	}
 
-	public function files() {
+	public function files(): HasMany {
 		return $this->hasMany(File::class);
 	}
 
-	public function user() {
+	public function user(): BelongsTo {
 		return $this->belongsTo(User::class);
 	}
 }

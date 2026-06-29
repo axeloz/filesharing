@@ -24,7 +24,7 @@ class CheckRelease extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): bool
     {
 		$releases = [];
 
@@ -63,5 +63,6 @@ class CheckRelease extends Command
 		}
 
 		$this->newLine();
+		return true;
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use \Orbit\Concerns\Orbital;
 use Illuminate\Database\Schema\Blueprint;
 
@@ -25,17 +26,17 @@ class File extends Model
 	public $incrementing = false;
 
 
-	public function getKeyName()
+	public function getKeyName(): string
 	{
 		return 'uuid';
 	}
 
-	public function getIncrementing()
+	public function getIncrementing(): bool
 	{
 		return false;
 	}
 
-	public static function schema(Blueprint $table)
+	public static function schema(Blueprint $table): void
 	{
 		$table->string('uuid');
 		$table->string('original')->nullable();
@@ -47,7 +48,7 @@ class File extends Model
 		$table->string('bundle_slug');
 	}
 
-	public function bundle() {
+	public function bundle(): BelongsTo {
 		return $this->belongsTo(Bundle::class);
 	}
 }

@@ -27,7 +27,7 @@ class CreateUser extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): bool
     {
         $login = strtolower($this->argument('login'));
 
@@ -67,9 +67,11 @@ class CreateUser extends Command
 			]);
 
 			$this->info('User has been created');
+			return true;
 		}
 		catch(Exception $e) {
 			$this->error('An error occurred, could not create user');
 		}
+		return false;
     }
 }

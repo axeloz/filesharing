@@ -25,7 +25,7 @@ class DeleteUser extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): bool
     {
         $user = User::where('username', $this->argument('login'))->first();
 		if (empty($user)) {
@@ -35,10 +35,12 @@ class DeleteUser extends Command
 			try {
 				$user->delete();
 				$this->info('User "'.$this->argument('login').'" has been deleted');
+				return true;
 			}
 			catch (Exception $e) {
 				$this->error('Could not delete user "'.$this->argument('login').'"');
 			}
+			return false;
 		}
 
     }

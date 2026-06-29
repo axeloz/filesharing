@@ -10,7 +10,7 @@ use Carbon\Carbon;
 
 class Auth {
 
-	static function isLogged():Bool {
+	static function isLogged(): Bool {
 		// Checking credentials auth
 		if (session()->get('authenticated', false) === true && session()->has('username')) {
 			// If user still exists
@@ -23,7 +23,7 @@ class Auth {
 		return false;
 	}
 
-	static function loginUser(String $username, String $password):Bool {
+	static function loginUser(String $username, String $password): Bool {
 		try {
 			// Checking user existence
 			$user = self::getUserDetails($username);
