@@ -183,13 +183,6 @@ class UploadController extends Controller
             $bundle->expires_at = time() - (3600 * 24 * 30);
             $bundle->save();
 
-            // Then deleting file models
-            foreach ($bundle->files as $f) {
-                $f->forceDelete();
-            }
-
-            // Finally deleting bundle
-            $bundle->forceDelete();
 
             return response()->json([
                 'success'	=> true

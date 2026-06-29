@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use App\Http\Resources\BundleResource;
 use Illuminate\Contracts\View\View;
 
-class BundleController extends Controller
+class DownloadController extends Controller
 {
     // The bundle content preview
     public function previewBundle(Request $request, Bundle $bundle): View
@@ -117,6 +117,38 @@ class BundleController extends Controller
         // Could not find the metadata file
         catch (Exception $e) {
             abort(500, $e->getMessage());
+        }
+    }
+
+    /**
+     * In this method, we do not delete files
+     * physically to spare some time and ressources.
+     * We invalidate the expiry date and let the CRON
+     * task do the hard work
+     */
+    public function deleteBundle(Request $request, Bundle $bundle): JsonResponse
+    {
+        try {
+            // Forcing bundle to expire
+            $bundle->expires_at = time() - (3600 * 24 * 30);
+            $bundle->save();
+
+            // Then deleting file models
+            foreach ($bundle->files as $f) {
+                $f->forceDelete();
+            }
+
+            // Finally deleting bundle
+            $bundle->forceDelete();
+
+            return response()->json([
+                'success'	=> true
+            ]);
+        } catch (Exception $e) {
+            return response()->json([
+                'success'		=> false,
+                'message'		=> $e->getMessage()
+            ], 500);
         }
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\WebController;
 use App\Http\Controllers\UploadController;
-use App\Http\Controllers\BundleController;
+use App\Http\Controllers\DownloadController;
 use App\Http\Middleware\UploadAccess;
 
 /*
@@ -51,7 +51,7 @@ Route::middleware(['can.upload'])->group(function () {
 /**
 Download routes
 */
-Route::middleware(['access.guest'])->prefix('/bundle/{bundle}')->controller(BundleController::class)->name('bundle.')->group(function () {
+Route::middleware(['access.guest'])->prefix('/bundle/{bundle}')->controller(DownloadController::class)->name('bundle.')->group(function () {
     Route::get('/preview', 'previewBundle')->name('preview');
     Route::get('/download', 'downloadZip')->name('zip.download');
 });
