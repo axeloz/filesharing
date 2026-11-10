@@ -2,11 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Orbit\Concerns\Orbital;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Str;
 
 class Bundle extends Model
 {
@@ -76,5 +78,19 @@ class Bundle extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected function title(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => Str::of($value)->stripTags(),
+        );
+    }
+
+    protected function description(): Attribute
+    {
+        return Attribute::make(
+            set: fn ($value) => Str::of($value)->stripTags(),
+        );
     }
 }
