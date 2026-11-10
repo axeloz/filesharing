@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use Exception;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\Auth;
 
 class Upload {
 
@@ -123,9 +124,15 @@ class Upload {
 
 	public static function canUpload(String $current_ip):Bool {
 
+		// First, we check if anonymous upload is allowed. If not, user must be logged in.
+		if (config('sharing.anonymous_upload_allowed') === false && ! Auth::isLogged()) {
+			return false;
+		}
+
 		// Getting the IP limit configuration
 		$ips = config('sharing.upload_ip_limit');
 
+		// If no IP is set, we consider that there is no restriction
 		if (empty($ips)) {
 			return true;
 		}

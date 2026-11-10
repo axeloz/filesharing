@@ -19,6 +19,9 @@ return [
     ],
     'default_expiry'		=> 86400, // 1 Day,
 
+
+    'anonymous_upload_allowed' => env('ANONYMOUS_UPLOAD_ALLOWED', false),
+
     /**
      ** IP v4 access limitations
      ** Acceptable formats :

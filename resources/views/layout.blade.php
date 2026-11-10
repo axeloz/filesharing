@@ -18,7 +18,7 @@
 
 	</head>
 
-	<body class="font-display text-[13px] selection:bg-purple-100 outline-none select-none">
+	<body class="font-display  selection:bg-purple-100 outline-none select-none">
 
 		<div class="md:fixed md:min-w-xl md:max-w-3xl md:left-[50%] md:top-[50%] md:translate-x-[-50%] md:translate-y-[-50%] md:w-2/3">
 			<div class="relative bg-white md:border border-primary md:rounded-lg md:overflow-hidden shadow-lg shadow-black/30 hover:shadow-black/40 transition-all">
