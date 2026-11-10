@@ -30,9 +30,7 @@ class OwnerAccess
 		if (! empty($request->header('X-Upload-Auth'))) {
 			$auth = $request->header('X-Upload-Auth');
 		}
-		else if (! empty($request->auth)) {
-			$auth = $request->auth;
-		}
+
 		// Aborting if no auth token provided
 		abort_if(empty($auth), 403);
 

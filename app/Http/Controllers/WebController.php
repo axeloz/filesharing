@@ -66,6 +66,9 @@ class WebController extends Controller
         // Aborting if request is not AJAX
         abort_if(! $request->ajax(), 403);
 
+        // Aborting if owner token is missing
+        abort_if(empty($request->header('X-Upload-Auth')), 422);
+
         if (Auth::isLogged()) {
             $user = Auth::getLoggedUserDetails();
         }
@@ -79,7 +82,7 @@ class WebController extends Controller
                 'expires_at'	=> null,
                 'password'  	=> null,
                 'slug'			=> substr(sha1(uniqid('slug_', true)), 0, rand(35, 40)),
-                'owner_token'	=> substr(sha1(uniqid('preview_', true)), 0, 15),
+                'owner_token'	=> $request->header('X-Upload-Auth'),
                 'preview_token'	=> substr(sha1(uniqid('preview_', true)), 0, 15),
                 'fullsize'		=> 0,
                 'title'			=> null,

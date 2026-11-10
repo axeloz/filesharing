@@ -21,14 +21,6 @@ class BundleResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-		/**
-		Do not return private data on the preview page
-		 */
-		$full = false;
-		if (Auth::isLogged() || Upload::canUpload($request->ip())) {
-			$full = true;
-		}
-
 		$response = [
 			'created_at' 		=> $this->created_at,
 			'completed'			=> (bool)$this->completed,
@@ -44,11 +36,10 @@ class BundleResource extends JsonResource
 			'files'				=> FileResource::collection($this->files),
 			'preview_link'		=> $this->preview_link,
 			'download_link'		=> $this->download_link,
-			'password'			=> $this->when($full === true, $this->password),
-			'owner_token'		=> $this->when($full === true, $this->owner_token),
-			'preview_token'		=> $this->when($full === true, $this->preview_token),
-			'deletion_link'		=> $this->when($full === true, $this->deletion_link),
-			'user'				=> $this->when($full === true, new UserResource($this->user))
+			'password'			=> $this->password,
+			'preview_token'		=> $this->preview_token,
+			'deletion_link'		=> $this->deletion_link,
+			'user'				=> new UserResource($this->user)
 		];
 
 		return $response;

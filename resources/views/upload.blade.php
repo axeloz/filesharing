@@ -167,7 +167,7 @@
 						url: BASE_URL+'/upload/'+this.bundle.slug+'/file',
 						method: 'POST',
 						headers: {
-							'X-Upload-Auth': this.bundle.owner_token
+							'X-Upload-Auth': localStorage.getItem('owner_token')
 						},
 						createImageThumbnails: false,
 						disablePreviews: true,

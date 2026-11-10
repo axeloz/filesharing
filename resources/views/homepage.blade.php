@@ -18,8 +18,9 @@
 				// Generating anonymous owner token
 				this.ownerToken = localStorage.getItem('owner_token')
 				if (this.ownerToken === null) {
-					this.ownerToken = this.generateStr(15)
+					this.ownerToken = this.generateStr(25)
 					localStorage.setItem('owner_token', this.ownerToken)
+					window.axios.defaults.headers.common['X-Upload-Auth'] = this.ownerToken;
 				}
 
 				// Loading existing bundles

@@ -9,16 +9,16 @@ use App\Models\Bundle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use App\Http\Resources\BundleResource;
+use App\Http\Resources\BundleResourceFiltered;
 use Illuminate\Contracts\View\View;
 
 class DownloadController extends Controller
 {
     // The bundle content preview
-    public function previewBundle(Request $request, Bundle $bundle): View
+    public function previewBundle(Bundle $bundle): View
     {
         return view('download', [
-            'bundle'		=> new BundleResource($bundle)
+            'bundle' => new BundleResourceFiltered($bundle)
         ]);
     }
 

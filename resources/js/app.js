@@ -13,19 +13,22 @@ moment().format();
 
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.headers.common['X-Upload-Auth'] = localStorage.getItem('owner_token');
 
-window.axios.interceptors.response.use(function (response) {
-	return response;
- }, function (error) {
-
-	// Authenticated user
-	if (error.response.status == 401) {
-		window.location.href = BASE_URL+'/'
+window.axios.interceptors.response.use(
+	function (response) {
+		return response;
+	},
+	function (error) {
+		// Unauthenticated user
+		if (error.response.status == 401) {
+			window.location.href = BASE_URL + '/'
+		}
+		else {
+			return Promise.reject(error);
+		}
 	}
-	else {
-		return Promise.reject(error);
-	}
-  });
+);
 
 import Dropzone from "dropzone";
 window.Dropzone = Dropzone;
