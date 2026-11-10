@@ -10,7 +10,7 @@
 
 	document.addEventListener('alpine:init', () => {
 		Alpine.data('download', () => ({
-			metadata: @js($bundle),
+			metadata: bundle,
 			created_at: null,
 			expires_at: null,
 			expired: null,

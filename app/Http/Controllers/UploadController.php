@@ -21,8 +21,8 @@ class UploadController extends Controller
     public function createBundle(Request $request, Bundle $bundle): View
     {
         return view('upload', [
-            'bundle'  		=> new BundleResource($bundle),
-            'baseUrl'		=> config('app.url')
+            'bundle'      => new BundleResource($bundle),
+            'baseUrl'     => config('app.url')
         ]);
     }
 
@@ -31,18 +31,18 @@ class UploadController extends Controller
     {
         try {
             $bundle->update([
-                'expiry'		=> $request->expiry ?? null,
-                'password'  	=> $request->password ?? null,
-                'title'			=> $request->title ?? null,
-                'description'	=> $request->description ?? null,
-                'max_downloads'	=> $request->max_downloads ?? 0
+                'expiry'          => $request->expiry ?? null,
+                'password'        => $request->password ?? null,
+                'title'           => $request->title ?? null,
+                'description'     => $request->description,
+                'max_downloads'   => $request->max_downloads ?? 0
             ]);
 
             return response()->json(new BundleResource($bundle));
         } catch (Exception $e) {
             return response()->json([
-                'result'	=> false,
-                'message'	=> $e->getMessage()
+                'result'     => false,
+                'message'    => $e->getMessage()
             ], 500);
         }
     }
