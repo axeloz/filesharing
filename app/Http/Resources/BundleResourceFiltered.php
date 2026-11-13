@@ -24,7 +24,10 @@ class BundleResourceFiltered extends JsonResource
 			'fullsize'			=> (int)$this->fullsize,
 			'title'				=> $this->title,
 			'description'		=> $this->description,
-			'description_html'	=> ! empty($this->description) ? Str::markdown($this->description) : null,
+			'description_html'	=> ! empty($this->description) ? Str::markdown($this->description, [
+				'html_input' => 'strip',
+				'allow_unsafe_links' => false,
+			]) : null,
 			'max_downloads'		=> (int)$this->max_downloads,
 			'downloads'			=> (int)$this->downloads,
 			'files'				=> FileResource::collection($this->files),
