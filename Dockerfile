@@ -3,6 +3,8 @@ MAINTAINER axeloz
 
 SHELL ["/bin/bash", "-c"]
 
+ARG RELEASE_VERSION
+
 # INSTALLING SYSTEM DEPENDENCIES
 RUN apt-get update -y
 RUN apt-get install -y libmcrypt-dev libonig-dev build-essential libxml2-dev \
@@ -32,6 +34,7 @@ ENV APP_ENV=production
 COPY . /app
 WORKDIR /app
 
+RUN echo $RELEASE_VERSION > RELEASE.txt
 
 # INSTALLING THE CRONTAB
 RUN { echo "* * * * * php /app/artisan schedule:run >> /dev/null 2>&1"; } | crontab -
