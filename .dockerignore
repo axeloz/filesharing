@@ -1,0 +1,7 @@
+.git
+node_modules/
+vendor/
+storage/app/
+storage/clockwork
+storage/content
+storage/logs
