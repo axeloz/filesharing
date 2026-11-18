@@ -22,6 +22,7 @@ class WebController extends Controller
                 $bundles = BundleResource::collection($bundles) ;
             }
         }
+
         return view('homepage', [
             'bundles'	=> $bundles ?? []
         ]);

@@ -40,6 +40,7 @@ Route::middleware(['can.upload'])->group(function () {
 
         Route::middleware(['access.owner'])->group(function () {
             Route::post('/', 'storeBundle')->name('create.store');
+        	Route::get('/details', 'getBundleDetails')->name('details');
             Route::post('/file', 'uploadFile')->name('file.store');
             Route::delete('/file', 'deleteFile')->name('file.delete');
             Route::post('/complete', 'completeBundle')->name('complete');

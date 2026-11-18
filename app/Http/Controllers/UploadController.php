@@ -21,9 +21,14 @@ class UploadController extends Controller
     public function createBundle(Request $request, Bundle $bundle): View
     {
         return view('upload', [
-            'bundle'      => new BundleResource($bundle),
+            'bundle_slug' => $bundle->slug,
             'baseUrl'     => config('app.url')
         ]);
+    }
+
+    public function getBundleDetails(Bundle $bundle): JsonResponse
+    {
+        return response()->json(new BundleResource($bundle));
     }
 
     // The upload form
