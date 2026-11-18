@@ -20,3 +20,4 @@ yarn-error.log
 /storage/content
 /storage/clockwork
 .DS_Store
+RELEASE.txt
