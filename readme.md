@@ -97,6 +97,7 @@ docker run -d \
 -e UPLOAD_PREVENT_DUPLICATES=true \
 -e HASH_MAX_FILESIZE="1G" \
 -e UPLOAD_MAX_FILES=100 \
+-e ANONYMOUS_UPLOAD_ALLOWED=false \
 -e LIMIT_DOWNLOAD_RATE="100K" \
 axeloz/filesharing:latest
 ```
