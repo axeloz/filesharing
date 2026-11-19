@@ -21,7 +21,7 @@ window.axios.interceptors.response.use(
 	},
 	function (error) {
 		// Unauthenticated user
-		if (error.response.status == 401 || error.response.status == 403) {
+		if (error.response.status == 401) {
 			window.location.href = BASE_URL + '/'
 		}
 		else {
