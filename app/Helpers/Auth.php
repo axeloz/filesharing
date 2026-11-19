@@ -3,6 +3,7 @@
 namespace App\Helpers;
 
 use Exception;
+use App\Exceptions\UnauthenticatedUserException;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
@@ -51,7 +52,7 @@ class Auth {
 		if (self::isLogged()) {
 			return self::getUserDetails(session()->get('username'));
 		}
-		throw new UnauthenticatedUser('User is not logged in');
+		throw new UnauthenticatedUserException('User is not logged in');
 	}
 
 	static function getUserDetails(String $username):User {
@@ -80,8 +81,5 @@ class Auth {
 		}
 	}
 }
-
-
-class UnauthenticatedUser extends Exception {}
 
 ?>

@@ -18,10 +18,10 @@ class OwnerAccess
     public function handle(Request $request, Closure $next): Response
     {
 		// Aborting if request is not AJAX
-		abort_if(! $request->ajax(), 403);
+		abort_if(! $request->ajax(), 401);
 
 		// Aborting if Bundle ID is not present
-		abort_if(empty($request->route()->parameter('bundle')), 403);
+		abort_if(empty($request->route()->parameter('bundle')), 401);
 		$bundle = $request->route()->parameters()['bundle'];
 		abort_if(! is_a($bundle, Bundle::class), 404);
 
@@ -32,10 +32,10 @@ class OwnerAccess
 		}
 
 		// Aborting if no auth token provided
-		abort_if(empty($auth), 403);
+		abort_if(empty($auth), 401);
 
 		// Aborting if owner token is wrong
-		abort_if($bundle->owner_token !== $auth, 403);
+		abort_if($bundle->owner_token !== $auth, 401);
 
         return $next($request);
     }

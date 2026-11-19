@@ -92,5 +92,6 @@ return [
     'no'	=> '아니요',
     'open-in-a-new-tab'	=> '새 탭에서 열기',
     'copied'	=> '복사됨',
-    'select-existing-bundle' => '기존 아카이브 선택'
+    'select-existing-bundle' => '기존 아카이브 선택',
+    'auth-failed' => '인증 실패',
 ];

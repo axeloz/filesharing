@@ -92,5 +92,6 @@ return [
     'no'	=> 'No',
     'open-in-a-new-tab'	=> 'Open in a new tab',
     'copied'	=> 'Copied',
-    'select-existing-bundle' => 'Select an existing archive'
+    'select-existing-bundle' => 'Select an existing archive',
+    'auth-failed' => 'These credentials do not match our records.',
 ];
