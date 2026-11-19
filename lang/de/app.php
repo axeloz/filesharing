@@ -92,5 +92,6 @@ return [
     'no'	=> 'Nein',
     'open-in-a-new-tab'	=> 'Open in a new tab',
     'copied'	=> 'Copied',
-    'select-existing-bundle' => 'Wählen Sie ein vorhandenes Archiv aus'
+    'select-existing-bundle' => 'Wählen Sie ein vorhandenes Archiv aus',
+    'auth-failed' => 'Ihre Anmeldedaten sind ungültig.',
 ];

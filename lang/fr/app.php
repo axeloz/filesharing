@@ -92,5 +92,6 @@ return [
     'no'	=> 'Non',
     'open-in-a-new-tab'	=> 'Open in a new tab',
     'copied'	=> 'Copied',
-    'select-existing-bundle' => 'Sélectionnez une archive existante'
+    'select-existing-bundle' => 'Sélectionnez une archive existante',
+    'auth-failed' => 'Vos identifiants sont incorrects.',
 ];

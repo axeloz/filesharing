@@ -51,7 +51,7 @@ class WebController extends Controller
         } catch (Exception $e) {
             return response()->json([
                 'result'	=> false,
-                'message'	=> 'Authentication failed, please try again.'
+                'message'	=> __('app.auth-failed')
             ], 403);
         }
 
